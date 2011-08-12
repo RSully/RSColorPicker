@@ -21,6 +21,7 @@
     
     brightnessSlider = [[RSBrightnessSlider alloc] initWithFrame:CGRectMake(10, 360, 300, 30)];
     [brightnessSlider setColorPicker:colorPicker];
+    [brightnessSlider setUseCustomSlider:YES]; // Defaults to NO
     
     colorPatch = [[UIView alloc] initWithFrame:CGRectMake(10, 400, 300, 30)];
     

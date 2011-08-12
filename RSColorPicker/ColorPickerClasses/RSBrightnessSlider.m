@@ -8,6 +8,7 @@
 
 #import "RSBrightnessSlider.h"
 #import "RSColorPickerView.h"
+#import "ANImageBitmapRep.h"
 
 @implementation RSBrightnessSlider
 
@@ -17,12 +18,19 @@
         self.minimumValue = 0.0f;
         self.maximumValue = 1.0f;
         self.continuous = YES;
-        [self setupImages];
+        
         self.enabled = YES;
         self.userInteractionEnabled = YES;
+        
         [self addTarget:self action:@selector(myValueChanged:) forControlEvents:UIControlEventValueChanged];
     }
     return self;
+}
+
+-(void)setUseCustomSlider:(BOOL)use {
+    if (use) {
+        [self setupImages];
+    }
 }
 
 -(void)myValueChanged:(id)notif {
@@ -30,7 +38,17 @@
 }
 
 -(void)setupImages {
+    ANImageBitmapRep *myRep = [[ANImageBitmapRep alloc] initWithSize:BMPointMake(self.frame.size.width, self.frame.size.height)];
+    for (int x = 0; x < myRep.bitmapSize.x; x++) {
+        CGFloat percGray = (CGFloat)x / (CGFloat)myRep.bitmapSize.x;
+        for (int y = 0; y < myRep.bitmapSize.y; y++) {
+            [myRep setPixel:BMPixelMake(percGray, percGray, percGray, 1.0f) atPoint:BMPointMake(x, y)];
+        }
+    }
     
+    //[self setBackgroundColor:[UIColor colorWithPatternImage:[myRep image]]];
+    [self setMinimumTrackImage:[myRep image] forState:UIControlStateNormal];
+    [self setMaximumTrackImage:[myRep image] forState:UIControlStateNormal];
 }
 
 -(void)setColorPicker:(RSColorPickerView*)cp {

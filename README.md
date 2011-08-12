@@ -33,3 +33,5 @@ See included example project (application delegate).
 ***
 
 ![Example Color Picker Implementation](https://github.com/RSully/RSColorPicker/raw/master/Example.png)
+![Example Color Picker with Custom Slider](https://github.com/RSully/RSColorPicker/raw/master/Example2.png)
+

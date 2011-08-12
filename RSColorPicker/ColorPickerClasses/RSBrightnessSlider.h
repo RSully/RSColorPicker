@@ -14,7 +14,9 @@
     RSColorPickerView *colorPicker;
 }
 
+-(void)setUseCustomSlider:(BOOL)use;
 -(void)setupImages;
+
 -(void)setColorPicker:(RSColorPickerView*)cp;
 
 @end
