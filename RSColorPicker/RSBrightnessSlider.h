@@ -8,9 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
+@class RSColorPickerView;
 
 @interface RSBrightnessSlider : UISlider {
-    
+    RSColorPickerView *colorPicker;
 }
+
+-(void)setupImages;
+-(void)setColorPicker:(RSColorPickerView*)cp;
 
 @end

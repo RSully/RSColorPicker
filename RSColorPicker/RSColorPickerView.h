@@ -7,10 +7,31 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <QuartzCore/QuartzCore.h>
 
+#import "ANImageBitmapRep.h"
+
+
+@class RSColorPickerView;
+@protocol RSColorPickerViewDelegate <NSObject>
+-(void)colorPickerDidChangeSelection:(RSColorPickerView*)cp;
+@end
 
 @interface RSColorPickerView : UIView {
+    ANImageBitmapRep *rep;
+    CGFloat brightness;
     
+    UIView *selectionView;
+    CGPoint selection;
+    BOOL badTouch;
+    
+    id<RSColorPickerViewDelegate> delegate;
 }
+
+-(UIColor*)selectionColor;
+-(CGPoint)selection;
+
+@property (nonatomic, assign) CGFloat brightness;
+@property (assign) id<RSColorPickerViewDelegate> delegate;
 
 @end

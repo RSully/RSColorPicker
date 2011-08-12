@@ -14,10 +14,26 @@
 @synthesize window=_window;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
-    // Override point for customization after application launch.
+{    
+    colorPicker = [[RSColorPickerView alloc] initWithFrame:CGRectMake(10, 40, 300, 300)];
+    [colorPicker setDelegate:self];
+    [colorPicker setBrightness:1.0f];
+    
+    brightnessSlider = [[RSBrightnessSlider alloc] initWithFrame:CGRectMake(10, 360, 300, 30)];
+    [brightnessSlider setColorPicker:colorPicker];
+    
+    colorPatch = [[UIView alloc] initWithFrame:CGRectMake(10, 400, 300, 30)];
+    
+    [self.window addSubview:colorPicker];
+    [self.window addSubview:brightnessSlider];
+    [self.window addSubview:colorPatch];
+    
     [self.window makeKeyAndVisible];
     return YES;
+}
+
+-(void)colorPickerDidChangeSelection:(RSColorPickerView *)cp {
+    colorPatch.backgroundColor = [cp selectionColor];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
