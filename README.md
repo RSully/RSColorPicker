@@ -8,7 +8,6 @@ Square (circle) color-picker that handles touch events and allows for brightness
 
 Basic UISlider subclass that can be used easily with RSColorPickerView. 
 
-***
 
 ## Project
 
@@ -18,7 +17,6 @@ Also uses [ANImageBitmapRep](https://github.com/unixpickle/ANImageBitmapRep) for
 
 And of course, thanks to [Wikipedia](http://en.wikipedia.org/wiki/HSL_and_HSV).
 
-***
 
 ## Usage
 
