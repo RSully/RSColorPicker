@@ -1,15 +1,15 @@
-## Class Files
+# Class Files:
 
-### RSColorPickerView
+## RSColorPickerView
 
 Square (circle) color-picker that handles touch events and allows for brightness control. Uses delegation to report color selection as-changed
 
-### RSBrightnessSlider
+## RSBrightnessSlider
 
 Basic UISlider subclass that can be used easily with RSColorPickerView. 
 
 
-## Project
+# Project:
 
 Inspired by [ANColorPicker](https://github.com/unixpickle/ANColorPicker). 
 Uses formulas from [EasyRGB](http://www.easyrgb.com/index.php?X=MATH&H=21#text21) (HSV conversions). 
@@ -18,11 +18,11 @@ Also uses [ANImageBitmapRep](https://github.com/unixpickle/ANImageBitmapRep) for
 And of course, thanks to [Wikipedia](http://en.wikipedia.org/wiki/HSL_and_HSV).
 
 
-## Usage
+# Usage:
 
 See included example project (application delegate).
 
-## Requirements
+## Requirements:
 
 * QuartzCore.framework
 * CoreGraphics.framework
