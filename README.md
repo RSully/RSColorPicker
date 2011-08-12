@@ -32,4 +32,4 @@ See included example project (application delegate).
 
 ***
 
-![Example Color Picker Implementation](Example.png)
+![Example Color Picker Implementation](https://github.com/RSully/RSColorPicker/raw/master/Example.png)
