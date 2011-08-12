@@ -30,3 +30,6 @@ See included example project (application delegate).
 * Foundation.framework
 * ANImageBitmapRep (Included)
 
+***
+
+![Example Color Picker Implementation](Example.png)
