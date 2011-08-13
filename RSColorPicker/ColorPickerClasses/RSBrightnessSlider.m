@@ -49,6 +49,8 @@
     //[self setBackgroundColor:[UIColor colorWithPatternImage:[myRep image]]];
     [self setMinimumTrackImage:[myRep image] forState:UIControlStateNormal];
     [self setMaximumTrackImage:[myRep image] forState:UIControlStateNormal];
+    
+    [myRep release];
 }
 
 -(void)setColorPicker:(RSColorPickerView*)cp {
