@@ -18,8 +18,8 @@
 	colorPicker = [[RSColorPickerView alloc] initWithFrame:CGRectMake(10.0, 40.0, 300.0, 300.0)];
 	[colorPicker setDelegate:self];
 	[colorPicker setBrightness:1.0];
-	[colorPicker setCropToCircle:NO]; // Defaults to YES (and you can set BG color)
-	//[colorPicker setBackgroundColor:[UIColor whiteColor]];
+	//[colorPicker setCropToCircle:NO]; // Defaults to YES (and you can set BG color)
+	[colorPicker setBackgroundColor:[UIColor clearColor]];
 	
 	brightnessSlider = [[RSBrightnessSlider alloc] initWithFrame:CGRectMake(10.0, 360.0, 300.0, 30.0)];
 	[brightnessSlider setColorPicker:colorPicker];
@@ -65,7 +65,7 @@
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
 	/*
-	 Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+	 Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background,optionally refresh the user interface.
 	 */
 }
 

@@ -8,6 +8,9 @@
 
 #import "RSColorPickerView.h"
 
+// point-related macros
+#define INNER_P(x) (x < 0 ? ceil(x) : floor(x))
+#define IS_INSIDE(p) (round(p.x) >= 0 && round(p.x) < self.frame.size.width && round(p.y) >= 0 && round(p.y) < self.frame.size.height)
 
 // Concept-code from http://www.easyrgb.com/index.php?X=MATH&H=21#text21
 BMPixel pixelFromHSV(CGFloat H, CGFloat S, CGFloat V) {
@@ -40,6 +43,7 @@ BMPixel pixelFromHSV(CGFloat H, CGFloat S, CGFloat V) {
 
 @interface RSColorPickerView (Private)
 -(void)updateSelectionLocation;
+-(CGPoint)validPointForTouch:(CGPoint)touchPoint;
 @end
 
 
@@ -55,6 +59,7 @@ BMPixel pixelFromHSV(CGFloat H, CGFloat S, CGFloat V) {
 	self = [super initWithFrame:frame];
 	if (self) {
 		cropToCircle = YES;
+		bitmapNeedsUpdate = YES;
 		
 		selection = CGPointMake(sqr/2, sqr/2);
 		selectionView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 18.0, 18.0)];
@@ -84,6 +89,7 @@ BMPixel pixelFromHSV(CGFloat H, CGFloat S, CGFloat V) {
 }
 
 -(void)genBitmap {
+	if (!bitmapNeedsUpdate) { return; }
 	CGFloat radius = (self.frame.size.width / 2.0);
 	CGFloat relX = 0.0;
 	CGFloat relY = 0.0;
@@ -109,6 +115,7 @@ BMPixel pixelFromHSV(CGFloat H, CGFloat S, CGFloat V) {
 			[rep setPixel:thisPixel atPoint:BMPointMake(x, y)];
 		}
 	}
+	bitmapNeedsUpdate = NO;
 }
 
 
@@ -128,52 +135,77 @@ BMPixel pixelFromHSV(CGFloat H, CGFloat S, CGFloat V) {
 	return selection;
 }
 
+-(CGPoint)validPointForTouch:(CGPoint)touchPoint {
+	if (!cropToCircle) return touchPoint;
+	else {
+		BMPixel pixel = BMPixelMake(0, 0, 0, 0);
+		if (IS_INSIDE(touchPoint)) {
+			pixel = [rep getPixelAtPoint:BMPointFromPoint(touchPoint)];
+		}
+		if (pixel.alpha > 0.0f) {
+			return touchPoint;
+		} else {
+			// the point is invalid, so we will put it in a valid location.
+			CGFloat radius = (self.frame.size.width / 2);
+			CGFloat relX = touchPoint.x - radius;
+			CGFloat relY = radius - touchPoint.y;
+			CGFloat angle = atan2f(relY, relX);
+			if (angle < 0) { angle = (2*M_PI) + angle; }
+			relX = INNER_P(cosf((float)angle) * radius);
+			relY = INNER_P(sinf((float)angle) * radius);
+			while (relX >= radius) { relX -= 1; }
+			while (relX <= -radius) { relX += 1; }
+			while (relY >= radius) { relY -= 1; }
+			while (relY <= -radius) { relY += 1; }
+			return CGPointMake(round(relX + radius), round(radius - relY));
+		}
+	}
+}
+
 -(void)updateSelectionLocation {
 	selectionView.center = selection;
 }
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
 	CGPoint point = [[touches anyObject] locationInView:self];
-	if (![self pointInside:point withEvent:event]) { return; }
+	CGPoint circlePoint = [self validPointForTouch:point];
 	
-	BMPixel pixel = [rep getPixelAtPoint:BMPointFromPoint(point)];
-	if (pixel.alpha > 0.0) {
-		badTouch = NO;
-		selection = point;
-		[delegate colorPickerDidChangeSelection:self];
-		[self updateSelectionLocation];
-	} else {
-		//[super touchesCancelled:touches withEvent:event];
-		badTouch = YES;
-	}
+	BMPixel pixel = [rep getPixelAtPoint:BMPointFromPoint(circlePoint)];
+	NSAssert(pixel.alpha >= 0.0, @"-validPointForTouch: returned invalid point.");
+	
+	selection = circlePoint;
+	[delegate colorPickerDidChangeSelection:self];
+	[self updateSelectionLocation];
 }
 -(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-	if (badTouch) { return; }
 	CGPoint point = [[touches anyObject] locationInView:self];
-	if (![self pointInside:point withEvent:event]) { return; }
-	BMPixel pixel = [rep getPixelAtPoint:BMPointFromPoint(point)];
-	if (pixel.alpha > 0.0) {
-		selection = point;
-		[delegate colorPickerDidChangeSelection:self];
-		[self updateSelectionLocation];
-	}
+	CGPoint circlePoint = [self validPointForTouch:point];
+	
+	BMPixel pixel = [rep getPixelAtPoint:BMPointFromPoint(circlePoint)];
+	NSAssert(pixel.alpha >= 0.0, @"-validPointForTouch: returned invalid point.");
+	
+	selection = circlePoint;
+	[delegate colorPickerDidChangeSelection:self];
+	[self updateSelectionLocation];
 }
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-	if (badTouch) { return; }
 	CGPoint point = [[touches anyObject] locationInView:self];
-	if (![self pointInside:point withEvent:event]) { return; }
-	BMPixel pixel = [rep getPixelAtPoint:BMPointFromPoint(point)];
-	if (pixel.alpha > 0.0) {
-		selection = point;
-		[delegate colorPickerDidChangeSelection:self];
-		[self updateSelectionLocation];
-	}
+	CGPoint circlePoint = [self validPointForTouch:point];
+	
+	BMPixel pixel = [rep getPixelAtPoint:BMPointFromPoint(circlePoint)];
+	NSAssert(pixel.alpha >= 0.0, @"-validPointForTouch: returned invalid point.");
+	
+	selection = circlePoint;
+	[delegate colorPickerDidChangeSelection:self];
+	[self updateSelectionLocation];
 }
 
 
 
 - (void)dealloc
 {
+	[rep release];
+	[selectionView release];
 	[super dealloc];
 }
 

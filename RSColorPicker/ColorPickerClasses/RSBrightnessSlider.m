@@ -45,7 +45,6 @@
 			[myRep setPixel:BMPixelMake(percGray, percGray, percGray, 1.0) atPoint:BMPointMake(x, y)];
 		}
 	}
-	
 	//[self setBackgroundColor:[UIColor colorWithPatternImage:[myRep image]]];
 	[self setMinimumTrackImage:[myRep image] forState:UIControlStateNormal];
 	[self setMaximumTrackImage:[myRep image] forState:UIControlStateNormal];
