@@ -15,8 +15,8 @@
 -(id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        self.minimumValue = 0.0f;
-        self.maximumValue = 1.0f;
+        self.minimumValue = 0.0;
+        self.maximumValue = 1.0;
         self.continuous = YES;
         
         self.enabled = YES;
@@ -42,7 +42,7 @@
     for (int x = 0; x < myRep.bitmapSize.x; x++) {
         CGFloat percGray = (CGFloat)x / (CGFloat)myRep.bitmapSize.x;
         for (int y = 0; y < myRep.bitmapSize.y; y++) {
-            [myRep setPixel:BMPixelMake(percGray, percGray, percGray, 1.0f) atPoint:BMPointMake(x, y)];
+            [myRep setPixel:BMPixelMake(percGray, percGray, percGray, 1.0) atPoint:BMPointMake(x, y)];
         }
     }
     
