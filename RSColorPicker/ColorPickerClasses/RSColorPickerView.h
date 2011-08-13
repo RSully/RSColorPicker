@@ -18,15 +18,15 @@
 @end
 
 @interface RSColorPickerView : UIView {
-    ANImageBitmapRep *rep;
-    CGFloat brightness;
-    BOOL cropToCircle;
-    
-    UIView *selectionView;
-    CGPoint selection;
-    BOOL badTouch;
-    
-    id<RSColorPickerViewDelegate> delegate;
+	ANImageBitmapRep *rep;
+	CGFloat brightness;
+	BOOL cropToCircle;
+	
+	UIView *selectionView;
+	CGPoint selection;
+	BOOL badTouch;
+	
+	id<RSColorPickerViewDelegate> delegate;
 }
 
 -(UIColor*)selectionColor;

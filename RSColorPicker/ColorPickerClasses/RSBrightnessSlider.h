@@ -11,7 +11,7 @@
 @class RSColorPickerView;
 
 @interface RSBrightnessSlider : UISlider {
-    RSColorPickerView *colorPicker;
+	RSColorPickerView *colorPicker;
 }
 
 -(void)setUseCustomSlider:(BOOL)use;

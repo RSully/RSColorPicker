@@ -11,9 +11,9 @@
 #import "RSBrightnessSlider.h"
 
 @interface RSColorPickerAppDelegate : NSObject <UIApplicationDelegate, RSColorPickerViewDelegate> {
-    RSColorPickerView *colorPicker;
-    RSBrightnessSlider *brightnessSlider;
-    UIView *colorPatch;
+	RSColorPickerView *colorPicker;
+	RSBrightnessSlider *brightnessSlider;
+	UIView *colorPatch;
 }
 
 @property (nonatomic, retain) IBOutlet UIWindow *window;
