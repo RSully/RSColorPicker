@@ -20,6 +20,7 @@
 @interface RSColorPickerView : UIView {
     ANImageBitmapRep *rep;
     CGFloat brightness;
+    BOOL cropToCircle;
     
     UIView *selectionView;
     CGPoint selection;
@@ -31,6 +32,7 @@
 -(UIColor*)selectionColor;
 -(CGPoint)selection;
 
+@property (nonatomic, assign) BOOL cropToCircle;
 @property (nonatomic, assign) CGFloat brightness;
 @property (assign) id<RSColorPickerViewDelegate> delegate;
 

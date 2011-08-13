@@ -45,7 +45,7 @@ BMPixel pixelFromHSV(CGFloat H, CGFloat S, CGFloat V) {
 
 @implementation RSColorPickerView
 
-@synthesize brightness, delegate;
+@synthesize brightness, cropToCircle, delegate;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -54,6 +54,8 @@ BMPixel pixelFromHSV(CGFloat H, CGFloat S, CGFloat V) {
     
     self = [super initWithFrame:frame];
     if (self) {
+        cropToCircle = YES;
+        
         selection = CGPointMake(sqr/2, sqr/2);
         selectionView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 18.0f, 18.0f)];
         selectionView.backgroundColor = [UIColor clearColor];
@@ -75,6 +77,11 @@ BMPixel pixelFromHSV(CGFloat H, CGFloat S, CGFloat V) {
     [delegate colorPickerDidChangeSelection:self];
 }
 
+-(void)setCropToCircle:(BOOL)circle {
+    if (circle == cropToCircle) { return; }
+    cropToCircle = circle;
+    [self setNeedsDisplay];
+}
 
 -(void)genBitmap {
     CGFloat radius = (self.frame.size.width / 2);
@@ -88,10 +95,11 @@ BMPixel pixelFromHSV(CGFloat H, CGFloat S, CGFloat V) {
             relY = radius - y;
             
             CGFloat r_distance = sqrtf((relX * relX)+(relY * relY));
-            if (fabsf(r_distance) > radius) {
+            if (fabsf(r_distance) > radius && cropToCircle == YES) {
                 [rep setPixel:BMPixelMake(0.0f, 0.0f, 0.0f, 0.0f) atPoint:BMPointMake(x, y)];
                 continue;
             }
+            r_distance = fminf(r_distance, radius);
             
             CGFloat angle = atan2f(relY, relX);
             if (angle < 0) { angle = (2*M_PI)+angle; }
