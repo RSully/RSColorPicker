@@ -15,17 +15,17 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {    
-    colorPicker = [[RSColorPickerView alloc] initWithFrame:CGRectMake(10, 40, 300, 300)];
+    colorPicker = [[RSColorPickerView alloc] initWithFrame:CGRectMake(10.0, 40.0, 300.0, 300.0)];
     [colorPicker setDelegate:self];
-    [colorPicker setBrightness:1.0f];
+    [colorPicker setBrightness:1.0];
     [colorPicker setCropToCircle:NO]; // Defaults to YES (and you can set BG color)
     //[colorPicker setBackgroundColor:[UIColor whiteColor]];
     
-    brightnessSlider = [[RSBrightnessSlider alloc] initWithFrame:CGRectMake(10, 360, 300, 30)];
+    brightnessSlider = [[RSBrightnessSlider alloc] initWithFrame:CGRectMake(10.0, 360.0, 300.0, 30.0)];
     [brightnessSlider setColorPicker:colorPicker];
     [brightnessSlider setUseCustomSlider:YES]; // Defaults to NO
     
-    colorPatch = [[UIView alloc] initWithFrame:CGRectMake(10, 400, 300, 30)];
+    colorPatch = [[UIView alloc] initWithFrame:CGRectMake(10.0, 400.0, 300.0, 30.0)];
     
     [self.window addSubview:colorPicker];
     [self.window addSubview:brightnessSlider];
@@ -80,6 +80,10 @@
 
 - (void)dealloc
 {
+    [colorPatch release];
+    [brightnessSlider release];
+    [colorPicker release];
+    
     [_window release];
     [super dealloc];
 }
