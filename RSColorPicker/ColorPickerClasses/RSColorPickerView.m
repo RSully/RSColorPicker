@@ -143,7 +143,7 @@ BMPixel pixelFromHSV(CGFloat H, CGFloat S, CGFloat V) {
         [delegate colorPickerDidChangeSelection:self];
         [self updateSelectionLocation];
     } else {
-        [super touchesCancelled:touches withEvent:event];
+        //[super touchesCancelled:touches withEvent:event];
         badTouch = YES;
     }
 }
