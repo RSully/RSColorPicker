@@ -139,29 +139,31 @@ BMPixel pixelFromHSV(CGFloat H, CGFloat S, CGFloat V) {
 
 -(CGPoint)validPointForTouch:(CGPoint)touchPoint {
 	if (!cropToCircle) return touchPoint;
-	else {
-		BMPixel pixel = BMPixelMake(0, 0, 0, 0);
-		if (IS_INSIDE(touchPoint)) {
-			pixel = [rep getPixelAtPoint:BMPointFromPoint(touchPoint)];
-		}
-		if (pixel.alpha > 0.0f) {
-			return touchPoint;
-		} else {
-			// the point is invalid, so we will put it in a valid location.
-			CGFloat radius = (self.frame.size.width / 2);
-			CGFloat relX = touchPoint.x - radius;
-			CGFloat relY = radius - touchPoint.y;
-			CGFloat angle = atan2f(relY, relX);
-			if (angle < 0) { angle = (2*M_PI) + angle; }
-			relX = INNER_P(cosf((float)angle) * radius);
-			relY = INNER_P(sinf((float)angle) * radius);
-			while (relX >= radius) { relX -= 1; }
-			while (relX <= -radius) { relX += 1; }
-			while (relY >= radius) { relY -= 1; }
-			while (relY <= -radius) { relY += 1; }
-			return CGPointMake(round(relX + radius), round(radius - relY));
-		}
+	
+	BMPixel pixel = BMPixelMake(0.0, 0.0, 0.0, 0.0);
+	if (IS_INSIDE(touchPoint)) {
+		pixel = [rep getPixelAtPoint:BMPointFromPoint(touchPoint)];
 	}
+	
+	if (pixel.alpha > 0.0) {
+		return touchPoint;
+	}
+	
+	// the point is invalid, so we will put it in a valid location.
+	CGFloat radius = (self.frame.size.width / 2.0);
+	CGFloat relX = touchPoint.x - radius;
+	CGFloat relY = radius - touchPoint.y;
+	CGFloat angle = atan2(relY, relX);
+	
+	if (angle < 0) { angle = (2.0 * M_PI) + angle; }
+	relX = INNER_P(cos(angle) * radius);
+	relY = INNER_P(sin(angle) * radius);
+	
+	while (relX >= radius) { relX -= 1; }
+	while (relX <= -radius) { relX += 1; }
+	while (relY >= radius) { relY -= 1; }
+	while (relY <= -radius) { relY += 1; }
+	return CGPointMake(round(relX + radius), round(radius - relY));
 }
 
 -(void)updateSelectionLocation {
