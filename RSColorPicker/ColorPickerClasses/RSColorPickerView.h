@@ -24,6 +24,8 @@
 	
 	UIView *selectionView;
 	CGPoint selection;
+	
+	BOOL badTouch;
 	BOOL bitmapNeedsUpdate;
 	
 	id<RSColorPickerViewDelegate> delegate;

@@ -59,6 +59,7 @@ BMPixel pixelFromHSV(CGFloat H, CGFloat S, CGFloat V) {
 	self = [super initWithFrame:frame];
 	if (self) {
 		cropToCircle = YES;
+		badTouch = NO;
 		bitmapNeedsUpdate = YES;
 		
 		selection = CGPointMake(sqr/2, sqr/2);
@@ -78,6 +79,7 @@ BMPixel pixelFromHSV(CGFloat H, CGFloat S, CGFloat V) {
 
 -(void)setBrightness:(CGFloat)bright {
 	brightness = bright;
+	bitmapNeedsUpdate = YES;
 	[self setNeedsDisplay];
 	[delegate colorPickerDidChangeSelection:self];
 }
@@ -170,6 +172,13 @@ BMPixel pixelFromHSV(CGFloat H, CGFloat S, CGFloat V) {
 	CGPoint point = [[touches anyObject] locationInView:self];
 	CGPoint circlePoint = [self validPointForTouch:point];
 	
+	BMPixel checker = [rep getPixelAtPoint:BMPointFromPoint(point)];
+	if (!(checker.alpha > 0.0)) {
+		badTouch = YES;
+		return;
+	}
+	badTouch = NO;
+	
 	BMPixel pixel = [rep getPixelAtPoint:BMPointFromPoint(circlePoint)];
 	NSAssert(pixel.alpha >= 0.0, @"-validPointForTouch: returned invalid point.");
 	
@@ -178,6 +187,8 @@ BMPixel pixelFromHSV(CGFloat H, CGFloat S, CGFloat V) {
 	[self updateSelectionLocation];
 }
 -(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
+	if (badTouch) return;
+	
 	CGPoint point = [[touches anyObject] locationInView:self];
 	CGPoint circlePoint = [self validPointForTouch:point];
 	
@@ -189,6 +200,8 @@ BMPixel pixelFromHSV(CGFloat H, CGFloat S, CGFloat V) {
 	[self updateSelectionLocation];
 }
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+	if (badTouch) return;
+	
 	CGPoint point = [[touches anyObject] locationInView:self];
 	CGPoint circlePoint = [self validPointForTouch:point];
 	
