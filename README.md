@@ -30,6 +30,10 @@ See included example project (application delegate).
 * Foundation.framework
 * ANImageBitmapRep (Included)
 
+## License
+
+You know the drill, use at your own risk, this code is given without support, etc. And for good karma link back to this github.com page, [github.com/rsully/rscolorpicker](https://github.com/RSully/RSColorPicker)
+
 ***
 
 ![Example Color Picker Implementation](https://github.com/RSully/RSColorPicker/raw/master/Example.png)
