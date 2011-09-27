@@ -7,6 +7,7 @@
 //
 
 #import "RSColorPickerView.h"
+#import "BGRSLoupeLayer.h"
 
 // point-related macros
 #define INNER_P(x) (x < 0 ? ceil(x) : floor(x))
@@ -77,6 +78,13 @@ BMPixel pixelFromHSV(CGFloat H, CGFloat S, CGFloat V) {
 	return self;
 }
 
+// For Use with Nib.
+-(id)initWithCoder:(NSCoder *)aDecoder{ 
+	if((self = [super initWithCoder:aDecoder])){
+      
+   }
+}
+
 -(void)setBrightness:(CGFloat)bright {
 	brightness = bright;
 	bitmapNeedsUpdate = YES;
@@ -137,6 +145,61 @@ BMPixel pixelFromHSV(CGFloat H, CGFloat S, CGFloat V) {
 	return selection;
 }
 
+/**
+ * Hue saturation and briteness of the selected point
+ * @Reference: Taken from ars/uicolor-utilities 
+ * http://github.com/ars/uicolor-utilities
+ */
+-(void)selectionToHue:(CGFloat *)pH saturation:(CGFloat *)pS brightness:(CGFloat *)pV{
+	
+	//Get red green and blue from selection
+	BMPixel pixel = [rep getPixelAtPoint:BMPointFromPoint(selection)];
+	CGFloat r = pixel.red, b = pixel.blue, g = pixel.green;
+	
+	CGFloat h,s,v;
+	
+	// From Foley and Van Dam
+	
+	CGFloat max = MAX(r, MAX(g, b));
+	CGFloat min = MIN(r, MIN(g, b));
+	
+	// Brightness
+	v = max;
+	
+	// Saturation
+	s = (max != 0.0f) ? ((max - min) / max) : 0.0f;
+	
+	if (s == 0.0f) {
+		// No saturation, so undefined hue
+		h = 0.0f;
+	} else {
+		// Determine hue
+		CGFloat rc = (max - r) / (max - min);		// Distance of color from red
+		CGFloat gc = (max - g) / (max - min);		// Distance of color from green
+		CGFloat bc = (max - b) / (max - min);		// Distance of color from blue
+		
+		if (r == max) h = bc - gc;					// resulting color between yellow and magenta
+		else if (g == max) h = 2 + rc - bc;			// resulting color between cyan and yellow
+		else /* if (b == max) */ h = 4 + gc - rc;	// resulting color between magenta and cyan
+		
+		h *= 60.0f;									// Convert to degrees
+		if (h < 0.0f) h += 360.0f;					// Make non-negative
+		h /= 360.0f;                        //Convert to decimal
+	}
+	
+	if (pH) *pH = h;
+	if (pS) *pS = s;
+	if (pV) *pV = v;
+}
+
+-(UIColor*)colorAtPoint:(CGPoint)point {
+   if (CGRectContainsPoint(self.bounds,point)){
+      return UIColorFromBMPixel([rep getPixelAtPoint:BMPointFromPoint(point)]);
+   }else{
+      return self.backgroundColor;
+   }
+}
+
 -(CGPoint)validPointForTouch:(CGPoint)touchPoint {
 	if (!cropToCircle) return touchPoint;
 	
@@ -167,10 +230,20 @@ BMPixel pixelFromHSV(CGFloat H, CGFloat S, CGFloat V) {
 }
 
 -(void)updateSelectionLocation {
-	selectionView.center = selection;
+   selectionView.center = selection;
+
+   [CATransaction setDisableActions:YES];
+   loupeLayer.position = selection;
+   [loupeLayer setNeedsDisplay];
 }
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+   
+   //Lazily load loupeLayer
+   if (!loupeLayer){
+      loupeLayer = [[BGRSLoupeLayer layer] retain];
+   }
+   
 	CGPoint point = [[touches anyObject] locationInView:self];
 	CGPoint circlePoint = [self validPointForTouch:point];
 	
@@ -186,7 +259,9 @@ BMPixel pixelFromHSV(CGFloat H, CGFloat S, CGFloat V) {
 	
 	selection = circlePoint;
 	[delegate colorPickerDidChangeSelection:self];
-	[self updateSelectionLocation];
+   [loupeLayer appearInColorPicker:self];
+	
+   [self updateSelectionLocation];
 }
 -(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
 	if (badTouch) return;
@@ -213,6 +288,7 @@ BMPixel pixelFromHSV(CGFloat H, CGFloat S, CGFloat V) {
 	selection = circlePoint;
 	[delegate colorPickerDidChangeSelection:self];
 	[self updateSelectionLocation];
+   [loupeLayer disapear];
 }
 
 
@@ -221,6 +297,9 @@ BMPixel pixelFromHSV(CGFloat H, CGFloat S, CGFloat V) {
 {
 	[rep release];
 	[selectionView release];
+   [loupeLayer release];
+   loupeLayer = nil;
+   
 	[super dealloc];
 }
 
