@@ -78,12 +78,6 @@ BMPixel pixelFromHSV(CGFloat H, CGFloat S, CGFloat V) {
 	return self;
 }
 
-// For Use with Nib.
--(id)initWithCoder:(NSCoder *)aDecoder{ 
-	if((self = [super initWithCoder:aDecoder])){
-      
-   }
-}
 
 -(void)setBrightness:(CGFloat)bright {
 	brightness = bright;
