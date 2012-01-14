@@ -93,15 +93,16 @@ BMPixel pixelFromHSV(CGFloat H, CGFloat S, CGFloat V) {
 }
 
 -(void)genBitmap {
-	if (!bitmapNeedsUpdate) { return; }
-	CGFloat radius = (self.frame.size.width / 2.0);
+	if (!bitmapNeedsUpdate) return;
+    
+	CGFloat radius = (rep.bitmapSize.x / 2.0);
 	CGFloat relX = 0.0;
 	CGFloat relY = 0.0;
 	
-	for (int x = 0; x < self.frame.size.width; x++) {
+	for (int x = 0; x < rep.bitmapSize.x; x++) {
 		relX = x - radius;
 		
-		for (int y = 0; y < self.frame.size.height; y++) {
+		for (int y = 0; y < rep.bitmapSize.y; y++) {
 			relY = radius - y;
 			
 			CGFloat r_distance = sqrt((relX * relX)+(relY * relY));
@@ -153,7 +154,6 @@ BMPixel pixelFromHSV(CGFloat H, CGFloat S, CGFloat V) {
 	CGFloat h,s,v;
 	
 	// From Foley and Van Dam
-	
 	CGFloat max = MAX(r, MAX(g, b));
 	CGFloat min = MIN(r, MIN(g, b));
 	
@@ -178,7 +178,7 @@ BMPixel pixelFromHSV(CGFloat H, CGFloat S, CGFloat V) {
 		
 		h *= 60.0f;									// Convert to degrees
 		if (h < 0.0f) h += 360.0f;					// Make non-negative
-		h /= 360.0f;                        //Convert to decimal
+		h /= 360.0f;                                // Convert to decimal
 	}
 	
 	if (pH) *pH = h;
@@ -187,15 +187,21 @@ BMPixel pixelFromHSV(CGFloat H, CGFloat S, CGFloat V) {
 }
 
 -(UIColor*)colorAtPoint:(CGPoint)point {
-   if (CGRectContainsPoint(self.bounds,point)){
-      return UIColorFromBMPixel([rep getPixelAtPoint:BMPointFromPoint(point)]);
-   }else{
-      return self.backgroundColor;
-   }
+    if (IS_INSIDE(point)){
+        return UIColorFromBMPixel([rep getPixelAtPoint:BMPointFromPoint(point)]);
+    }
+    return self.backgroundColor;
 }
 
 -(CGPoint)validPointForTouch:(CGPoint)touchPoint {
-	if (!cropToCircle) return touchPoint;
+	if (!cropToCircle) {
+		//Constrain point to inside of bounds
+		touchPoint.x = MIN(CGRectGetMaxX(self.bounds)-1, touchPoint.x);
+		touchPoint.x = MAX(CGRectGetMinX(self.bounds),   touchPoint.x);
+		touchPoint.y = MIN(CGRectGetMaxX(self.bounds)-1, touchPoint.y);
+		touchPoint.y = MAX(CGRectGetMinX(self.bounds),   touchPoint.y);
+		return touchPoint;
+	}
 	
 	BMPixel pixel = BMPixelMake(0.0, 0.0, 0.0, 0.0);
 	if (IS_INSIDE(touchPoint)) {
@@ -216,12 +222,13 @@ BMPixel pixelFromHSV(CGFloat H, CGFloat S, CGFloat V) {
 	relX = INNER_P(cos(angle) * radius);
 	relY = INNER_P(sin(angle) * radius);
 	
-	while (relX >= radius) { relX -= 1; }
+	while (relX >= radius)  { relX -= 1; }
 	while (relX <= -radius) { relX += 1; }
-	while (relY >= radius) { relY -= 1; }
+	while (relY >= radius)  { relY -= 1; }
 	while (relY <= -radius) { relY += 1; }
 	return CGPointMake(round(relX + radius), round(radius - relY));
 }
+
 
 -(void)updateSelectionLocation {
    selectionView.center = selection;
@@ -234,10 +241,10 @@ BMPixel pixelFromHSV(CGFloat H, CGFloat S, CGFloat V) {
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
    
    //Lazily load loupeLayer
-   if (!loupeLayer){
-      loupeLayer = [[BGRSLoupeLayer layer] retain];
-   }
-   
+    if (!loupeLayer){
+        loupeLayer = [[BGRSLoupeLayer layer] retain];
+    }
+    
 	CGPoint point = [[touches anyObject] locationInView:self];
 	CGPoint circlePoint = [self validPointForTouch:point];
 	
@@ -253,9 +260,9 @@ BMPixel pixelFromHSV(CGFloat H, CGFloat S, CGFloat V) {
 	
 	selection = circlePoint;
 	[delegate colorPickerDidChangeSelection:self];
-   [loupeLayer appearInColorPicker:self];
+    [loupeLayer appearInColorPicker:self];
 	
-   [self updateSelectionLocation];
+    [self updateSelectionLocation];
 }
 -(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
 	if (badTouch) return;
@@ -281,20 +288,20 @@ BMPixel pixelFromHSV(CGFloat H, CGFloat S, CGFloat V) {
 	
 	selection = circlePoint;
 	[delegate colorPickerDidChangeSelection:self];
-	[self updateSelectionLocation];
-   [loupeLayer disapear];
+    [self updateSelectionLocation];
+    [loupeLayer disapear];
 }
 
 
 
 - (void)dealloc
 {
-	[rep release];
-	[selectionView release];
-   [loupeLayer release];
-   loupeLayer = nil;
-   
-	[super dealloc];
+    [rep release];
+    [selectionView release];
+    [loupeLayer release];
+    loupeLayer = nil;
+    
+    [super dealloc];
 }
 
 @end

@@ -23,7 +23,7 @@
 	BOOL cropToCircle;
 	
 	UIView *selectionView;
-   BGRSLoupeLayer* loupeLayer;
+    BGRSLoupeLayer* loupeLayer;
 	CGPoint selection;
 	
 	BOOL badTouch;

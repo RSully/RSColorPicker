@@ -34,8 +34,8 @@
 
 @interface BGRSLoupeLayer () //Private Methods
 - (void)drawGlintInContext:(CGContextRef)ctx;
-
 @end
+
 
 @implementation BGRSLoupeLayer
 
@@ -72,7 +72,7 @@ const int NUM_PIXELS = 5, NUM_SKIP = 15;
    //Draw Shadow 
    CGContextSaveGState(ctx);     //Save before shadow
    
-	CGSize shadowOffset = CGSizeMake(0,SHADOW_SIZE/2);
+   CGSize shadowOffset = CGSizeMake(0,SHADOW_SIZE/2);
    CGContextSetShadowWithColor(ctx, shadowOffset, SHADOW_SIZE/2, [UIColor blackColor].CGColor);
    CGContextAddEllipseInRect(ctx, CGRectMake(-LOUPE_SIZE/2, -LOUPE_SIZE/2, LOUPE_SIZE, LOUPE_SIZE));
 
@@ -90,7 +90,7 @@ const int NUM_PIXELS = 5, NUM_SKIP = 15;
    CGContextSaveGState(ctx);     //Save context for cliping
 
    CGContextAddPath(ctx, circlePath);  //Clip gird drawing to inside of loupe
-	CGContextClip (ctx);
+   CGContextClip (ctx);
    
    //Draw Colorfull grid
    [self drawGridInContext:ctx];
@@ -100,13 +100,13 @@ const int NUM_PIXELS = 5, NUM_SKIP = 15;
 
    //Stroke Rim of Loupe
    CGContextSetLineWidth(ctx, rimThickness);
-	CGContextSetStrokeColorWithColor(ctx, [UIColor blackColor].CGColor);
+   CGContextSetStrokeColorWithColor(ctx, [UIColor blackColor].CGColor);
    CGContextAddPath(ctx, circlePath);
    CGContextStrokePath(ctx);
    
    //Draw center of rim loupe
    CGContextSetLineWidth(ctx, rimThickness-1);
-	CGContextSetStrokeColorWithColor(ctx, [UIColor whiteColor].CGColor);
+   CGContextSetStrokeColorWithColor(ctx, [UIColor whiteColor].CGColor);
    CGContextAddPath(ctx, circlePath);
    CGContextStrokePath(ctx);
    
