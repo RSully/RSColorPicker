@@ -6,8 +6,16 @@
 //  Copyright 2011 __MyCompanyName__. All rights reserved.
 //
 
+
+#if __has_feature(objc_arc) != 1
+
 #import <Foundation/Foundation.h>
+
+#if TARGET_OS_IPHONE
 #import <CoreGraphics/CoreGraphics.h>
+#elif TARGET_OS_MAC
+#import <Quartz/Quartz.h>
+#endif
 
 
 @interface CGImageContainer : NSObject {
@@ -39,3 +47,9 @@
 + (CGImageContainer *)imageContainerWithImage:(CGImageRef)anImage;
 
 @end
+
+#else
+
+id CGImageReturnAutoreleased (CGImageRef original) __attribute__((ns_returns_autoreleased));
+
+#endif

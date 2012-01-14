@@ -30,8 +30,8 @@
     size_t pixelsWide = round(size.width);
     size_t pixelsHigh = round(size.height);
 	
-    bitmapBytesPerRow = (pixelsWide * 4);
-    bitmapByteCount = (bitmapBytesPerRow * pixelsHigh);
+    bitmapBytesPerRow = (int)(pixelsWide * 4);
+    bitmapByteCount = (int)(bitmapBytesPerRow * pixelsHigh);
 	
     // Use the generic RGB color space.
     colorSpace = CGColorSpaceCreateDeviceRGB();
@@ -82,8 +82,8 @@
     size_t pixelsWide = CGImageGetWidth(image);
     size_t pixelsHigh = CGImageGetHeight(image);
 	
-    bitmapBytesPerRow = (pixelsWide * 4);
-    bitmapByteCount = (bitmapBytesPerRow * pixelsHigh);
+    bitmapBytesPerRow = (int)(pixelsWide * 4);
+    bitmapByteCount = (int)(bitmapBytesPerRow * pixelsHigh);
 	
     // Use the generic RGB color space.
     colorSpace = CGColorSpaceCreateDeviceRGB();
@@ -128,8 +128,10 @@
     return context;	
 }
 
+#if __has_feature(objc_arc) != 1
 - (void)dealloc {
     [super dealloc];
 }
+#endif
 
 @end

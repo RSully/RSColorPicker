@@ -6,8 +6,10 @@
 //  Copyright 2011 __MyCompanyName__. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-#import "RotatableBitmapRep.h"
+#import "OSCommonImage.h"
+#import "BitmapScaleManipulator.h"
+#import "BitmapCropManipulator.h"
+#import "BitmapRotationManipulator.h"
 #import "UIImage+ANImageBitmapRep.h"
 
 typedef struct {
@@ -18,14 +20,27 @@ typedef struct {
 } BMPixel;
 
 BMPixel BMPixelMake (CGFloat red, CGFloat green, CGFloat blue, CGFloat alpha);
+#if TARGET_OS_IPHONE
 UIColor * UIColorFromBMPixel (BMPixel pixel);
+#elif TARGET_OS_MAC
+NSColor * NSColorFromBMPixel (BMPixel pixel);
+#endif
 
-@interface ANImageBitmapRep : RotatableBitmapRep {
-    
+@interface ANImageBitmapRep : BitmapContextRep <BitmapScaleManipulator, BitmapCropManipulator, BitmapRotationManipulator, NSCopying> {
+#if __has_feature(objc_arc) == 1
+	__strong NSArray * baseClasses;
+#else
+	NSArray * baseClasses;
+#endif
 }
 
+#if __has_feature(objc_arc) == 1
++ (ANImageBitmapRep *)imageBitmapRepWithCGSize:(CGSize)avgSize __attribute__((ns_returns_autoreleased));
++ (ANImageBitmapRep *)imageBitmapRepWithImage:(ANImageObj *)anImage __attribute__((ns_returns_autoreleased));
+#else
 + (ANImageBitmapRep *)imageBitmapRepWithCGSize:(CGSize)avgSize;
-+ (ANImageBitmapRep *)imageBitmapRepWithImage:(UIImage *)anImage;
++ (ANImageBitmapRep *)imageBitmapRepWithImage:(ANImageObj *)anImage;
+#endif
 
 /**
  * Reverses the RGB values of all pixels in the bitmap.  This causes
@@ -68,8 +83,12 @@ UIColor * UIColorFromBMPixel (BMPixel pixel);
 - (void)setPixel:(BMPixel)pixel atPoint:(BMPoint)point;
 
 /**
- * Creates a new UIImage from the bitmap context.
+ * Creates a new UIImage or NSImage from the bitmap context.
  */
-- (UIImage *)image;
+#if __has_feature(objc_arc) == 1
+- (ANImageObj *)image __attribute__((ns_returns_autoreleased));
+#else
+- (ANImageObj *)image;
+#endif
 
 @end

@@ -7,10 +7,18 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "BitmapContextRep.h"
+#import "BitmapContextManipulator.h"
 
+@protocol BitmapScaleManipulator <NSObject>
 
-@interface ScalableBitmapRep : BitmapContextRep {
+@optional
+- (void)setSize:(BMPoint)aSize;
+- (void)setSizeFittingFrame:(BMPoint)aSize;
+- (void)setSizeFillingFrame:(BMPoint)aSize;
+
+@end
+
+@interface BitmapScaleManipulator : BitmapContextManipulator {
     
 }
 

@@ -7,10 +7,17 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "CroppableBitmapRep.h"
+#import "BitmapContextManipulator.h"
 
+@protocol BitmapRotationManipulator
 
-@interface RotatableBitmapRep : CroppableBitmapRep {
+@optional
+- (void)rotate:(CGFloat)degrees;
+- (CGImageRef)imageByRotating:(CGFloat)degrees;
+
+@end
+
+@interface BitmapRotationManipulator : BitmapContextManipulator {
     
 }
 

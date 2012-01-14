@@ -6,7 +6,7 @@
 //  Copyright 2011 __MyCompanyName__. All rights reserved.
 //
 
-#import "RotatableBitmapRep.h"
+#import "BitmapRotationManipulator.h"
 
 #define DEGTORAD(x) (x * (M_PI / 180.0f))
 
@@ -17,12 +17,12 @@ static CGPoint locationForAngle (CGFloat angle, CGFloat hypotenuse) {
 	return p;
 }
 
-@implementation RotatableBitmapRep
+@implementation BitmapRotationManipulator
 
 - (void)rotate:(CGFloat)degrees {
 	if (degrees == 0) return;
 	
-	CGSize size = CGSizeMake([self bitmapSize].x, [self bitmapSize].y);
+	CGSize size = CGSizeMake([bitmapContext bitmapSize].x, [bitmapContext bitmapSize].y);
 	CGSize newSize = CGSizeZero;
 	
 	/* Since the corners go off to the sides, we have to use the existing hypotenuse to calculate the new size
@@ -82,16 +82,16 @@ static CGPoint locationForAngle (CGFloat angle, CGFloat hypotenuse) {
 	drawRect.origin.x = (CGFloat)round((newSize.width / 2) - (size.width / 2));
 	drawRect.origin.y = (CGFloat)round((newSize.height / 2) - (size.height / 2));
 	
-	CGContextDrawImage(newContext, drawRect, [self CGImage]);
+	CGContextDrawImage(newContext, drawRect, [bitmapContext CGImage]);
 	CGContextRestoreGState(newContext);
-	[self setContext:newContext];
+	[bitmapContext setContext:newContext];
 	CGContextRelease(newContext);
 }
 
 - (CGImageRef)imageByRotating:(CGFloat)degrees {
-	if (degrees == 0) return [self CGImage];
+	if (degrees == 0) return [bitmapContext CGImage];
 	
-	CGSize size = CGSizeMake([self bitmapSize].x, [self bitmapSize].y);
+	CGSize size = CGSizeMake([bitmapContext bitmapSize].x, [bitmapContext bitmapSize].y);
 	CGSize newSize = CGSizeZero;
 	
 	/* Since the corners go off to the sides, we have to use the existing hypotenuse to calculate the new size
@@ -151,15 +151,21 @@ static CGPoint locationForAngle (CGFloat angle, CGFloat hypotenuse) {
 	drawRect.origin.x = (CGFloat)round((newSize.width / 2) - (size.width / 2));
 	drawRect.origin.y = (CGFloat)round((newSize.height / 2) - (size.height / 2));
 	
-	CGContextDrawImage(newContext, drawRect, [self CGImage]);
+	CGContextDrawImage(newContext, drawRect, [bitmapContext CGImage]);
 	CGContextRestoreGState(newContext);
 	CGImageRef image = CGBitmapContextCreateImage(newContext);
 	void * buff = CGBitmapContextGetData(newContext);
 	CGContextRelease(newContext);
 	free(buff);
+#if __has_feature(objc_arc) == 1
+	id retainedImage = CGImageReturnAutoreleased(image);
+	CGImageRelease(image);
+	return (__bridge CGImageRef)retainedImage;
+#else
 	CGImageContainer * container = [CGImageContainer imageContainerWithImage:image];
 	CGImageRelease(image);
 	return [container image];
+#endif
 }
 
 @end

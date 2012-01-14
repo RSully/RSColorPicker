@@ -25,9 +25,9 @@ BMPoint BMPointFromPoint (CGPoint point) {
 
 @implementation BitmapContextRep
 
-- (id)initWithImage:(UIImage *)image {
+- (id)initWithImage:(ANImageObj *)image {
 	if ((self = [super init])) {
-		context = [CGContextCreator newARGBBitmapContextWithImage:[image CGImage]];
+		context = [CGContextCreator newARGBBitmapContextWithImage:CGImageFromANImage(image)];
 		bitmapData = CGBitmapContextGetData(context);
 		lastImage = CGBitmapContextCreateImage(context);
 	}
@@ -36,6 +36,14 @@ BMPoint BMPointFromPoint (CGPoint point) {
 
 - (id)initWithSize:(BMPoint)sizePoint {
 	if ((self = [super init])) {
+		if (sizePoint.x == 0 || sizePoint.y == 0) {
+#if __has_feature(objc_arc)
+			return nil;
+#else
+			[super dealloc];
+			return nil;
+#endif
+		}
 		context = [CGContextCreator newARGBBitmapContextWithSize:CGSizeMake(sizePoint.x, sizePoint.y)];
 		bitmapData = CGBitmapContextGetData(context);
 		lastImage = CGBitmapContextCreateImage(context);
@@ -72,8 +80,8 @@ BMPoint BMPointFromPoint (CGPoint point) {
 - (void)getRawPixel:(UInt8 *)rgba atPoint:(BMPoint)point {
 	size_t width = CGBitmapContextGetWidth(context);
 	size_t height = CGBitmapContextGetHeight(context);
-	NSAssert(point.x >= 0 || point.x < width, @"Point must be within bitmap.");
-	NSAssert(point.y >= 0 || point.y < height, @"Point must be within bitmap.");
+	NSAssert(point.x >= 0 && point.x < width, @"Point must be within bitmap.");
+	NSAssert(point.y >= 0 && point.y < height, @"Point must be within bitmap.");
 	unsigned char * argbData = &bitmapData[((point.y * width) + point.x) * 4];
 	rgba[0] = argbData[1]; // red
 	rgba[1] = argbData[2]; // green
@@ -85,8 +93,8 @@ BMPoint BMPointFromPoint (CGPoint point) {
 - (void)setRawPixel:(const UInt8 *)rgba atPoint:(BMPoint)point {
 	size_t width = CGBitmapContextGetWidth(context);
 	size_t height = CGBitmapContextGetHeight(context);
-	NSAssert(point.x >= 0 || point.x < width, @"Point must be within bitmap.");
-	NSAssert(point.y >= 0 || point.y < height, @"Point must be within bitmap.");
+	NSAssert(point.x >= 0 && point.x < width, @"Point must be within bitmap.");
+	NSAssert(point.y >= 0 && point.y < height, @"Point must be within bitmap.");
 	unsigned char * argbData = &bitmapData[((point.y * width) + point.x) * 4];
 	argbData[1] = rgba[0]; // red
 	argbData[2] = rgba[1]; // green
@@ -101,7 +109,11 @@ BMPoint BMPointFromPoint (CGPoint point) {
 		lastImage = CGBitmapContextCreateImage(context);
 		needsUpdate = NO;
 	}
+#if __has_feature(objc_arc) == 1
+	return (__bridge CGImageRef)CGImageReturnAutoreleased(lastImage);
+#else
 	return (CGImageRef)[[CGImageContainer imageContainerWithImage:lastImage] image];
+#endif
 }
 
 - (void)dealloc {
@@ -110,7 +122,9 @@ BMPoint BMPointFromPoint (CGPoint point) {
 	if (lastImage != NULL) {
 		CGImageRelease(lastImage);
 	}
+#if __has_feature(objc_arc) != 1
 	[super dealloc];
+#endif
 }
 
 @end
