@@ -74,6 +74,7 @@ void HSVFromPixel(BMPixel pixel, CGFloat* h, CGFloat* s, CGFloat* v) {
 
 
 @interface RSColorPickerView (Private)
+-(void)initRoutine;
 -(void)updateSelectionLocation;
 -(CGPoint)validPointForTouch:(CGPoint)touchPoint;
 @end
@@ -83,32 +84,45 @@ void HSVFromPixel(BMPixel pixel, CGFloat* h, CGFloat* s, CGFloat* v) {
 
 @synthesize brightness, cropToCircle, delegate;
 
-- (id)initWithFrame:(CGRect)frame
-{
+- (id)initWithFrame:(CGRect)frame {
 	CGFloat sqr = fmin(frame.size.height, frame.size.width);
 	frame.size = CGSizeMake(sqr, sqr);
 	
 	self = [super initWithFrame:frame];
 	if (self) {
-		cropToCircle = YES;
-		badTouch = NO;
-		bitmapNeedsUpdate = YES;
-		
-		selection = CGPointMake(sqr/2, sqr/2);
-		selectionView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 18.0, 18.0)];
-		selectionView.backgroundColor = [UIColor clearColor];
-		selectionView.layer.borderWidth = 2.0;
-		selectionView.layer.borderColor = [UIColor colorWithWhite:0.1 alpha:1.0].CGColor;
-		selectionView.layer.cornerRadius = 9.0;
-		[self updateSelectionLocation];
-		[self addSubview:selectionView];
-		
-		self.brightness = 1.0;
-		rep = [[ANImageBitmapRep alloc] initWithSize:BMPointFromSize(frame.size)];
+		[self initRoutine];
 	}
 	return self;
 }
 
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        [self initRoutine];
+    }
+    return self;
+}
+
+-(void)initRoutine {
+    CGRect frame = self.frame;
+    CGFloat sqr = fmin(frame.size.height, frame.size.width);
+    
+    cropToCircle = YES;
+    badTouch = NO;
+    bitmapNeedsUpdate = YES;
+    
+    selection = CGPointMake(sqr/2, sqr/2);
+    selectionView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 18.0, 18.0)];
+    selectionView.backgroundColor = [UIColor clearColor];
+    selectionView.layer.borderWidth = 2.0;
+    selectionView.layer.borderColor = [UIColor colorWithWhite:0.1 alpha:1.0].CGColor;
+    selectionView.layer.cornerRadius = 9.0;
+    [self updateSelectionLocation];
+    [self addSubview:selectionView];
+    
+    self.brightness = 1.0;
+    rep = [[ANImageBitmapRep alloc] initWithSize:BMPointFromSize(frame.size)];
+}
 
 -(void)setBrightness:(CGFloat)bright {
 	brightness = bright;
