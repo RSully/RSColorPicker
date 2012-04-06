@@ -34,6 +34,7 @@
 
 -(UIColor*)selectionColor;
 -(CGPoint)selection;
+-(void)setSelectionColor:(UIColor *)selectionColor;
 
 @property (nonatomic, assign) BOOL cropToCircle;
 @property (nonatomic, assign) CGFloat brightness;

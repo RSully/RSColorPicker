@@ -12,6 +12,8 @@
 // point-related macros
 #define INNER_P(x) (x < 0 ? ceil(x) : floor(x))
 #define IS_INSIDE(p) (round(p.x) >= 0 && round(p.x) < self.frame.size.width && round(p.y) >= 0 && round(p.y) < self.frame.size.height)
+#define MY_MIN3(x,y,z) MIN(x,MIN(y,z))
+#define MY_MAX3(x,y,z) MAX(x,MAX(y,z))
 
 // Concept-code from http://www.easyrgb.com/index.php?X=MATH&H=21#text21
 BMPixel pixelFromHSV(CGFloat H, CGFloat S, CGFloat V) {
@@ -39,6 +41,35 @@ BMPixel pixelFromHSV(CGFloat H, CGFloat S, CGFloat V) {
 		return BMPixelMake(var_3, var_1, V, 1.0);
 	}
 	return BMPixelMake(V, var_1, var_2, 1.0);
+}
+
+void HSVFromPixel(BMPixel pixel, CGFloat* h, CGFloat* s, CGFloat* v) {
+    CGFloat rgb_min, rgb_max;
+    CGFloat hsv_hue, hsv_val, hsv_sat;
+    rgb_min = MY_MIN3(pixel.red, pixel.green, pixel.blue);
+    rgb_max = MY_MAX3(pixel.red, pixel.green, pixel.blue);
+    
+    if (rgb_max == rgb_min) {
+        hsv_hue = 0;
+    } else if (rgb_max == pixel.red) {
+        hsv_hue = 60.0f * ((pixel.green - pixel.blue) / (rgb_max - rgb_min));
+        hsv_hue = fmodf(hsv_hue, 360.0f);
+    } else if (rgb_max == pixel.green) {
+        hsv_hue = 60.0f * ((pixel.blue - pixel.red) / (rgb_max - rgb_min)) + 120.0f;
+    } else if (rgb_max == pixel.blue) {
+        hsv_hue = 60.0f * ((pixel.red - pixel.green) / (rgb_max - rgb_min)) + 240.0f;
+    }
+    
+    hsv_val = rgb_max;
+    if (rgb_max == 0) {
+        hsv_sat = 0;
+    } else {
+        hsv_sat = 1.0 - (rgb_min / rgb_max);
+    }
+    
+    *h = hsv_hue;
+    *s = hsv_sat;
+    *v = hsv_val;
 }
 
 
@@ -134,10 +165,31 @@ BMPixel pixelFromHSV(CGFloat H, CGFloat S, CGFloat V) {
 
 
 -(UIColor*)selectionColor {
+    [self genBitmap];
 	return UIColorFromBMPixel([rep getPixelAtPoint:BMPointFromPoint(selection)]);
 }
 -(CGPoint)selection {
 	return selection;
+}
+-(void)setSelectionColor:(UIColor *)selectionColor {
+    const float* comps = CGColorGetComponents(selectionColor.CGColor);
+    BMPixel pixel = BMPixelMake(comps[0], comps[1], comps[2], 1);
+    
+    // convert to HSV
+    CGFloat h, s, v;
+    HSVFromPixel(pixel, &h, &s, &v);
+    
+    // extract the original point
+    CGFloat radius = (rep.bitmapSize.x / 2.0);
+    CGFloat angle = h * (M_PI / 180);
+    CGFloat centerDistance = s * radius;
+    
+    CGFloat pointX = cos(angle) * centerDistance + radius;
+    CGFloat pointY = radius - sin(angle) * centerDistance;
+    selection = CGPointMake(pointX, pointY);
+    
+    [self updateSelectionLocation];
+    [self setBrightness:v];
 }
 
 /**
