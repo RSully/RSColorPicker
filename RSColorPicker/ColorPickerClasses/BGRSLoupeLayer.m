@@ -90,7 +90,7 @@ const int NUM_PIXELS = 5, NUM_SKIP = 15;
    CGContextSaveGState(ctx);     //Save context for cliping
 
    CGContextAddPath(ctx, circlePath);  //Clip gird drawing to inside of loupe
-   CGContextClip (ctx);
+   CGContextClip(ctx);
    
    //Draw Colorfull grid
    [self drawGridInContext:ctx];
@@ -140,6 +140,7 @@ const int NUM_PIXELS = 5, NUM_SKIP = 15;
          CGContextSetFillColorWithColor(ctx, pixelColor.CGColor);
          CGContextFillPath(ctx);
          
+          CGPathRelease(pixelPath);
          //NSLog(@"CurrentPoint x:%f y:%f",currentPoint.x,currentPoint.y);
          
          currentPoint.x += NUM_SKIP;
