@@ -27,6 +27,11 @@
 	
 	colorPatch = [[UIView alloc] initWithFrame:CGRectMake(10.0, 400.0, 300.0, 30.0)];
 	
+    // example of preloading a color
+    // UIColor * aColor = [UIColor colorWithRed:0.803 green:0.4 blue:0.144 alpha:1];
+    // [colorPicker setSelectionColor:aColor];
+    // [brightnessSlider setValue:[colorPicker brightness]];
+    
 	[self.window addSubview:colorPicker];
 	[self.window addSubview:brightnessSlider];
 	[self.window addSubview:colorPatch];
