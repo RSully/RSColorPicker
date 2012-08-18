@@ -134,6 +134,7 @@ void HSVFromPixel(BMPixel pixel, CGFloat* h, CGFloat* s, CGFloat* v) {
 -(void)setCropToCircle:(BOOL)circle {
 	if (circle == cropToCircle) { return; }
 	cropToCircle = circle;
+    bitmapNeedsUpdate = YES;
 	[self setNeedsDisplay];
 }
 
