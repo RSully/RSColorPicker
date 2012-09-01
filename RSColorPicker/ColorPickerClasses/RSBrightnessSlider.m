@@ -147,16 +147,28 @@ UIImage* RSArrowLoopThumbImage(CGSize size, CGSize loopSize){
 -(id)initWithFrame:(CGRect)frame {
 	self = [super initWithFrame:frame];
 	if (self) {
-		self.minimumValue = 0.0;
-		self.maximumValue = 1.0;
-		self.continuous = YES;
-		
-		self.enabled = YES;
-		self.userInteractionEnabled = YES;
-		
-		[self addTarget:self action:@selector(myValueChanged:) forControlEvents:UIControlEventValueChanged];
+        [self initRoutine];
 	}
 	return self;
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        [self initRoutine];
+    }
+    return self;
+}
+
+-(void)initRoutine {
+    self.minimumValue = 0.0;
+    self.maximumValue = 1.0;
+    self.continuous = YES;
+    
+    self.enabled = YES;
+    self.userInteractionEnabled = YES;
+    
+    [self addTarget:self action:@selector(myValueChanged:) forControlEvents:UIControlEventValueChanged];
 }
 
 -(void)setUseCustomSlider:(BOOL)use {
