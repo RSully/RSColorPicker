@@ -117,7 +117,7 @@ void HSVFromPixel(BMPixel pixel, CGFloat* h, CGFloat* s, CGFloat* v) {
     selectionView.layer.borderWidth = 2.0;
     selectionView.layer.borderColor = [UIColor colorWithWhite:0.1 alpha:1.0].CGColor;
     selectionView.layer.cornerRadius = 9.0;
-    [self updateSelectionLocation];
+    [self updateSelectionLocationDisableActions:NO];
     [self addSubview:selectionView];
     
     self.brightness = 1.0;
@@ -296,11 +296,15 @@ void HSVFromPixel(BMPixel pixel, CGFloat* h, CGFloat* s, CGFloat* v) {
 	return CGPointMake(round(relX + radius), round(radius - relY));
 }
 
-
 -(void)updateSelectionLocation {
-   selectionView.center = selection;
+    [self updateSelectionLocationDisableActions:YES];
+}
 
-   [CATransaction setDisableActions:YES];
+-(void)updateSelectionLocationDisableActions: (BOOL)disable {
+   selectionView.center = selection;
+   if(disable) {
+       [CATransaction setDisableActions:YES];
+   }
    loupeLayer.position = selection;
    [loupeLayer setNeedsDisplay];
 }
