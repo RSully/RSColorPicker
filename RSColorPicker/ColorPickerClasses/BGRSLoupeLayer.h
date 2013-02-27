@@ -36,7 +36,7 @@
 @interface BGRSLoupeLayer : CALayer
 
 @property (nonatomic) CGPoint loupeCenter;
-@property (nonatomic, unsafe_unretained) RSColorPickerView* colorPicker;
+@property (nonatomic, weak) RSColorPickerView* colorPicker;
 
 #pragma mark - Drawing
 - (void)drawGridInContext:(CGContextRef)ctx;

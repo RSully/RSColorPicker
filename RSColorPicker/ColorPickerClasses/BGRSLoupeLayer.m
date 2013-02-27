@@ -224,46 +224,23 @@ const int NUM_PIXELS = 5, NUM_SKIP = 15;
 	if (self.colorPicker != aColorPicker){
 		self.colorPicker = aColorPicker;
 	}
-//	//Add Layer to color picker
-//	[CATransaction setDisableActions:YES];
-//	self.transform = CATransform3DMakeScale(.1f, .1f, 1.0f);
+	//Add Layer to color picker
+	[CATransaction setDisableActions:YES];
 	[self.colorPicker.layer addSublayer:self];
 	
-//	//Animate Arival
-//	CGFloat tPts[3] = {0.0f,0.12f,0.2f};
-//	CGFloat largeSize = 1.4;
-//	
-//	//  Expanison
-//	CABasicAnimation *expand = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
-//	expand.fromValue = [NSNumber numberWithFloat:0.1f];
-//	expand.toValue   = [NSNumber numberWithFloat:largeSize];
-//	expand.duration  = tPts[1]-tPts[0];
-//	expand.beginTime = tPts[0];
-//	expand.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-//	expand.removedOnCompletion = NO;
-//	expand.fillMode = kCAFillModeForwards;
-//	
-//	//  Slight Contraction
-//	CABasicAnimation *contract = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
-//	contract.fromValue = [NSNumber numberWithFloat:largeSize];
-//	contract.toValue   = [NSNumber numberWithFloat:1.0f];
-//	contract.duration  = tPts[2]-tPts[1];
-//	contract.beginTime = tPts[1];
-//	expand.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-//	
-//	//  Create Animation group
-//	CAAnimationGroup* appear = [CAAnimationGroup new];
-//	appear.duration = tPts[2]-tPts[0];
-//	appear.removedOnCompletion = NO;
-//	appear.fillMode = kCAFillModeForwards;
-//	appear.animations = [NSArray arrayWithObjects:expand,contract, nil];
-//	
-//	// Animate
-//	[self addAnimation:appear forKey:@"appear"];
-//	
-//	//Cleanup
-//	
-//	//CAAnimationGroup* expand = [CAAnimationGroup new];
+	//Animate Arival
+	CAKeyframeAnimation *springEffect = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale"];
+	springEffect.values = @[@(0.1), @(1.4), @(0.95), @(1)];
+	springEffect.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+	springEffect.removedOnCompletion = NO;
+	springEffect.duration = 0.3;
+
+	// Animate
+	[self addAnimation:springEffect forKey:@"appear"];
+	
+	//Cleanup
+	
+	//CAAnimationGroup* expand = [CAAnimationGroup new];
 }
 
 /**
@@ -271,24 +248,23 @@ const int NUM_PIXELS = 5, NUM_SKIP = 15;
  */
 static NSString* const kDisapearKey = @"disapear";
 
-- (void)disapear{
+- (void)disapear
+{
+	self.transform = CATransform3DMakeScale(0.01, 0.01, 1);
 	
-//	CABasicAnimation* disapear = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
-//	disapear.fromValue = [NSNumber numberWithFloat:1.0f];
-//	disapear.toValue   = [NSNumber numberWithFloat:0.0f];
-//	disapear.duration  = 0.1f;
-//	disapear.delegate  = self;
-//	disapear.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-//	disapear.removedOnCompletion = NO;
-//	disapear.fillMode = kCAFillModeForwards;
-//	[self addAnimation:disapear forKey:kDisapearKey];
-//
-	[self removeFromSuperlayer];
+	CABasicAnimation* disapear = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
+	disapear.fromValue = @(1);
+	disapear.duration  = 0.1f;
+	disapear.delegate  = self;
+	disapear.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+	disapear.removedOnCompletion = NO;
+	[self addAnimation:disapear forKey:kDisapearKey];
 }
 
 - (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag{
 	if (anim == [self animationForKey:kDisapearKey]){
 		[self removeFromSuperlayer];
+		self.transform = CATransform3DIdentity;
 	}
 }
 

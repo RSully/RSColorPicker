@@ -29,6 +29,7 @@
 		2BD7E14C14C1B94C00BD1096 /* BitmapCropManipulator.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BD7E13F14C1B94C00BD1096 /* BitmapCropManipulator.m */; };
 		2BD7E14D14C1B94C00BD1096 /* BitmapRotationManipulator.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BD7E14114C1B94C00BD1096 /* BitmapRotationManipulator.m */; };
 		2BD7E14E14C1B94C00BD1096 /* BitmapScaleManipulator.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BD7E14314C1B94C00BD1096 /* BitmapScaleManipulator.m */; };
+		930D5A8016DE4D36006C38D4 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 930D5A7F16DE4D36006C38D4 /* Default-568h@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -72,6 +73,7 @@
 		2BD7E14114C1B94C00BD1096 /* BitmapRotationManipulator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BitmapRotationManipulator.m; sourceTree = "<group>"; };
 		2BD7E14214C1B94C00BD1096 /* BitmapScaleManipulator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BitmapScaleManipulator.h; sourceTree = "<group>"; };
 		2BD7E14314C1B94C00BD1096 /* BitmapScaleManipulator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BitmapScaleManipulator.m; sourceTree = "<group>"; };
+		930D5A7F16DE4D36006C38D4 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,6 +94,7 @@
 		1FA35E5013F57B2700A6B347 = {
 			isa = PBXGroup;
 			children = (
+				930D5A7F16DE4D36006C38D4 /* Default-568h@2x.png */,
 				1FA35E6513F57B2700A6B347 /* RSColorPicker */,
 				1FA35E5E13F57B2700A6B347 /* Frameworks */,
 				1FA35E5C13F57B2700A6B347 /* Products */,
@@ -260,6 +263,7 @@
 			files = (
 				1FA35E6A13F57B2800A6B347 /* InfoPlist.strings in Resources */,
 				1FA35E7313F57B2800A6B347 /* MainWindow.xib in Resources */,
+				930D5A8016DE4D36006C38D4 /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -354,6 +358,7 @@
 				GCC_PREFIX_HEADER = "RSColorPicker/RSColorPicker-Prefix.pch";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "RSColorPicker/RSColorPicker-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -369,6 +374,7 @@
 				GCC_PREFIX_HEADER = "RSColorPicker/RSColorPicker-Prefix.pch";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "RSColorPicker/RSColorPicker-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALIDATE_PRODUCT = YES;
 				WRAPPER_EXTENSION = app;
