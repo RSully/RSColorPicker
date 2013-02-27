@@ -209,7 +209,7 @@ void HSVFromPixel(BMPixel pixel, CGFloat* h, CGFloat* s, CGFloat* v) {
 
 /**
  * Hue saturation and briteness of the selected point
- * @Reference: Taken from ars/uicolor-utilities 
+ * @Reference: Taken from ars/uicolor-utilities
  * http://github.com/ars/uicolor-utilities
  */
 -(void)selectionToHue:(CGFloat *)pH saturation:(CGFloat *)pS brightness:(CGFloat *)pV{
@@ -301,17 +301,22 @@ void HSVFromPixel(BMPixel pixel, CGFloat* h, CGFloat* s, CGFloat* v) {
 }
 
 -(void)updateSelectionLocationDisableActions: (BOOL)disable {
-   selectionView.center = selection;
-   if(disable) {
-       [CATransaction setDisableActions:YES];
-   }
-   loupeLayer.position = selection;
-   [loupeLayer setNeedsDisplay];
+	selectionView.center = selection;
+	if(disable) {
+		[CATransaction setDisableActions:YES];
+	}
+	loupeLayer.position = selection;
+	//make loupeLayer sharp on screen
+	CGRect loupeFrame = loupeLayer.frame;
+	loupeFrame.origin = CGPointMake(floor(loupeFrame.origin.x), floor(loupeFrame.origin.y));
+	loupeLayer.frame = loupeFrame;
+	
+	[loupeLayer setNeedsDisplay];
 }
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-   
-   //Lazily load loupeLayer
+	
+	//Lazily load loupeLayer
     if (!loupeLayer){
         loupeLayer = [BGRSLoupeLayer layer];
     }
