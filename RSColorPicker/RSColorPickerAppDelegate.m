@@ -7,6 +7,7 @@
 //
 
 #import "RSColorPickerAppDelegate.h"
+#import "RSViewController.h"
 
 @implementation RSColorPickerAppDelegate
 
@@ -15,33 +16,13 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-	colorPicker = [[RSColorPickerView alloc] initWithFrame:CGRectMake(10.0, 40.0, 300.0, 300.0)];
-	[colorPicker setDelegate:self];
-	[colorPicker setBrightness:1.0];
-	[colorPicker setCropToCircle:NO]; // Defaults to YES (and you can set BG color)
-	[colorPicker setBackgroundColor:[UIColor clearColor]];
-	
-	brightnessSlider = [[RSBrightnessSlider alloc] initWithFrame:CGRectMake(10.0, 360.0, 300.0, 30.0)];
-	[brightnessSlider setColorPicker:colorPicker];
-	[brightnessSlider setUseCustomSlider:YES]; // Defaults to NO
-	
-	colorPatch = [[UIView alloc] initWithFrame:CGRectMake(10.0, 400.0, 300.0, 30.0)];
-	
-    // example of preloading a color
-    // UIColor * aColor = [UIColor colorWithRed:0.803 green:0.4 blue:0.144 alpha:1];
-    // [colorPicker setSelectionColor:aColor];
-    // [brightnessSlider setValue:[colorPicker brightness]];
-    
-	[self.window addSubview:colorPicker];
-	[self.window addSubview:brightnessSlider];
-	[self.window addSubview:colorPatch];
-	
+	RSViewController *controller = [[RSViewController alloc] initWithNibName:nil bundle:nil];
+
+	self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+	self.window.rootViewController = controller;
+
 	[self.window makeKeyAndVisible];
 	return YES;
-}
-
--(void)colorPickerDidChangeSelection:(RSColorPickerView *)cp {
-	colorPatch.backgroundColor = [cp selectionColor];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
