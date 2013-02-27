@@ -51,6 +51,7 @@ const int NUM_PIXELS = 5, NUM_SKIP = 15;
 		CGFloat size = LOUPE_SIZE+2*SHADOW_SIZE;
 		self.bounds = CGRectMake(-size/2,-size/2,size,size);
 		self.anchorPoint = CGPointMake(0.5, LOUPE_SIZE/(LOUPE_SIZE+SHADOW_SIZE));
+		self.contentsScale = [UIScreen mainScreen].scale;
 	}
 	return self;
 }
