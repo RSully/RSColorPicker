@@ -313,7 +313,7 @@ void HSVFromPixel(BMPixel pixel, CGFloat* h, CGFloat* s, CGFloat* v) {
    
    //Lazily load loupeLayer
     if (!loupeLayer){
-        loupeLayer = [[BGRSLoupeLayer layer] retain];
+        loupeLayer = [BGRSLoupeLayer layer];
     }
     
 	CGPoint point = [[touches anyObject] locationInView:self];
@@ -367,12 +367,8 @@ void HSVFromPixel(BMPixel pixel, CGFloat* h, CGFloat* s, CGFloat* v) {
 
 - (void)dealloc
 {
-    [rep release];
-    [selectionView release];
-    [loupeLayer release];
     loupeLayer = nil;
     
-    [super dealloc];
 }
 
 @end

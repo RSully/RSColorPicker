@@ -29,7 +29,7 @@
 	BOOL badTouch;
 	BOOL bitmapNeedsUpdate;
 	
-	id<RSColorPickerViewDelegate> delegate;
+	id<RSColorPickerViewDelegate> __unsafe_unretained delegate;
 }
 
 -(UIColor*)selectionColor;
@@ -38,7 +38,7 @@
 
 @property (nonatomic, assign) BOOL cropToCircle;
 @property (nonatomic, assign) CGFloat brightness;
-@property (assign) id<RSColorPickerViewDelegate> delegate;
+@property (unsafe_unretained) id<RSColorPickerViewDelegate> delegate;
 
 /**
  * Hue, saturation and briteness of the selected point
