@@ -23,7 +23,6 @@
 	[_colorPicker setDelegate:self];
 	[_colorPicker setBrightness:1.0];
 	[_colorPicker setCropToCircle:NO]; // Defaults to YES (and you can set BG color)
-	[_colorPicker setBackgroundColor:[UIColor clearColor]];
 	[rootController.view addSubview:_colorPicker];
 	
 	_brightnessSlider = [[RSBrightnessSlider alloc] initWithFrame:CGRectMake(10.0, 340.0, 300.0, 30.0)];
