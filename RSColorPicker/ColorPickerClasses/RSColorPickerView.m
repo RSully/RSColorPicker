@@ -72,7 +72,7 @@ void HSVFromPixel(BMPixel pixel, CGFloat* h, CGFloat* s, CGFloat* v) {
     *v = hsv_val;
 }
 
-@class RSGradientDelegate;
+@class RSGradientDelegate, RSSelectionView;
 
 @interface RSColorPickerView () {
 	
@@ -89,7 +89,7 @@ void HSVFromPixel(BMPixel pixel, CGFloat* h, CGFloat* s, CGFloat* v) {
 @property (nonatomic) UIColor *blackColor;
 @property (nonatomic) RSGradientDelegate *gradientDelegate;
 
-@property (nonatomic) UIView *selectionView;
+@property (nonatomic) RSSelectionView *selectionView;
 @property (nonatomic) CALayer *gradientLayer;
 
 @property (nonatomic) BGRSLoupeLayer* loupeLayer;
@@ -111,6 +111,7 @@ void HSVFromPixel(BMPixel pixel, CGFloat* h, CGFloat* s, CGFloat* v) {
 	CGRect bounds = (CGRect) { CGPointZero, layer.bounds.size };
 	CGContextTranslateCTM(ctx, 0, bounds.size.height);
 	CGContextScaleCTM(ctx, 1, -1);
+	CGContextSaveGState(ctx);
 	CGContextSetFillColorWithColor(ctx, _pickerView.backgroundColor.CGColor);
 	CGContextFillRect(ctx, bounds);
 	CGContextAddPath(ctx, _pickerView.gradientPath.CGPath);
@@ -119,10 +120,53 @@ void HSVFromPixel(BMPixel pixel, CGFloat* h, CGFloat* s, CGFloat* v) {
 	CGContextFillRect(ctx, bounds);
 	CGContextSetAlpha(ctx, _pickerView.brightness);
 	CGContextDrawImage(ctx, _pickerView.gradientPath.bounds, _pickerView.gradientImage.CGImage);
+	CGContextRestoreGState(ctx);
+	if (_pickerView.cropToCircle) {
+		//we draw the background colour on the circle edge's to mask the underlying black color.
+		CGContextAddRect(ctx, bounds);
+		CGContextAddEllipseInRect(ctx, CGRectInset(_pickerView.gradientPath.bounds, 1, 1));
+		CGContextSetFillColorWithColor(ctx, [UIColor whiteColor].CGColor);
+		CGContextEOFillPath(ctx);
+	}
 }
 
 @end
 
+@interface RSSelectionView : UIView
+@property (nonatomic) UIColor *selectedColor;
+@end
+@implementation RSSelectionView
+
+- (id)initWithFrame:(CGRect)frame
+{
+	self = [super initWithFrame:frame];
+	if (self) {
+		self.opaque = NO;
+	}
+	return self;
+}
+
+- (void)setSelectedColor:(UIColor *)selectedColor
+{
+	_selectedColor = selectedColor;
+	[self setNeedsDisplay];
+}
+
+- (void)drawRect:(CGRect)rect
+{
+	CGContextRef ctx = UIGraphicsGetCurrentContext();
+	
+	CGContextSetFillColorWithColor(ctx, _selectedColor.CGColor);
+	CGContextFillEllipseInRect(ctx, CGRectInset(rect, 2, 2));
+	CGContextSetLineWidth(ctx, 3);
+	CGContextSetStrokeColorWithColor(ctx, [UIColor colorWithWhite:1 alpha:0.4].CGColor);
+	CGContextStrokeEllipseInRect(ctx, CGRectInset(rect, 1.5, 1.5));
+	CGContextSetLineWidth(ctx, 2);
+	CGContextSetStrokeColorWithColor(ctx, [UIColor colorWithWhite:0 alpha:1].CGColor);
+	CGContextStrokeEllipseInRect(ctx, CGRectInset(rect, 3, 3));
+}
+
+@end
 
 @implementation RSColorPickerView
 
@@ -147,26 +191,23 @@ void HSVFromPixel(BMPixel pixel, CGFloat* h, CGFloat* s, CGFloat* v) {
     return self;
 }
 
--(void)initRoutine {
-    
-    self.cropToCircle = YES;
+-(void)initRoutine
+{
+	self.opaque = YES;
+	self.backgroundColor = [UIColor whiteColor];
 	_colorPickerViewFlags.bitmapNeedsUpdate = YES;
-    
+	
     _selection = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
 	
-    _selectionView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 18.0, 18.0)];
-    _selectionView.layer.borderWidth = 2.0;
-    _selectionView.layer.borderColor = [UIColor colorWithWhite:0.1 alpha:1.0].CGColor;
-    _selectionView.layer.cornerRadius = 9.0;
-	_selectionView.layer.shouldRasterize = YES;
-	_selectionView.layer.rasterizationScale = [UIScreen mainScreen].scale;
-	
+    _selectionView = [[RSSelectionView alloc] initWithFrame:CGRectMake(0.0, 0.0, 22.0, 22.0)];
 	_blackColor = [UIColor blackColor];
 	
 	_gradientDelegate = [RSGradientDelegate new];
 	_gradientDelegate.pickerView = self;
 	
 	_gradientLayer = [CALayer layer];
+	_gradientLayer.opaque = YES;
+	_gradientLayer.contentsScale = [UIScreen mainScreen].scale;
 	
 	/* we set the gradientLayer frame smaller than the view frame so the the selectionView can go out of the gradient's
 	 * bounds and still be selectable */
@@ -181,6 +222,9 @@ void HSVFromPixel(BMPixel pixel, CGFloat* h, CGFloat* s, CGFloat* v) {
     self.brightness = 1.0;
     _rep = [[ANImageBitmapRep alloc] initWithSize:BMPointFromSize(_gradientLayer.bounds.size)];
 	[self genBitmap];
+	
+	self.cropToCircle = YES;
+	self.selectionColor = [UIColor whiteColor];
 }
 
 #pragma mark - Setters
@@ -340,7 +384,7 @@ void HSVFromPixel(BMPixel pixel, CGFloat* h, CGFloat* s, CGFloat* v) {
 	[rgbColor getHue:&h saturation:&s brightness:&v alpha:NULL];
 	_selectionColor = [UIColor colorWithHue:h saturation:s brightness:_brightness alpha:1];
 	
-	_selectionView.backgroundColor = _selectionColor;
+	_selectionView.selectedColor = _selectionColor;
 	
 	if (_colorPickerViewFlags.delegateDidChangeSelection) [_delegate colorPickerDidChangeSelection:self];
 

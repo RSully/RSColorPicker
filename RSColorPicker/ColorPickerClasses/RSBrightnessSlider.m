@@ -8,7 +8,6 @@
 
 #import "RSBrightnessSlider.h"
 #import "RSColorPickerView.h"
-#import "ANImageBitmapRep.h"
 
 /**
  * Creates Default Bitmap Context for drawing into.
@@ -171,28 +170,29 @@ UIImage* RSArrowLoopThumbImage(CGSize size, CGSize loopSize){
     [self addTarget:self action:@selector(myValueChanged:) forControlEvents:UIControlEventValueChanged];
 }
 
--(void)setUseCustomSlider:(BOOL)use {
-	if (use) {
-		[self setupImages];
-	}
+- (CGRect)trackRectForBounds:(CGRect)bounds
+{
+	//to hide the track view
+	return CGRectMake(0, ceilf(bounds.size.height / 2), bounds.size.width, 0);
 }
 
 -(void)myValueChanged:(id)notif {
 	[_colorPicker setBrightness:self.value];
 }
 
--(void)setupImages {
-	ANImageBitmapRep *myRep = [[ANImageBitmapRep alloc] initWithSize:BMPointMake(self.frame.size.width, self.frame.size.height)];
-	for (int x = 0; x < myRep.bitmapSize.x; x++) {
-		CGFloat percGray = (CGFloat)x / (CGFloat)myRep.bitmapSize.x;
-		for (int y = 0; y < myRep.bitmapSize.y; y++) {
-			[myRep setPixel:BMPixelMake(percGray, percGray, percGray, 1.0) atPoint:BMPointMake(x, y)];
-		}
-	}
-	//[self setBackgroundColor:[UIColor colorWithPatternImage:[myRep image]]];
-	[self setMinimumTrackImage:[myRep image] forState:UIControlStateNormal];
-	[self setMaximumTrackImage:[myRep image] forState:UIControlStateNormal];
+- (void)drawRect:(CGRect)rect
+{
+	CGContextRef ctx = UIGraphicsGetCurrentContext();
+	CGColorSpaceRef space = CGColorSpaceCreateDeviceGray();
+	NSArray* colors = [[NSArray alloc] initWithObjects:
+					   (id)[UIColor colorWithWhite:0 alpha:1].CGColor,
+					   (id)[UIColor colorWithWhite:1 alpha:1].CGColor,nil];
 	
+	CGGradientRef myGradient = CGGradientCreateWithColors(space, (__bridge CFArrayRef)colors, NULL);
+	
+	CGContextDrawLinearGradient(ctx, myGradient, CGPointZero, CGPointMake(rect.size.width, 0), 0);
+	CGGradientRelease(myGradient);
+	CGColorSpaceRelease(space);
 }
 
 -(void)setColorPicker:(RSColorPickerView*)cp {

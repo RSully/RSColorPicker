@@ -14,7 +14,4 @@
 
 @property (nonatomic) RSColorPickerView *colorPicker;
 
--(void)setUseCustomSlider:(BOOL)use;
--(void)setupImages;
-
 @end

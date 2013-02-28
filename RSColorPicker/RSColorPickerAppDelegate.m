@@ -22,13 +22,12 @@
 	_colorPicker = [[RSColorPickerView alloc] initWithFrame:CGRectMake(10.0, 20.0, 300.0, 300.0)];
 	[_colorPicker setDelegate:self];
 	[_colorPicker setBrightness:1.0];
-	[_colorPicker setCropToCircle:YES]; // Defaults to YES (and you can set BG color)
+	[_colorPicker setCropToCircle:NO]; // Defaults to YES (and you can set BG color)
 	[_colorPicker setBackgroundColor:[UIColor clearColor]];
 	[rootController.view addSubview:_colorPicker];
 	
 	_brightnessSlider = [[RSBrightnessSlider alloc] initWithFrame:CGRectMake(10.0, 340.0, 300.0, 30.0)];
 	[_brightnessSlider setColorPicker:_colorPicker];
-	[_brightnessSlider setUseCustomSlider:YES]; // Defaults to NO
 	[rootController.view addSubview:_brightnessSlider];
 	
 	_colorPatch = [[UIView alloc] initWithFrame:CGRectMake(10.0, 400.0, 300.0, 30.0)];
