@@ -13,7 +13,6 @@
 		1FA35E6A13F57B2800A6B347 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1FA35E6813F57B2800A6B347 /* InfoPlist.strings */; };
 		1FA35E6D13F57B2800A6B347 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA35E6C13F57B2800A6B347 /* main.m */; };
 		1FA35E7013F57B2800A6B347 /* RSColorPickerAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA35E6F13F57B2800A6B347 /* RSColorPickerAppDelegate.m */; };
-		1FA35E7313F57B2800A6B347 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1FA35E7113F57B2800A6B347 /* MainWindow.xib */; };
 		1FA35E9913F5A17E00A6B347 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FA35E9813F5A17E00A6B347 /* QuartzCore.framework */; };
 		1FA35EC613F5AE1500A6B347 /* RSBrightnessSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA35EC313F5AE1400A6B347 /* RSBrightnessSlider.m */; };
 		1FA35EC713F5AE1500A6B347 /* RSColorPickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA35EC513F5AE1500A6B347 /* RSColorPickerView.m */; };
@@ -29,6 +28,7 @@
 		2BD7E14C14C1B94C00BD1096 /* BitmapCropManipulator.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BD7E13F14C1B94C00BD1096 /* BitmapCropManipulator.m */; };
 		2BD7E14D14C1B94C00BD1096 /* BitmapRotationManipulator.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BD7E14114C1B94C00BD1096 /* BitmapRotationManipulator.m */; };
 		2BD7E14E14C1B94C00BD1096 /* BitmapScaleManipulator.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BD7E14314C1B94C00BD1096 /* BitmapScaleManipulator.m */; };
+		930D5A8016DE4D36006C38D4 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 930D5A7F16DE4D36006C38D4 /* Default-568h@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,7 +42,6 @@
 		1FA35E6C13F57B2800A6B347 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		1FA35E6E13F57B2800A6B347 /* RSColorPickerAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RSColorPickerAppDelegate.h; sourceTree = "<group>"; };
 		1FA35E6F13F57B2800A6B347 /* RSColorPickerAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RSColorPickerAppDelegate.m; sourceTree = "<group>"; };
-		1FA35E7213F57B2800A6B347 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		1FA35E9813F5A17E00A6B347 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		1FA35EC213F5AE1400A6B347 /* RSBrightnessSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RSBrightnessSlider.h; path = ColorPickerClasses/RSBrightnessSlider.h; sourceTree = "<group>"; };
 		1FA35EC313F5AE1400A6B347 /* RSBrightnessSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RSBrightnessSlider.m; path = ColorPickerClasses/RSBrightnessSlider.m; sourceTree = "<group>"; };
@@ -72,6 +71,7 @@
 		2BD7E14114C1B94C00BD1096 /* BitmapRotationManipulator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BitmapRotationManipulator.m; sourceTree = "<group>"; };
 		2BD7E14214C1B94C00BD1096 /* BitmapScaleManipulator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BitmapScaleManipulator.h; sourceTree = "<group>"; };
 		2BD7E14314C1B94C00BD1096 /* BitmapScaleManipulator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BitmapScaleManipulator.m; sourceTree = "<group>"; };
+		930D5A7F16DE4D36006C38D4 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,6 +92,7 @@
 		1FA35E5013F57B2700A6B347 = {
 			isa = PBXGroup;
 			children = (
+				930D5A7F16DE4D36006C38D4 /* Default-568h@2x.png */,
 				1FA35E6513F57B2700A6B347 /* RSColorPicker */,
 				1FA35E5E13F57B2700A6B347 /* Frameworks */,
 				1FA35E5C13F57B2700A6B347 /* Products */,
@@ -124,7 +125,6 @@
 				1FA35E6F13F57B2800A6B347 /* RSColorPickerAppDelegate.m */,
 				1FA35EC813F5AE1B00A6B347 /* ColorPicker */,
 				2BD7E12A14C1B94C00BD1096 /* ANImageBitmapRep */,
-				1FA35E7113F57B2800A6B347 /* MainWindow.xib */,
 				1FA35E6613F57B2700A6B347 /* Supporting Files */,
 			);
 			path = RSColorPicker;
@@ -259,7 +259,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1FA35E6A13F57B2800A6B347 /* InfoPlist.strings in Resources */,
-				1FA35E7313F57B2800A6B347 /* MainWindow.xib in Resources */,
+				930D5A8016DE4D36006C38D4 /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -298,14 +298,6 @@
 				1FA35E6913F57B2800A6B347 /* en */,
 			);
 			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		1FA35E7113F57B2800A6B347 /* MainWindow.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				1FA35E7213F57B2800A6B347 /* en */,
-			);
-			name = MainWindow.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -347,12 +339,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_OBJC_ARC = YES;
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "RSColorPicker/RSColorPicker-Prefix.pch";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "RSColorPicker/RSColorPicker-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -362,11 +356,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_OBJC_ARC = YES;
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "RSColorPicker/RSColorPicker-Prefix.pch";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "RSColorPicker/RSColorPicker-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALIDATE_PRODUCT = YES;
 				WRAPPER_EXTENSION = app;

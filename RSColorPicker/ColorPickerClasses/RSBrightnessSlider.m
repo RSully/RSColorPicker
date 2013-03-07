@@ -178,7 +178,7 @@ UIImage* RSArrowLoopThumbImage(CGSize size, CGSize loopSize){
 }
 
 -(void)myValueChanged:(id)notif {
-	[colorPicker setBrightness:self.value];
+	[_colorPicker setBrightness:self.value];
 }
 
 -(void)setupImages {
@@ -193,13 +193,12 @@ UIImage* RSArrowLoopThumbImage(CGSize size, CGSize loopSize){
 	[self setMinimumTrackImage:[myRep image] forState:UIControlStateNormal];
 	[self setMaximumTrackImage:[myRep image] forState:UIControlStateNormal];
 	
-	[myRep release];
 }
 
 -(void)setColorPicker:(RSColorPickerView*)cp {
-	colorPicker = cp;
-	if (!colorPicker) { return; }
-	self.value = [colorPicker brightness];
+	_colorPicker = cp;
+	if (!_colorPicker) { return; }
+	self.value = [_colorPicker brightness];
 }
 
 @end
