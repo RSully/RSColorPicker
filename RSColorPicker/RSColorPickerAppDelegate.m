@@ -98,6 +98,7 @@
 -(void)colorPickerDidChangeSelection:(RSColorPickerView *)cp
 {
 	_colorPatch.backgroundColor = [cp selectionColor];
+    _brightnessSlider.value = [cp brightness];
 }
 
 #pragma mark - User action
