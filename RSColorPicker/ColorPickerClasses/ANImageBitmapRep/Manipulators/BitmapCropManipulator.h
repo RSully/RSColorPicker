@@ -14,6 +14,7 @@
 @optional
 - (void)cropFrame:(CGRect)frame;
 - (void)cropTopFrame:(CGRect)frame;
+- (void)cropTopEllipse:(CGRect)frame;
 - (CGImageRef)croppedImageWithFrame:(CGRect)frame;
 
 @end
@@ -43,6 +44,15 @@
  * left corner, use cropFrame: instead.
  */
 - (void)cropTopFrame:(CGRect)frame;
+
+/**
+ * Cuts an ellipse of the bitmap out for a new bitmap.
+ * @param frame The rectangle around the ellipse to be cut. The
+ * coordinates for this start at (0,0).
+ * @discussion The coordinates for this method begin in the top
+ * left corner.  There is no alternative.
+ */
+- (void)cropTopEllipse:(CGRect)frame;
 
 /**
  * Creates a new CGImageRef by cutting out a portion of this one.

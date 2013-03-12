@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ANImageBitmapRep.h"
+#import "ANImageBitmapRep/ANImageBitmapRep.h"
 
 BMPixel RSPixelFromHSV(CGFloat H, CGFloat S, CGFloat V);
 void RSHSVFromPixel(BMPixel pixel, CGFloat *h, CGFloat *s, CGFloat *v);

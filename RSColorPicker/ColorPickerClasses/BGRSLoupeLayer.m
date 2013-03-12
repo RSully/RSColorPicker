@@ -29,7 +29,6 @@
  */
 
 #import "BGRSLoupeLayer.h"
-
 #import "RSColorPickerView.h"
 
 @interface BGRSLoupeLayer (Private)

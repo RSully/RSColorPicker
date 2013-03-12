@@ -147,11 +147,13 @@ NSColor * NSColorFromBMPixel (BMPixel pixel) {
 	BitmapCropManipulator * croppable = [[BitmapCropManipulator alloc] initWithContext:self];
 	BitmapScaleManipulator * scalable = [[BitmapScaleManipulator alloc] initWithContext:self];
 	BitmapRotationManipulator * rotatable = [[BitmapRotationManipulator alloc] initWithContext:self];
-	baseClasses = [[NSArray alloc] initWithObjects:croppable, scalable, rotatable, nil];
+    BitmapDrawManipulator * drawable = [[BitmapDrawManipulator alloc] initWithContext:self];
+	baseClasses = [[NSArray alloc] initWithObjects:croppable, scalable, rotatable, drawable, nil];
 #if __has_feature(objc_arc) != 1
 	[rotatable release];
 	[scalable release];
 	[croppable release];
+    [drawable release];
 #endif
 }
 

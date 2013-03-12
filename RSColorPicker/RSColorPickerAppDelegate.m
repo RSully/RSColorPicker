@@ -7,7 +7,7 @@
 //
 
 #import "RSColorPickerAppDelegate.h"
-#import "RSBrightnessSlider.h"
+#import "ColorPickerClasses/RSBrightnessSlider.h"
 
 @implementation RSColorPickerAppDelegate
 
