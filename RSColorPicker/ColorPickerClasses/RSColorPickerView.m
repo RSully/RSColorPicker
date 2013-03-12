@@ -54,6 +54,7 @@ void getComponentsForColor(float components[3], UIColor *color) {
 
 @property (nonatomic) ANImageBitmapRep *rep;
 @property (nonatomic) UIBezierPath *gradientShape;
+@property (nonatomic) UIBezierPath *activeAreaShape;
 
 @property (nonatomic) RSSelectionView *selectionView;
 @property (nonatomic) UIImageView *gradientView;
@@ -185,6 +186,8 @@ void getComponentsForColor(float components[3], UIColor *color) {
 	_cropToCircle = circle;
 	_gradientContainer.layer.cornerRadius = circle ? _gradientContainer.bounds.size.width / 2.0 : 0;
 	_gradientShape = circle ? [UIBezierPath bezierPathWithOvalInRect:_gradientContainer.frame] : [UIBezierPath bezierPathWithRect:_gradientContainer.frame];
+	CGRect activeAreaFrame = CGRectInset(_gradientContainer.frame, _selectionView.bounds.size.width / 2.0, _selectionView.bounds.size.height / 2.0);
+	_activeAreaShape = circle ? [UIBezierPath bezierPathWithOvalInRect:activeAreaFrame] : [UIBezierPath bezierPathWithRect:activeAreaFrame];
 	[self updateSelectionLocation];
 }
 
@@ -314,7 +317,7 @@ void getComponentsForColor(float components[3], UIColor *color) {
 - (CGPoint)validPointForTouch:(CGPoint)touchPoint {
 	
 	CGPoint returnedPoint;
-	if ([_gradientShape containsPoint:touchPoint]) {
+	if ([_activeAreaShape containsPoint:touchPoint]) {
 		returnedPoint = touchPoint;
 	} else {
 		//we compute the right point on the gradient border
@@ -333,7 +336,7 @@ void getComponentsForColor(float components[3], UIColor *color) {
 		//'actual radius' is the distance between the center and the border of the gradient
 		CGFloat actualRadius;
 		if (_cropToCircle) {
-			actualRadius = _gradientShape.bounds.size.width / 2.0;
+			actualRadius = _gradientShape.bounds.size.width / 2.0 - _selectionView.bounds.size.width / 2.0;
 		} else {
 			//square shape - using the intercept theorem we have "actualRadius / r == 0.5*gradientContainer.height / Y"
 			if ( (alpha >= M_PI_4 && alpha < 3 * M_PI_4) || (alpha >= 5 * M_PI_4 && alpha < 7 * M_PI_4) ) actualRadius = r * _gradientContainer.bounds.size.height / 2.0 / Y;
