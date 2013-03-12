@@ -24,12 +24,13 @@
 	_colorPicker = [[RSColorPickerView alloc] initWithFrame:CGRectMake(10.0, 20.0, 300.0, 300.0)];
 	[_colorPicker setDelegate:self];
 	[_colorPicker setBrightness:1.0];
-	[_colorPicker setCropToCircle:NO]; // Defaults to YES (and you can set BG color)
+	[_colorPicker setCropToCircle:YES]; // Defaults to YES (and you can set BG color)
 	[rootController.view addSubview:_colorPicker];
 	
     
     // On/off circle or square
     UISwitch *circleSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(10, 340, 0, 0)];
+    [circleSwitch setOn:_colorPicker.cropToCircle];
 	[circleSwitch addTarget:self action:@selector(circleSwitchAction:) forControlEvents:UIControlEventValueChanged];
 	[rootController.view addSubview:circleSwitch];
     
@@ -88,7 +89,7 @@
     
 	self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
 	self.window.rootViewController = rootController;
-
+    
 	[self.window makeKeyAndVisible];
 	return YES;
 }
