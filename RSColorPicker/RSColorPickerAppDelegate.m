@@ -24,7 +24,7 @@
 	_colorPicker = [[RSColorPickerView alloc] initWithFrame:CGRectMake(10.0, 20.0, 300.0, 300.0)];
 	[_colorPicker setDelegate:self];
 	[_colorPicker setBrightness:1.0];
-	[_colorPicker setCropToCircle:YES]; // Defaults to YES (and you can set BG color)
+	[_colorPicker setCropToCircle:NO]; // Defaults to YES (and you can set BG color)
 	[rootController.view addSubview:_colorPicker];
 	
     
