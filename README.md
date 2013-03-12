@@ -39,11 +39,8 @@ This is licensed under the BSD license (found at the bottom of this file). You k
 ***
 
 <img alt="Color Picker - Circle" src="https://github.com/RSully/RSColorPicker/raw/master/Example01.png" width="320">
-
 <img alt="Color Picker - Loupe popup" src="https://github.com/RSully/RSColorPicker/raw/master/Example02.png" width="320">
-
 <img alt="Color Picker - Square" src="https://github.com/RSully/RSColorPicker/raw/master/Example03.png" width="320">
-
 <img alt="Color Picker - Square, default slider style" src="https://github.com/RSully/RSColorPicker/raw/master/Example04.png" width="320">
 
 ***
