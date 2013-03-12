@@ -26,6 +26,21 @@ void HSVFromPixel(BMPixel pixel, CGFloat *h, CGFloat *s, CGFloat *v)
 	[color getHue:h saturation:s brightness:v alpha:NULL];
 }
 
+void getComponentsForColor(float components[3], UIColor *color) {
+    CGColorSpaceRef rgbColorSpace = CGColorSpaceCreateDeviceRGB();
+    unsigned char resultingPixel[4];
+    CGContextRef context = CGBitmapContextCreate(&resultingPixel, 1, 1, 8, 4, rgbColorSpace, kCGImageAlphaNoneSkipLast);
+    CGContextSetFillColorWithColor(context, [color CGColor]);
+    CGContextFillRect(context, CGRectMake(0, 0, 1, 1));
+    CGContextRelease(context);
+    CGColorSpaceRelease(rgbColorSpace);
+    
+    for (int component = 0; component < 3; component++) {
+        components[component] = resultingPixel[component] / 255.0f;
+    }
+}
+
+
 @class RSSelectionView;
 
 @interface RSColorPickerView () {
@@ -136,7 +151,8 @@ void HSVFromPixel(BMPixel pixel, CGFloat *h, CGFloat *s, CGFloat *v)
 	_selection = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
 	
 	//we leave a margin around the gradient container so that the selection view doesn't go out of bounds and become unselectable.
-	_gradientContainer = [[UIView alloc] initWithFrame:CGRectInset(self.bounds, _selectionView.frame.size.height / 2.0, _selectionView.frame.size.width / 2.0)];
+//	_gradientContainer = [[UIView alloc] initWithFrame:CGRectInset(self.bounds, _selectionView.frame.size.height / 2.0, _selectionView.frame.size.width / 2.0)];
+	_gradientContainer = [[UIView alloc] initWithFrame:self.bounds];
 	_gradientContainer.backgroundColor = [UIColor blackColor];
 	_gradientContainer.clipsToBounds = YES;
 	_gradientContainer.layer.shouldRasterize = YES;
@@ -174,21 +190,29 @@ void HSVFromPixel(BMPixel pixel, CGFloat *h, CGFloat *s, CGFloat *v)
 
 - (void)setSelectionColor:(UIColor *)selectionColor
 {
-	_selectionColor = selectionColor;
-	
+    // Force color into correct colorspace to get HSV from
+    float components[3];
+    getComponentsForColor(components, selectionColor);
+    selectionColor = [UIColor colorWithRed:components[0] green:components[1] blue:components[2] alpha:1.0];
+    
     // convert to HSV
     CGFloat h, s, v;
-	[selectionColor getHue:&h saturation:&s brightness:&v alpha:NULL];
+	BOOL gotHSV = [selectionColor getHue:&h saturation:&s brightness:&v alpha:NULL];
+    if (!gotHSV) {
+        return;
+    }
+    CGFloat paddingDistance = _selectionView.bounds.size.width / 2.0;
     
-    // extract the original point
     CGFloat radius = (_rep.bitmapSize.x / 2.0);
-    CGFloat angle = h * (M_PI / 180);
-    CGFloat centerDistance = s * radius;
+	CGFloat angle = h * (2.0 * M_PI);
+    CGFloat r_distance = s * radius;
+    r_distance = fmax(fmin(r_distance, r_distance - paddingDistance), 0);
     
-    CGFloat pointX = cos(angle) * centerDistance + radius;
-    CGFloat pointY = radius - sin(angle) * centerDistance;
-	
-    _selection = [self convertGradientPointToView:(CGPointMake(pointX, pointY))];
+    CGFloat pointX = (cos(angle) * r_distance) + radius;
+    CGFloat pointY = radius - (sin(angle) * r_distance);
+    
+    _selection = [self convertGradientPointToView:CGPointMake(pointX, pointY)];
+    _selectionColor = selectionColor;
     
     [self updateSelectionLocation];
     [self setBrightness:v];
@@ -205,7 +229,8 @@ void HSVFromPixel(BMPixel pixel, CGFloat *h, CGFloat *s, CGFloat *v)
 - (void)genBitmap {
 	if (!_colorPickerViewFlags.bitmapNeedsUpdate) return;
     
-	CGFloat radius = (_rep.bitmapSize.x / 2.0);
+    CGFloat paddingDistance = _selectionView.bounds.size.width / 2.0;
+	CGFloat radius = (_rep.bitmapSize.x / 2.0) - paddingDistance;
 	CGFloat relX = 0.0;
 	CGFloat relY = 0.0;
 	
