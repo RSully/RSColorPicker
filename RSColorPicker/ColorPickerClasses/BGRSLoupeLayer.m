@@ -32,7 +32,7 @@
 
 #import "RSColorPickerView.h"
 
-@interface BGRSLoupeLayer () //Private Methods
+@interface BGRSLoupeLayer (Private)
 - (void)drawGlintInContext:(CGContextRef)ctx;
 @end
 
@@ -215,7 +215,7 @@ const int NUM_PIXELS = 5, NUM_SKIP = 15;
 	CGContextRestoreGState(ctx);
 	
 	//Release objects
-	CGColorSpaceRelease (space);
+	CGColorSpaceRelease(space);
 }
 
 #pragma mark - Animation
@@ -237,10 +237,6 @@ const int NUM_PIXELS = 5, NUM_SKIP = 15;
 
 	// Animate
 	[self addAnimation:springEffect forKey:@"appear"];
-	
-	//Cleanup
-	
-	//CAAnimationGroup* expand = [CAAnimationGroup new];
 }
 
 /**
