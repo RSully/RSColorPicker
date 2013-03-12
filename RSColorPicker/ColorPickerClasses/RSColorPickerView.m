@@ -151,8 +151,6 @@ void getComponentsForColor(float components[3], UIColor *color) {
 	
 	_selection = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
 	
-	//we leave a margin around the gradient container so that the selection view doesn't go out of bounds and become unselectable.
-//	_gradientContainer = [[UIView alloc] initWithFrame:CGRectInset(self.bounds, _selectionView.frame.size.height / 2.0, _selectionView.frame.size.width / 2.0)];
 	_gradientContainer = [[UIView alloc] initWithFrame:self.bounds];
 	_gradientContainer.backgroundColor = [UIColor blackColor];
 	_gradientContainer.clipsToBounds = YES;
@@ -236,7 +234,8 @@ void getComponentsForColor(float components[3], UIColor *color) {
 	if (!_colorPickerViewFlags.bitmapNeedsUpdate) return;
     
     CGFloat paddingDistance = _selectionView.bounds.size.width / 2.0;
-	CGFloat radius = (_rep.bitmapSize.x / 2.0) - paddingDistance;
+	CGFloat radius = _rep.bitmapSize.x / 2.0;
+    CGFloat relRadius = radius - paddingDistance;
 	CGFloat relX = 0.0;
 	CGFloat relY = 0.0;
 	
@@ -247,13 +246,13 @@ void getComponentsForColor(float components[3], UIColor *color) {
 			relY = radius - y;
 			
 			CGFloat r_distance = sqrt((relX * relX)+(relY * relY));
-			r_distance = fmin(r_distance, radius);
+			r_distance = fmin(r_distance, relRadius);
 			
 			CGFloat angle = atan2(relY, relX);
 			if (angle < 0.0) { angle = (2.0 * M_PI)+angle; }
 			
 			CGFloat perc_angle = angle / (2.0 * M_PI);
-			BMPixel thisPixel = pixelFromHSV(perc_angle, r_distance/radius, 1); //full brightness
+			BMPixel thisPixel = pixelFromHSV(perc_angle, r_distance/relRadius, 1); //full brightness
 			[_rep setPixel:thisPixel atPoint:BMPointMake(x, y)];
 		}
 	}
