@@ -4,15 +4,17 @@
 
 Square (circle) color-picker that handles touch events and allows for brightness control. Uses delegation to report color selection as-changed
 
+## BGRSLoupeLayer
+
+Loupe used by RSColorPickerView for selection
+
 ## RSBrightnessSlider
 
 Basic UISlider subclass that can be used easily with RSColorPickerView. 
 
-
 # Project:
 
 Inspired by [ANColorPicker](https://github.com/unixpickle/ANColorPicker). 
-Uses formulas from [EasyRGB](http://www.easyrgb.com/index.php?X=MATH&H=21#text21) (HSV conversions). 
 Also uses [ANImageBitmapRep](https://github.com/unixpickle/ANImageBitmapRep) for easy pixel-level manipulation. 
 
 And of course, thanks to [Wikipedia](http://en.wikipedia.org/wiki/HSL_and_HSV).
@@ -36,12 +38,10 @@ This is licensed under the BSD license (found at the bottom of this file). You k
 
 ***
 
-![Example Color Picker Implementation](https://github.com/RSully/RSColorPicker/raw/master/Example.png)
-![Example Color Picker with Custom Slider](https://github.com/RSully/RSColorPicker/raw/master/Example2.png)
-![Example Color Picker as Square](https://github.com/RSully/RSColorPicker/raw/master/Example3.png)
-
-
-
+![Color Picker - Circle](https://github.com/RSully/RSColorPicker/raw/master/Example01.png)
+![Color Picker - Loupe popup](https://github.com/RSully/RSColorPicker/raw/master/Example02.png)
+![Color Picker - Square](https://github.com/RSully/RSColorPicker/raw/master/Example03.png)
+![Color Picker - Square, default slider style](https://github.com/RSully/RSColorPicker/raw/master/Example04.png)
 
 ***
 
