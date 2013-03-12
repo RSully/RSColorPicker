@@ -8,48 +8,16 @@
 
 #import "RSColorPickerView.h"
 #import "BGRSLoupeLayer.h"
+#import "RSSelectionView.h"
+#import "RSColorFunctions.h"
 
-// point-related macros
-#define IS_INSIDE(p) CGRectContainsPoint(self.bounds, p)
-
-BMPixel pixelFromHSV(CGFloat H, CGFloat S, CGFloat V)
-{
-	UIColor *color = [UIColor colorWithHue:H saturation:S brightness:V alpha:1];
-	CGFloat r, g, b;
-	[color getRed:&r green:&g blue:&b alpha:NULL];
-	return BMPixelMake(r, g, b, 1.0);
-}
-
-void HSVFromPixel(BMPixel pixel, CGFloat *h, CGFloat *s, CGFloat *v)
-{
-	UIColor *color = [UIColor colorWithRed:pixel.red green:pixel.green blue:pixel.blue alpha:1];
-	[color getHue:h saturation:s brightness:v alpha:NULL];
-}
-
-void getComponentsForColor(float components[3], UIColor *color) {
-    CGColorSpaceRef rgbColorSpace = CGColorSpaceCreateDeviceRGB();
-    unsigned char resultingPixel[4];
-    CGContextRef context = CGBitmapContextCreate(&resultingPixel, 1, 1, 8, 4, rgbColorSpace, kCGImageAlphaNoneSkipLast);
-    CGContextSetFillColorWithColor(context, [color CGColor]);
-    CGContextFillRect(context, CGRectMake(0, 0, 1, 1));
-    CGContextRelease(context);
-    CGColorSpaceRelease(rgbColorSpace);
-    
-    for (int component = 0; component < 3; component++) {
-        components[component] = resultingPixel[component] / 255.0f;
-    }
-}
-
-
-@class RSSelectionView;
 
 @interface RSColorPickerView () {
-	
-	struct {
+    struct {
         unsigned int bitmapNeedsUpdate:1;
         unsigned int badTouch:1;
 		unsigned int delegateDidChangeSelection:1;
-	} _colorPickerViewFlags;
+    } _colorPickerViewFlags;
 }
 
 @property (nonatomic) ANImageBitmapRep *rep;
@@ -71,53 +39,8 @@ void getComponentsForColor(float components[3], UIColor *color) {
 
 @end
 
-@interface RSSelectionView : UIView
-@property (nonatomic) UIColor *selectedColor;
-@end
-@implementation RSSelectionView
-
-- (id)initWithFrame:(CGRect)frame
-{
-	self = [super initWithFrame:frame];
-	if (self) {
-		self.opaque = NO;
-	}
-	return self;
-}
-
-- (void)setSelectedColor:(UIColor *)selectedColor
-{
-	_selectedColor = selectedColor;
-	[self setNeedsDisplay];
-}
-
-- (void)drawRect:(CGRect)rect
-{
-	CGContextRef ctx = UIGraphicsGetCurrentContext();
-	
-	CGContextSetFillColorWithColor(ctx, _selectedColor.CGColor);
-	CGContextFillEllipseInRect(ctx, CGRectInset(rect, 2, 2));
-	CGContextSetLineWidth(ctx, 3);
-	CGContextSetStrokeColorWithColor(ctx, [UIColor colorWithWhite:1 alpha:0.4].CGColor);
-	CGContextStrokeEllipseInRect(ctx, CGRectInset(rect, 1.5, 1.5));
-	CGContextSetLineWidth(ctx, 2);
-	CGContextSetStrokeColorWithColor(ctx, [UIColor colorWithWhite:0 alpha:1].CGColor);
-	CGContextStrokeEllipseInRect(ctx, CGRectInset(rect, 3, 3));
-}
-
-@end
 
 @implementation RSColorPickerView
-
-- (CGPoint)convertGradientPointToView:(CGPoint)point
-{
-	return CGPointMake(point.x + CGRectGetMinX(_gradientContainer.frame), point.y + CGRectGetMinY(_gradientContainer.frame));
-}
-
-- (CGPoint)convertViewPointToGradient:(CGPoint)point
-{
-	return CGPointMake(point.x - CGRectGetMinX(_gradientContainer.frame), point.y - CGRectGetMinY(_gradientContainer.frame));
-}
 
 #pragma mark - Object lifecycle
 
@@ -172,6 +95,66 @@ void getComponentsForColor(float components[3], UIColor *color) {
 	self.selectionColor = [UIColor whiteColor];
 }
 
+- (void)dealloc {
+    _loupeLayer = nil;
+}
+
+
+#pragma mark - Business
+
+- (void)genBitmap {
+	if (!_colorPickerViewFlags.bitmapNeedsUpdate) return;
+    
+    CGFloat paddingDistance = _selectionView.bounds.size.width / 2.0;
+	CGFloat radius = _rep.bitmapSize.x / 2.0;
+    CGFloat relRadius = radius - paddingDistance;
+	CGFloat relX = 0.0;
+	CGFloat relY = 0.0;
+	
+	for (int x = 0; x < _rep.bitmapSize.x; x++) {
+		relX = x - radius;
+		
+		for (int y = 0; y < _rep.bitmapSize.y; y++) {
+			relY = radius - y;
+			
+			CGFloat r_distance = sqrt((relX * relX)+(relY * relY));
+			r_distance = fmin(r_distance, relRadius);
+			
+			CGFloat angle = atan2(relY, relX);
+			if (angle < 0.0) { angle = (2.0 * M_PI)+angle; }
+			
+			CGFloat perc_angle = angle / (2.0 * M_PI);
+			BMPixel thisPixel = RSPixelFromHSV(perc_angle, r_distance/relRadius, 1); //full brightness
+			[_rep setPixel:thisPixel atPoint:BMPointMake(x, y)];
+		}
+	}
+	_colorPickerViewFlags.bitmapNeedsUpdate = NO;
+	_gradientView.image = [_rep image];
+}
+
+#pragma mark - Getters
+
+- (void)selectionToHue:(CGFloat *)pH saturation:(CGFloat *)pS brightness:(CGFloat *)pV {
+	[_selectionColor getHue:pH saturation:pS brightness:pV alpha:NULL];
+}
+
+- (UIColor*)colorAtPoint:(CGPoint)point {
+	CGPoint convertedPoint = [self convertViewPointToGradient:point];
+	convertedPoint.x = round(convertedPoint.x);
+	convertedPoint.y = round(convertedPoint.y);
+	
+	if (convertedPoint.x < 0) convertedPoint.x = 0;
+	if (convertedPoint.x >= _gradientContainer.frame.size.width) convertedPoint.x = _gradientContainer.bounds.size.width - 1;
+	if (convertedPoint.y < 0) convertedPoint.y = 0;
+	if (convertedPoint.y >= _gradientContainer.bounds.size.height) convertedPoint.y = _gradientContainer.bounds.size.height - 1;
+	
+	BMPixel pixel = [_rep getPixelAtPoint:BMPointFromPoint(convertedPoint)];
+	UIColor *rgbColor = [UIColor colorWithRed:pixel.red green:pixel.green blue:pixel.blue alpha:1];
+	CGFloat h, s, v;
+	[rgbColor getHue:&h saturation:&s brightness:&v alpha:NULL];
+	return [UIColor colorWithHue:h saturation:s brightness:_brightness alpha:1];
+}
+
 #pragma mark - Setters
 
 - (void)setBrightness:(CGFloat)bright {
@@ -196,7 +179,7 @@ void getComponentsForColor(float components[3], UIColor *color) {
 {
     // Force color into correct colorspace to get HSV from
     float components[3];
-    getComponentsForColor(components, selectionColor);
+    RSGetComponentsForColor(components, selectionColor);
     selectionColor = [UIColor colorWithRed:components[0] green:components[1] blue:components[2] alpha:1.0];
     
     // convert to HSV
@@ -228,61 +211,7 @@ void getComponentsForColor(float components[3], UIColor *color) {
 	_colorPickerViewFlags.delegateDidChangeSelection = [_delegate respondsToSelector:@selector(colorPickerDidChangeSelection:)];
 }
 
-#pragma mark - Business
-
-- (void)genBitmap {
-	if (!_colorPickerViewFlags.bitmapNeedsUpdate) return;
-    
-    CGFloat paddingDistance = _selectionView.bounds.size.width / 2.0;
-	CGFloat radius = _rep.bitmapSize.x / 2.0;
-    CGFloat relRadius = radius - paddingDistance;
-	CGFloat relX = 0.0;
-	CGFloat relY = 0.0;
-	
-	for (int x = 0; x < _rep.bitmapSize.x; x++) {
-		relX = x - radius;
-		
-		for (int y = 0; y < _rep.bitmapSize.y; y++) {
-			relY = radius - y;
-			
-			CGFloat r_distance = sqrt((relX * relX)+(relY * relY));
-			r_distance = fmin(r_distance, relRadius);
-			
-			CGFloat angle = atan2(relY, relX);
-			if (angle < 0.0) { angle = (2.0 * M_PI)+angle; }
-			
-			CGFloat perc_angle = angle / (2.0 * M_PI);
-			BMPixel thisPixel = pixelFromHSV(perc_angle, r_distance/relRadius, 1); //full brightness
-			[_rep setPixel:thisPixel atPoint:BMPointMake(x, y)];
-		}
-	}
-	_colorPickerViewFlags.bitmapNeedsUpdate = NO;
-	_gradientView.image = [_rep image];
-}
-
-/**
- * Hue saturation and briteness of the selected point
- */
-- (void)selectionToHue:(CGFloat *)pH saturation:(CGFloat *)pS brightness:(CGFloat *)pV {
-	[_selectionColor getHue:pH saturation:pS brightness:pV alpha:NULL];
-}
-
-- (UIColor*)colorAtPoint:(CGPoint)point {
-	CGPoint convertedPoint = [self convertViewPointToGradient:point];
-	convertedPoint.x = round(convertedPoint.x);
-	convertedPoint.y = round(convertedPoint.y);
-	
-	if (convertedPoint.x < 0) convertedPoint.x = 0;
-	if (convertedPoint.x >= _gradientContainer.frame.size.width) convertedPoint.x = _gradientContainer.bounds.size.width - 1;
-	if (convertedPoint.y < 0) convertedPoint.y = 0;
-	if (convertedPoint.y >= _gradientContainer.bounds.size.height) convertedPoint.y = _gradientContainer.bounds.size.height - 1;
-	
-	BMPixel pixel = [_rep getPixelAtPoint:BMPointFromPoint(convertedPoint)];
-	UIColor *rgbColor = [UIColor colorWithRed:pixel.red green:pixel.green blue:pixel.blue alpha:1];
-	CGFloat h, s, v;
-	[rgbColor getHue:&h saturation:&s brightness:&v alpha:NULL];
-	return [UIColor colorWithHue:h saturation:s brightness:_brightness alpha:1];
-}
+#pragma mark - Selection updates
 
 - (void)updateSelectionLocation {
     [self updateSelectionLocationDisableActions:YES];
@@ -308,13 +237,16 @@ void getComponentsForColor(float components[3], UIColor *color) {
 	_selection = circlePoint;
 
 	_selectionColor = [self colorAtPoint:circlePoint];
-	
 	_selectionView.selectedColor = _selectionColor;
 	
-	if (_colorPickerViewFlags.delegateDidChangeSelection) [_delegate colorPickerDidChangeSelection:self];
+	if (_colorPickerViewFlags.delegateDidChangeSelection) {
+        [_delegate colorPickerDidChangeSelection:self];
+    }
 	
 	[self updateSelectionLocation];
 }
+
+#pragma mark - Touch events
 
 - (CGPoint)validPointForTouch:(CGPoint)touchPoint {
 	
@@ -356,7 +288,6 @@ void getComponentsForColor(float components[3], UIColor *color) {
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-	
 	//Lazily load loupeLayer
     if (!_loupeLayer){
         _loupeLayer = [BGRSLoupeLayer layer];
@@ -382,9 +313,14 @@ void getComponentsForColor(float components[3], UIColor *color) {
 	[_loupeLayer disapear];
 }
 
-- (void)dealloc
-{
-    _loupeLayer = nil;
+#pragma mark - Helpers
+
+- (CGPoint)convertGradientPointToView:(CGPoint)point {
+	return CGPointMake(point.x + CGRectGetMinX(_gradientContainer.frame), point.y + CGRectGetMinY(_gradientContainer.frame));
+}
+
+- (CGPoint)convertViewPointToGradient:(CGPoint)point {
+	return CGPointMake(point.x - CGRectGetMinX(_gradientContainer.frame), point.y - CGRectGetMinY(_gradientContainer.frame));
 }
 
 @end
