@@ -17,7 +17,7 @@
 {
 	UIViewController *rootController = [[UIViewController alloc] initWithNibName:nil bundle:nil];
     
-	rootController.view.backgroundColor = [UIColor greenColor];
+	rootController.view.backgroundColor = [UIColor whiteColor];
 	
     
     // View that displays color picker (needs to be square)
@@ -35,42 +35,50 @@
 	
     
     // View that shows selected color
-	_colorPatch = [[UIView alloc] initWithFrame:CGRectMake(10.0, 380.0, 300.0, 30.0)];
+	_colorPatch = [[UIView alloc] initWithFrame:CGRectMake(160, 380.0, 150, 30.0)];
 	[rootController.view addSubview:_colorPatch];
     
     
     // Buttons for testing
     UIButton *selectRed = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    selectRed.frame = CGRectMake(10.0, 420.0, 50.0, 30.0);
-    [selectRed setTitle:@"Red" forState:UIControlStateNormal];
+    selectRed.frame = CGRectMake(10.0, 375, 50.0, 30.0);
+    [selectRed setTitle:@"R" forState:UIControlStateNormal];
+	[selectRed sizeToFit];
     [selectRed addTarget:self action:@selector(selectRed:) forControlEvents:UIControlEventTouchUpInside];
     [rootController.view addSubview:selectRed];
     
     UIButton *selectGreen = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    selectGreen.frame = CGRectMake(70.0, 420.0, 50.0, 30.0);
-    [selectGreen setTitle:@"Green" forState:UIControlStateNormal];
+    selectGreen.frame = CGRectMake(50, 375, 50.0, 30.0);
+    [selectGreen setTitle:@"G" forState:UIControlStateNormal];
+	[selectGreen sizeToFit];
     [selectGreen addTarget:self action:@selector(selectGreen:) forControlEvents:UIControlEventTouchUpInside];
     [rootController.view addSubview:selectGreen];
     
     UIButton *selectBlue = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    selectBlue.frame = CGRectMake(130.0, 420.0, 50.0, 30.0);
-    [selectBlue setTitle:@"Blue" forState:UIControlStateNormal];
+    selectBlue.frame = CGRectMake(90, 375, 50.0, 30.0);
+    [selectBlue setTitle:@"B" forState:UIControlStateNormal];
+	[selectBlue sizeToFit];
     [selectBlue addTarget:self action:@selector(selectBlue:) forControlEvents:UIControlEventTouchUpInside];
     [rootController.view addSubview:selectBlue];
     
     UIButton *selectBlack = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    selectBlack.frame = CGRectMake(190.0, 420.0, 50.0, 30.0);
+    selectBlack.frame = CGRectMake(10, 420.0, 50.0, 30.0);
     [selectBlack setTitle:@"Black" forState:UIControlStateNormal];
+	[selectBlack sizeToFit];
     [selectBlack addTarget:self action:@selector(selectBlack:) forControlEvents:UIControlEventTouchUpInside];
     [rootController.view addSubview:selectBlack];
     
     UIButton *selectWhite = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    selectWhite.frame = CGRectMake(260.0, 420.0, 50.0, 30.0);
+    selectWhite.frame = CGRectMake(CGRectGetMaxX(selectBlack.frame) + 10, 420.0, 50.0, 30.0);
     [selectWhite setTitle:@"White" forState:UIControlStateNormal];
+	[selectWhite sizeToFit];
     [selectWhite addTarget:self action:@selector(selectWhite:) forControlEvents:UIControlEventTouchUpInside];
     [rootController.view addSubview:selectWhite];
 	
-    
+    UISwitch *circleSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(CGRectGetMaxX(selectWhite.frame) + 10, 420, 0, 0)];
+	[circleSwitch addTarget:self action:@selector(circleSwitchAction:) forControlEvents:UIControlEventValueChanged];
+	[rootController.view addSubview:circleSwitch];
+	
 	self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
 	self.window.rootViewController = rootController;
 
@@ -85,7 +93,7 @@
 	_colorPatch.backgroundColor = [cp selectionColor];
 }
 
-#pragma mark - Select colors
+#pragma mark - User action
 
 -(void)selectRed:(id)sender {
     [_colorPicker setSelectionColor:[UIColor redColor]];
@@ -103,6 +111,11 @@
 -(void)selectWhite:(id)sender {
     [_colorPicker setSelectionColor:[UIColor whiteColor]];
 //    [_colorPicker setSelectionColor:[UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0]];
+}
+
+- (void)circleSwitchAction:(UISwitch *)s
+{
+	_colorPicker.cropToCircle = s.isOn;
 }
 
 @end

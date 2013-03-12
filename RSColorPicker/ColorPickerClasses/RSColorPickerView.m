@@ -168,7 +168,7 @@ void getComponentsForColor(float components[3], UIColor *color) {
 	
     _rep = [[ANImageBitmapRep alloc] initWithSize:BMPointFromSize(_gradientView.bounds.size)];
 	[self genBitmap];
-    
+
 	self.cropToCircle = YES;
     self.brightness = 1.0;
 	self.selectionColor = [UIColor whiteColor];
@@ -188,6 +188,9 @@ void getComponentsForColor(float components[3], UIColor *color) {
 	_gradientShape = circle ? [UIBezierPath bezierPathWithOvalInRect:_gradientContainer.frame] : [UIBezierPath bezierPathWithRect:_gradientContainer.frame];
 	CGRect activeAreaFrame = CGRectInset(_gradientContainer.frame, _selectionView.bounds.size.width / 2.0, _selectionView.bounds.size.height / 2.0);
 	_activeAreaShape = circle ? [UIBezierPath bezierPathWithOvalInRect:activeAreaFrame] : [UIBezierPath bezierPathWithRect:activeAreaFrame];
+	
+	_selection = [self validPointForTouch:_selection];
+	
 	[self updateSelectionLocation];
 }
 
