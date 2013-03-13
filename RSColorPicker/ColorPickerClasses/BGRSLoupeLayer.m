@@ -134,6 +134,18 @@ const int NUM_PIXELS = 5, NUM_SKIP = 15;
 	CGContextAddPath(ctx, self.gridCirclePath);
 	CGContextStrokePath(ctx);
 			
+	const CGFloat w = ceilf(LOUPE_SIZE/NUM_PIXELS);
+
+	//Draw Selection Square
+	CGFloat xyOffset = -(w+1)/2;
+	CGRect selectedRect = CGRectMake(xyOffset, xyOffset, w, w);
+	CGContextAddRect(ctx, selectedRect);
+	
+	CGContextSetStrokeColorWithColor(ctx, [UIColor blackColor].CGColor);
+	CGContextSetLineWidth(ctx, 1.0);
+	CGContextStrokePath(ctx);
+
+	
 	UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
 	UIGraphicsEndImageContext();
 	return image;
@@ -144,7 +156,7 @@ const int NUM_PIXELS = 5, NUM_SKIP = 15;
 	CGContextAddPath(ctx, self.gridCirclePath);  //Clip gird drawing to inside of loupe
 	CGContextClip(ctx);
 	
-	//[self drawGridInContext:ctx];
+	[self drawGridInContext:ctx];
 }
 
 - (void)drawGridInContext:(CGContextRef)ctx
@@ -173,24 +185,12 @@ const int NUM_PIXELS = 5, NUM_SKIP = 15;
 			CGContextFillPath(ctx);
 			
 			CGPathRelease(pixelPath);
-			//NSLog(@"CurrentPoint x:%f y:%f",currentPoint.x,currentPoint.y);
 			
 			currentPoint.x += NUM_SKIP;
 		}
 		currentPoint.x -= NUM_PIXELS*NUM_SKIP;
 		currentPoint.y += NUM_SKIP;
 	}
-	
-	//Draw Selection Square
-	CGFloat xyOffset = -(w+1)/2;
-	CGRect selectedRect = CGRectMake(xyOffset, xyOffset, w, w);
-	CGContextAddRect(ctx, selectedRect);
-	
-	CGContextSetStrokeColorWithColor(ctx, [UIColor blackColor].CGColor);
-	CGContextSetLineWidth(ctx, 1.0);
-	CGContextStrokePath(ctx);
-	
-	//NSLog(@" ",nil);
 }
 
 - (void)drawGlintInContext:(CGContextRef)ctx{
