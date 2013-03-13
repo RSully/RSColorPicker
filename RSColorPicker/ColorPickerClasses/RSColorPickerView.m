@@ -236,12 +236,12 @@
 	CGPoint circlePoint = [self validPointForTouch:point];
 	_selection = circlePoint;
 
-//	_selectionColor = [self colorAtPoint:circlePoint];
-//	_selectionView.selectedColor = _selectionColor;
-//	
-//	if (_colorPickerViewFlags.delegateDidChangeSelection) {
-//        [_delegate colorPickerDidChangeSelection:self];
-//    }
+	_selectionColor = [self colorAtPoint:circlePoint];
+	_selectionView.selectedColor = _selectionColor;
+	
+	if (_colorPickerViewFlags.delegateDidChangeSelection) {
+        [_delegate colorPickerDidChangeSelection:self];
+    }
 	
 	[self updateSelectionLocation];
 }
@@ -320,7 +320,8 @@
 }
 
 - (CGPoint)convertViewPointToGradient:(CGPoint)point {
-	return CGPointMake(point.x - CGRectGetMinX(_gradientContainer.frame), point.y - CGRectGetMinY(_gradientContainer.frame));
+	CGRect frame = _gradientContainer.frame;
+	return CGPointMake(point.x - CGRectGetMinX(frame), point.y - CGRectGetMinY(frame));
 }
 
 @end

@@ -98,10 +98,10 @@ const int NUM_PIXELS = 5, NUM_SKIP = 15;
 	CGContextSaveGState(ctx);     //Save before shadow
 	
 	UIBezierPath *inner = [UIBezierPath bezierPathWithOvalInRect:CGRectInset(self.bounds, SHADOW_SIZE + 1, SHADOW_SIZE + 1)];
-	UIBezierPath *outter = [UIBezierPath bezierPathWithRect:self.bounds];
-	[outter appendPath:inner];
-	outter.usesEvenOddFillRule = YES;
-	[outter addClip];
+	UIBezierPath *outer = [UIBezierPath bezierPathWithRect:self.bounds];
+	[outer appendPath:inner];
+	outer.usesEvenOddFillRule = YES;
+	[outer addClip];
 	
 	CGSize shadowOffset = CGSizeMake(0,SHADOW_SIZE/2);
 	CGContextSetShadowWithColor(ctx, shadowOffset, SHADOW_SIZE/2, [UIColor blackColor].CGColor);
@@ -173,18 +173,9 @@ const int NUM_PIXELS = 5, NUM_SKIP = 15;
 		for (i=0; i<NUM_PIXELS; i++){
 			
 			CGRect pixelRect = CGRectMake(w*i-LOUPE_SIZE/2, w*j-LOUPE_SIZE/2, w, w);
-			CGMutablePathRef pixelPath = CGPathCreateMutable();
-			
-			
-			CGPathAddRect(pixelPath, nil, pixelRect);
-			
-			//Fill Path
-			CGContextAddPath(ctx, pixelPath);
 			UIColor* pixelColor = [self.colorPicker colorAtPoint:currentPoint];
 			CGContextSetFillColorWithColor(ctx, pixelColor.CGColor);
-			CGContextFillPath(ctx);
-			
-			CGPathRelease(pixelPath);
+			CGContextFillRect(ctx, pixelRect);
 			
 			currentPoint.x += NUM_SKIP;
 		}

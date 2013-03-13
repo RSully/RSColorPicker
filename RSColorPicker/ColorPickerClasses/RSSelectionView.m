@@ -8,6 +8,13 @@
 
 #import "RSSelectionView.h"
 
+@interface RSSelectionView ()
+
+@property (nonatomic) UIColor *outerRingColor;
+@property (nonatomic) UIColor *innerRingColor;
+
+@end
+
 @implementation RSSelectionView
 
 - (id)initWithFrame:(CGRect)frame
@@ -15,6 +22,8 @@
 	self = [super initWithFrame:frame];
 	if (self) {
 		self.opaque = NO;
+		_outerRingColor = [UIColor colorWithWhite:1 alpha:0.4];
+		_innerRingColor = [UIColor colorWithWhite:0 alpha:1];
 	}
 	return self;
 }
@@ -32,10 +41,10 @@
 	CGContextSetFillColorWithColor(ctx, _selectedColor.CGColor);
 	CGContextFillEllipseInRect(ctx, CGRectInset(rect, 2, 2));
 	CGContextSetLineWidth(ctx, 3);
-	CGContextSetStrokeColorWithColor(ctx, [UIColor colorWithWhite:1 alpha:0.4].CGColor);
+	CGContextSetStrokeColorWithColor(ctx, _outerRingColor.CGColor);
 	CGContextStrokeEllipseInRect(ctx, CGRectInset(rect, 1.5, 1.5));
 	CGContextSetLineWidth(ctx, 2);
-	CGContextSetStrokeColorWithColor(ctx, [UIColor colorWithWhite:0 alpha:1].CGColor);
+	CGContextSetStrokeColorWithColor(ctx, _innerRingColor.CGColor);
 	CGContextStrokeEllipseInRect(ctx, CGRectInset(rect, 3, 3));
 }
 
