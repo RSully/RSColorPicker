@@ -75,8 +75,8 @@
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [super encodeWithCoder:aCoder];
-    [aCoder encodeObject:_selectionColor forKey:@"selectionColor"];
-    [aCoder encodeBool:_cropToCircle forKey:@"cropToCircle"];
+    [aCoder encodeObject:self.selectionColor forKey:@"selectionColor"];
+    [aCoder encodeBool:self.cropToCircle forKey:@"cropToCircle"];
 }
 
 - (void)initRoutine
@@ -126,6 +126,7 @@
     [self genBitmap];
     
     self.selectionColor = _selectionColor;
+    self.cropToCircle = _cropToCircle;
 }
 
 #pragma mark - Business
@@ -191,13 +192,18 @@
 
 - (void)setCropToCircle:(BOOL)circle {
 	_cropToCircle = circle;
-	_gradientContainer.layer.cornerRadius = circle ? _gradientContainer.bounds.size.width / 2.0 : 0;
-	_gradientShape = circle ? [UIBezierPath bezierPathWithOvalInRect:_gradientContainer.frame] : [UIBezierPath bezierPathWithRect:_gradientContainer.frame];
-	CGRect activeAreaFrame = CGRectInset(_gradientContainer.frame, _selectionView.bounds.size.width / 2.0, _selectionView.bounds.size.height / 2.0);
-	_activeAreaShape = circle ? [UIBezierPath bezierPathWithOvalInRect:activeAreaFrame] : [UIBezierPath bezierPathWithRect:activeAreaFrame];
-	
+    
+    CGRect activeAreaFrame = CGRectInset(_gradientContainer.frame, _selectionView.bounds.size.width / 2.0, _selectionView.bounds.size.height / 2.0);
+    if (circle) {
+        _gradientContainer.layer.cornerRadius = _gradientContainer.bounds.size.width / 2.0;
+        _gradientShape = [UIBezierPath bezierPathWithOvalInRect:_gradientContainer.frame];
+        _activeAreaShape = [UIBezierPath bezierPathWithOvalInRect:activeAreaFrame];
+    } else {
+        _gradientContainer.layer.cornerRadius = 0.0;
+        _gradientShape = [UIBezierPath bezierPathWithRect:_gradientContainer.frame];
+        _activeAreaShape = [UIBezierPath bezierPathWithRect:activeAreaFrame];
+    }
 	_selection = [self validPointForTouch:_selection];
-	
 	[self updateSelectionLocation];
 }
 
