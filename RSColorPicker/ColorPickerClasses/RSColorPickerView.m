@@ -59,10 +59,24 @@
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
+    // self = [super initWithFrame:CGRectMake(10.0, 20.0, 300.0, 300.0)];
     if (self) {
         [self initRoutine];
+        
+        if ([aDecoder containsValueForKey:@"selectionColor"]) {
+            self.selectionColor = [aDecoder decodeObjectForKey:@"selectionColor"];
+        }
+        if ([aDecoder containsValueForKey:@"cropToCircle"]) {
+            self.cropToCircle = [aDecoder decodeBoolForKey:@"cropToCircle"];
+        }
     }
     return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder {
+    [super encodeWithCoder:aCoder];
+    [aCoder encodeObject:_selectionColor forKey:@"selectionColor"];
+    [aCoder encodeBool:_cropToCircle forKey:@"cropToCircle"];
 }
 
 - (void)initRoutine
@@ -93,7 +107,6 @@
     [self addSubview:_selectionView];
 	    
 	self.cropToCircle = YES;
-    self.brightness = 1.0;
 	self.selectionColor = [UIColor whiteColor];
 }
 
@@ -111,6 +124,8 @@
     
     _colorPickerViewFlags.bitmapNeedsUpdate = YES;
     [self genBitmap];
+    
+    self.selectionColor = _selectionColor;
 }
 
 #pragma mark - Business
@@ -149,6 +164,7 @@
 #pragma mark - Getters
 
 - (UIColor*)colorAtPoint:(CGPoint)point {
+    if (!_rep) return nil;
 	CGPoint convertedPoint = [self convertViewPointToGradient:point];
 	convertedPoint.x = round(convertedPoint.x);
 	convertedPoint.y = round(convertedPoint.y);
@@ -247,8 +263,11 @@
 	CGPoint circlePoint = [self validPointForTouch:point];
 	_selection = circlePoint;
 
-	_selectionColor = [self colorAtPoint:circlePoint];
-	_selectionView.selectedColor = _selectionColor;
+    UIColor * newColor = [self colorAtPoint:circlePoint];
+    if (newColor) {
+        _selectionColor = newColor;
+        _selectionView.selectedColor = _selectionColor;
+    }
 	
 	if (_colorPickerViewFlags.delegateDidChangeSelection) {
         [_delegate colorPickerDidChangeSelection:self];

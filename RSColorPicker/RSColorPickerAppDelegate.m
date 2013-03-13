@@ -21,10 +21,16 @@
 	
     
     // View that displays color picker (needs to be square)
-	_colorPicker = [[RSColorPickerView alloc] initWithFrame:CGRectMake(10.0, 20.0, 300.0, 300.0)];
+    savePath = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/save.dat"];
+    
+    if ([[NSFileManager defaultManager] fileExistsAtPath:savePath]) {
+        _colorPicker = [NSKeyedUnarchiver unarchiveObjectWithFile:savePath];
+        _colorPicker.frame = CGRectMake(10.0, 20.0, 300.0, 300.0);
+    } else {
+        _colorPicker = [[RSColorPickerView alloc] initWithFrame:CGRectMake(10.0, 20.0, 300.0, 300.0)];
+        [_colorPicker setCropToCircle:YES]; // Defaults to YES (and you can set BG color)
+    }
 	[_colorPicker setDelegate:self];
-	[_colorPicker setBrightness:1.0];
-	[_colorPicker setCropToCircle:YES]; // Defaults to YES (and you can set BG color)
 	[rootController.view addSubview:_colorPicker];
 	
     
@@ -92,6 +98,10 @@
     
 	[self.window makeKeyAndVisible];
 	return YES;
+}
+
+- (void)applicationDidEnterBackground:(UIApplication *)application {
+    [NSKeyedArchiver archiveRootObject:_colorPicker toFile:savePath];
 }
 
 #pragma mark - RSColorPickerView delegate methods
