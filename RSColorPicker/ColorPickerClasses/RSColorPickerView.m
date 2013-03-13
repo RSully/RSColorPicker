@@ -225,7 +225,7 @@
 	_loupeLayer.position = _selection;
 	//make loupeLayer sharp on screen
 	CGRect loupeFrame = _loupeLayer.frame;
-	loupeFrame.origin = CGPointMake(floor(loupeFrame.origin.x), floor(loupeFrame.origin.y));
+	loupeFrame.origin = CGPointMake(round(loupeFrame.origin.x), round(loupeFrame.origin.y));
 	_loupeLayer.frame = loupeFrame;
 	
 	[_loupeLayer setNeedsDisplay];
@@ -236,12 +236,12 @@
 	CGPoint circlePoint = [self validPointForTouch:point];
 	_selection = circlePoint;
 
-	_selectionColor = [self colorAtPoint:circlePoint];
-	_selectionView.selectedColor = _selectionColor;
-	
-	if (_colorPickerViewFlags.delegateDidChangeSelection) {
-        [_delegate colorPickerDidChangeSelection:self];
-    }
+//	_selectionColor = [self colorAtPoint:circlePoint];
+//	_selectionView.selectedColor = _selectionColor;
+//	
+//	if (_colorPickerViewFlags.delegateDidChangeSelection) {
+//        [_delegate colorPickerDidChangeSelection:self];
+//    }
 	
 	[self updateSelectionLocation];
 }
