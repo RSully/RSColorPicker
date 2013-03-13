@@ -135,7 +135,7 @@ const int NUM_PIXELS = 5, NUM_SKIP = 15;
 			CGContextFillPath(ctx);
 			
 			CGPathRelease(pixelPath);
-			//NSLog(@"CurrentPoint x:%f y:%f",currentPoint.x,currentPoint.y);
+//			NSLog(@"CurrentPoint %@", NSStringFromCGPoint(currentPoint));
 			
 			currentPoint.x += NUM_SKIP;
 		}
@@ -151,8 +151,6 @@ const int NUM_PIXELS = 5, NUM_SKIP = 15;
 	CGContextSetStrokeColorWithColor(ctx, [UIColor blackColor].CGColor);
 	CGContextSetLineWidth(ctx, 1.0);
 	CGContextStrokePath(ctx);
-	
-	//NSLog(@" ",nil);
 }
 
 - (void)drawGlintInContext:(CGContextRef)ctx{
@@ -180,7 +178,7 @@ const int NUM_PIXELS = 5, NUM_SKIP = 15;
 	
 	CGContextClosePath(ctx);
 	CGContextSaveGState(ctx);     //Save context for cliping
-	CGContextClip (ctx);
+	CGContextClip(ctx);
 	
 	CGColorSpaceRef space = CGColorSpaceCreateDeviceGray();
 	NSArray* colors = [[NSArray alloc] initWithObjects:
@@ -201,7 +199,7 @@ const int NUM_PIXELS = 5, NUM_SKIP = 15;
 	
 	CGContextAddArc(ctx, 0, yOff, radius, 0, M_2_PI, YES);
 	CGContextSaveGState(ctx);     //Save context for cliping
-	CGContextClip (ctx);
+	CGContextClip(ctx);
 	
 	colors = [[NSArray alloc] initWithObjects:
 			  (id)[UIColor colorWithWhite:1.0 alpha:0.5].CGColor,
@@ -209,7 +207,7 @@ const int NUM_PIXELS = 5, NUM_SKIP = 15;
 	
 	myGradient = CGGradientCreateWithColors(space, (__bridge CFArrayRef)colors, NULL);
 	
-	CGContextDrawRadialGradient(ctx, myGradient,glintCenter, 0.0, glintCenter, radius, 0.0);
+	CGContextDrawRadialGradient(ctx, myGradient, glintCenter, 0.0, glintCenter, radius, 0.0);
 	CGGradientRelease(myGradient);
 	CGContextRestoreGState(ctx);
 	
@@ -219,8 +217,10 @@ const int NUM_PIXELS = 5, NUM_SKIP = 15;
 
 #pragma mark - Animation
 
+static NSString* const kAppearKey = @"cp_l_appear";
+
 - (void)appearInColorPicker:(RSColorPickerView*)aColorPicker{
-	if (self.colorPicker != aColorPicker){
+	if (self.colorPicker != aColorPicker) {
 		self.colorPicker = aColorPicker;
 	}
     
@@ -238,19 +238,19 @@ const int NUM_PIXELS = 5, NUM_SKIP = 15;
 	springEffect.values = @[@(0.1), @(1.4), @(0.95), @(1)];
 	springEffect.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
 	springEffect.removedOnCompletion = NO;
-	springEffect.duration = 0.3;
+	springEffect.duration = 0.35f;
     springEffect.delegate = self;
     
 	// Animate
-	[self addAnimation:springEffect forKey:@"appear"];
+	[self addAnimation:springEffect forKey:kAppearKey];
 }
 
 /**
  * Disapear removes the loupe view from the color picker by shrinking it down to zero
  */
-static NSString* const kDisapearKey = @"disapear";
+static NSString* const kDisappearKey = @"cp_l_disappear";
 
-- (void)disapear
+- (void)disappear
 {
     isReadyToDismiss = YES;
     if (isRunningInitialAnimation) return;
@@ -263,18 +263,19 @@ static NSString* const kDisapearKey = @"disapear";
 	disapear.delegate  = self;
 	disapear.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
 	disapear.removedOnCompletion = NO;
-	[self addAnimation:disapear forKey:kDisapearKey];
+	[self addAnimation:disapear forKey:kDisappearKey];
 }
 
 - (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag {
-    if (!flag) return;
-	if (anim == [self animationForKey:kDisapearKey]){
+	if (anim == [self animationForKey:kDisappearKey]){
+        if (!flag) return;
+        
 		[self removeFromSuperlayer];
 		self.transform = CATransform3DIdentity;
-	} else {
+	} else if (anim == [self animationForKey:kAppearKey]) {
         isRunningInitialAnimation = NO;
         if (isReadyToDismiss) {
-            [self disapear];
+            [self disappear];
         }
     }
 }

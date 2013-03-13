@@ -338,7 +338,7 @@
 		[self updateSelectionAtPoint:point];
 	}
 	_colorPickerViewFlags.badTouch = NO;
-	[_loupeLayer disapear];
+	[_loupeLayer disappear];
 }
 
 #pragma mark - Helpers
