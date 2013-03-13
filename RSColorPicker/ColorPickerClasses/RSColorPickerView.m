@@ -28,7 +28,7 @@
 @property (nonatomic) UIImageView *gradientView;
 @property (nonatomic) UIView *gradientContainer;
 
-@property (nonatomic) BGRSLoupeLayer* loupeLayer;
+@property (nonatomic) BGRSLoupeLayer *loupeLayer;
 @property (nonatomic) CGPoint selection;
 
 @property (nonatomic) CGFloat scale;
@@ -251,7 +251,7 @@
 	_loupeLayer.position = _selection;
 	//make loupeLayer sharp on screen
 	CGRect loupeFrame = _loupeLayer.frame;
-	loupeFrame.origin = CGPointMake(floor(loupeFrame.origin.x), floor(loupeFrame.origin.y));
+	loupeFrame.origin = CGPointMake(round(loupeFrame.origin.x), round(loupeFrame.origin.y));
 	_loupeLayer.frame = loupeFrame;
 	
 	[_loupeLayer setNeedsDisplay];
@@ -284,7 +284,7 @@
 	} else {
 		//we compute the right point on the gradient border
 		
-		// TouchCircle is the circle which pass by the point 'touchPoint', whose radius 'r'
+		// TouchCircle is the circle which pass by the point 'touchPoint', of radius 'r'
 		//'X' is the x coordinate of the touch in TouchCircle
 		CGFloat X = touchPoint.x - CGRectGetMidX(_gradientContainer.frame);
 		//'Y' is the y coordinate of the touch in TouchCircle
@@ -308,7 +308,7 @@
 		returnedPoint.x = fabs(actualRadius) * cos(alpha);
 		returnedPoint.y = fabs(actualRadius) * sin(alpha);
 		
-		//we offset the center of the circle, to get the coordinate with the right top left origin
+		//we offset the center of the circle, to get the coordinate from the right top left origin
 		returnedPoint.x = returnedPoint.x + CGRectGetMidX(_gradientContainer.frame);
 		returnedPoint.y = CGRectGetMidY(_gradientContainer.frame) - returnedPoint.y;
 	}
@@ -348,7 +348,8 @@
 }
 
 - (CGPoint)convertViewPointToGradient:(CGPoint)point {
-	return CGPointMake(point.x - CGRectGetMinX(_gradientContainer.frame), point.y - CGRectGetMinY(_gradientContainer.frame));
+	CGRect frame = _gradientContainer.frame;
+	return CGPointMake(point.x - CGRectGetMinX(frame), point.y - CGRectGetMinY(frame));
 }
 
 @end

@@ -31,8 +31,13 @@
 #import "BGRSLoupeLayer.h"
 #import "RSColorPickerView.h"
 
-@interface BGRSLoupeLayer (Private)
+@interface BGRSLoupeLayer ()
+
+@property (nonatomic) struct CGPath *gridCirclePath;
+
 - (void)drawGlintInContext:(CGContextRef)ctx;
+- (UIImage *)loupeImage;
+
 @end
 
 
@@ -40,7 +45,7 @@
 
 @synthesize loupeCenter, colorPicker;
 
-const CGFloat LOUPE_SIZE = 85, SHADOW_SIZE = 6;
+const CGFloat LOUPE_SIZE = 85, SHADOW_SIZE = 6, RIM_THICKNESS = 3.0;
 const int NUM_PIXELS = 5, NUM_SKIP = 15;
 
 - (id)init
@@ -49,8 +54,16 @@ const int NUM_PIXELS = 5, NUM_SKIP = 15;
 	if (self) {
 		CGFloat size = LOUPE_SIZE+2*SHADOW_SIZE;
 		self.bounds = CGRectMake(-size/2,-size/2,size,size);
-		self.anchorPoint = CGPointMake(0.5, LOUPE_SIZE/(LOUPE_SIZE+SHADOW_SIZE));
+		self.anchorPoint = CGPointMake(0.5, 1);
 		self.contentsScale = [UIScreen mainScreen].scale;
+
+		UIImage *loupeImage = [self loupeImage];
+		CALayer *loupeLayer = [CALayer layer];
+		loupeLayer.bounds = self.bounds;
+		loupeLayer.position = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
+		loupeLayer.contents = (id)loupeImage.CGImage;
+		
+		[self addSublayer:loupeLayer];
 	}
 	return self;
 }
@@ -58,14 +71,37 @@ const int NUM_PIXELS = 5, NUM_SKIP = 15;
 - (void)dealloc
 {
 	self.colorPicker = nil;
+	if (_gridCirclePath) CGPathRelease(_gridCirclePath);
 }
 
-- (void)drawInContext:(CGContextRef)ctx
+- (struct CGPath *)gridCirclePath
 {
-	const CGFloat rimThickness = 3.0;
+	if (_gridCirclePath == NULL) {
+		CGMutablePathRef circlePath = CGPathCreateMutable();
+		const CGFloat radius = LOUPE_SIZE/2;
+		CGPathAddArc(circlePath, nil, 0, 0, radius-RIM_THICKNESS/2, 0, 2*M_PI, YES);
+		_gridCirclePath = circlePath;
+	}
+	return _gridCirclePath;
+}
+
+- (UIImage *)loupeImage
+{
+	UIGraphicsBeginImageContextWithOptions(self.bounds.size, NO, 0);
+	
+	CGContextRef ctx = UIGraphicsGetCurrentContext();
+	
+	CGFloat size = LOUPE_SIZE+2*SHADOW_SIZE;
+	CGContextTranslateCTM(ctx, size/2, size/2);
 	
 	//Draw Shadow
 	CGContextSaveGState(ctx);     //Save before shadow
+	
+	UIBezierPath *inner = [UIBezierPath bezierPathWithOvalInRect:CGRectInset(self.bounds, SHADOW_SIZE + 1, SHADOW_SIZE + 1)];
+	UIBezierPath *outer = [UIBezierPath bezierPathWithRect:self.bounds];
+	[outer appendPath:inner];
+	outer.usesEvenOddFillRule = YES;
+	[outer addClip];
 	
 	CGSize shadowOffset = CGSizeMake(0,SHADOW_SIZE/2);
 	CGContextSetShadowWithColor(ctx, shadowOffset, SHADOW_SIZE/2, [UIColor blackColor].CGColor);
@@ -75,38 +111,52 @@ const int NUM_PIXELS = 5, NUM_SKIP = 15;
 	CGContextFillPath(ctx);
 	
 	CGContextRestoreGState(ctx);  //Restore context after shadow
-	
-	//Create Loupe Circle Path
-	CGMutablePathRef circlePath = CGPathCreateMutable();
-	const CGFloat radius = LOUPE_SIZE/2;
-	CGPathAddArc(circlePath, nil, 0, 0, radius-rimThickness/2, 0, 2*M_PI, YES);
-	
+		
 	//Create Cliping Area
 	CGContextSaveGState(ctx);     //Save context for cliping
 	
-	CGContextAddPath(ctx, circlePath);  //Clip gird drawing to inside of loupe
+	CGContextAddPath(ctx, self.gridCirclePath);  //Clip gird drawing to inside of loupe
 	CGContextClip(ctx);
 	
-	//Draw Colorfull grid
-	[self drawGridInContext:ctx];
 	[self drawGlintInContext:ctx];
 	
 	CGContextRestoreGState(ctx);  //Restor from clip drawing
 	
 	//Stroke Rim of Loupe
-	CGContextSetLineWidth(ctx, rimThickness);
+	CGContextSetLineWidth(ctx, RIM_THICKNESS);
 	CGContextSetStrokeColorWithColor(ctx, [UIColor blackColor].CGColor);
-	CGContextAddPath(ctx, circlePath);
+	CGContextAddPath(ctx, self.gridCirclePath);
 	CGContextStrokePath(ctx);
 	
 	//Draw center of rim loupe
-	CGContextSetLineWidth(ctx, rimThickness-1);
+	CGContextSetLineWidth(ctx, RIM_THICKNESS-1);
 	CGContextSetStrokeColorWithColor(ctx, [UIColor whiteColor].CGColor);
-	CGContextAddPath(ctx, circlePath);
+	CGContextAddPath(ctx, self.gridCirclePath);
 	CGContextStrokePath(ctx);
+			
+	const CGFloat w = ceilf(LOUPE_SIZE/NUM_PIXELS);
+
+	//Draw Selection Square
+	CGFloat xyOffset = -(w+1)/2;
+	CGRect selectedRect = CGRectMake(xyOffset, xyOffset, w, w);
+	CGContextAddRect(ctx, selectedRect);
 	
-	//Memory
-	CGPathRelease(circlePath);
+	CGContextSetStrokeColorWithColor(ctx, [UIColor blackColor].CGColor);
+	CGContextSetLineWidth(ctx, 1.0);
+	CGContextStrokePath(ctx);
+
+	
+	UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+	UIGraphicsEndImageContext();
+	return image;
+}
+
+- (void)drawInContext:(CGContextRef)ctx
+{
+	CGContextAddPath(ctx, self.gridCirclePath);  //Clip gird drawing to inside of loupe
+	CGContextClip(ctx);
+	
+	[self drawGridInContext:ctx];
 }
 
 - (void)drawGridInContext:(CGContextRef)ctx
@@ -123,34 +173,15 @@ const int NUM_PIXELS = 5, NUM_SKIP = 15;
 		for (i=0; i<NUM_PIXELS; i++){
 			
 			CGRect pixelRect = CGRectMake(w*i-LOUPE_SIZE/2, w*j-LOUPE_SIZE/2, w, w);
-			CGMutablePathRef pixelPath = CGPathCreateMutable();
-			
-			
-			CGPathAddRect(pixelPath, nil, pixelRect);
-			
-			//Fill Path
-			CGContextAddPath(ctx, pixelPath);
 			UIColor* pixelColor = [self.colorPicker colorAtPoint:currentPoint];
 			CGContextSetFillColorWithColor(ctx, pixelColor.CGColor);
-			CGContextFillPath(ctx);
-			
-			CGPathRelease(pixelPath);
-//			NSLog(@"CurrentPoint %@", NSStringFromCGPoint(currentPoint));
+			CGContextFillRect(ctx, pixelRect);
 			
 			currentPoint.x += NUM_SKIP;
 		}
 		currentPoint.x -= NUM_PIXELS*NUM_SKIP;
 		currentPoint.y += NUM_SKIP;
 	}
-	
-	//Draw Selection Square
-	CGFloat xyOffset = -(w+1)/2;
-	CGRect selectedRect = CGRectMake(xyOffset, xyOffset, w, w);
-	CGContextAddRect(ctx, selectedRect);
-	
-	CGContextSetStrokeColorWithColor(ctx, [UIColor blackColor].CGColor);
-	CGContextSetLineWidth(ctx, 1.0);
-	CGContextStrokePath(ctx);
 }
 
 - (void)drawGlintInContext:(CGContextRef)ctx{
