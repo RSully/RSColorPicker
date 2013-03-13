@@ -24,7 +24,6 @@
 @property (nonatomic, weak) id <RSColorPickerViewDelegate> delegate;
 @property (nonatomic, readonly) CGPoint selection;
 
--(void)selectionToHue:(CGFloat *)pH saturation:(CGFloat *)pS brightness:(CGFloat *)pV;
 -(UIColor*)colorAtPoint:(CGPoint)point; //Returns UIColor at a point in the RSColorPickerView
 
 @end

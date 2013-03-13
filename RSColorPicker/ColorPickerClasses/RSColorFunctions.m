@@ -35,3 +35,13 @@ void RSGetComponentsForColor(float components[3], UIColor *color) {
         components[component] = resultingPixel[component] / 255.0f;
     }
 }
+
+CGSize RSCGSizeWithScale(CGSize size, CGFloat scale) {
+    return CGSizeMake(size.width * scale, size.height * scale);
+}
+CGPoint RSCGPointWithScale(CGPoint point, CGFloat scale) {
+    return CGPointMake(point.x * scale, point.y * scale);
+}
+UIImage* RSUIImageWithScale(UIImage *img, CGFloat scale) {
+    return [UIImage imageWithCGImage:img.CGImage scale:scale orientation:UIImageOrientationUp];
+}

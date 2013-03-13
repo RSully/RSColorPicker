@@ -11,7 +11,9 @@
 
 @class RSBrightnessSlider;
 
-@interface RSColorPickerAppDelegate : NSObject <UIApplicationDelegate, RSColorPickerViewDelegate>
+@interface RSColorPickerAppDelegate : NSObject <UIApplicationDelegate, RSColorPickerViewDelegate> {
+    NSString * savePath;
+}
 
 @property (nonatomic, strong) UIWindow *window;
 
