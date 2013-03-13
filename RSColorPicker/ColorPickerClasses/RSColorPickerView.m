@@ -296,15 +296,18 @@
 		if (touchPoint.y > CGRectGetMidX(_gradientContainer.frame)) alpha = 2 * M_PI - alpha;
 		
 		//'actual radius' is the distance between the center and the border of the gradient
-		CGFloat actualRadius;
-		if (_cropToCircle) {
-			actualRadius = _gradientShape.bounds.size.width / 2.0 - _selectionView.bounds.size.width / 2.0;
-		} else {
+        CGFloat actualRadius;
+        if (_cropToCircle) {
+            actualRadius = _gradientShape.bounds.size.width / 2.0 - _selectionView.bounds.size.width / 2.0;
+        } else {
 			//square shape - using the intercept theorem we have "actualRadius / r == 0.5*gradientContainer.height / Y"
-			if ( (alpha >= M_PI_4 && alpha < 3 * M_PI_4) || (alpha >= 5 * M_PI_4 && alpha < 7 * M_PI_4) ) actualRadius = r * (_gradientContainer.bounds.size.height / 2.0 - _selectionView.bounds.size.height / 2.0 ) / Y;
-			else actualRadius = r * (_gradientContainer.bounds.size.width / 2.0 - _selectionView.bounds.size.width / 2.0) / X;
+            if ( (alpha >= M_PI_4 && alpha < 3 * M_PI_4) || (alpha >= 5 * M_PI_4 && alpha < 7 * M_PI_4) ) {
+                actualRadius = r * (_gradientContainer.bounds.size.height / 2.0 - _selectionView.bounds.size.height / 2.0 ) / Y;
+            } else {
+                actualRadius = r * (_gradientContainer.bounds.size.width / 2.0 - _selectionView.bounds.size.width / 2.0) / X;
+            }
 		}
-		
+        
 		returnedPoint.x = fabs(actualRadius) * cos(alpha);
 		returnedPoint.y = fabs(actualRadius) * sin(alpha);
 		
