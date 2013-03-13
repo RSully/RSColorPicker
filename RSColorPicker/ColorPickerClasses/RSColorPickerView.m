@@ -31,6 +31,8 @@
 @property (nonatomic) BGRSLoupeLayer* loupeLayer;
 @property (nonatomic) CGPoint selection;
 
+@property (nonatomic) CGFloat scale;
+
 - (void)initRoutine;
 - (void)updateSelectionLocation;
 - (CGPoint)validPointForTouch:(CGPoint)touchPoint;
@@ -45,8 +47,8 @@
 #pragma mark - Object lifecycle
 
 - (id)initWithFrame:(CGRect)frame {
-	CGFloat sqr = fmin(frame.size.height, frame.size.width);
-	frame.size = CGSizeMake(sqr, sqr);
+	CGFloat square = fmin(frame.size.height, frame.size.width);
+	frame.size = CGSizeMake(square, square);
 	
 	self = [super initWithFrame:frame];
 	if (self) {
@@ -67,7 +69,7 @@
 {
 	self.opaque = YES;
 	self.backgroundColor = [UIColor whiteColor];
-	_colorPickerViewFlags.bitmapNeedsUpdate = YES;
+	_colorPickerViewFlags.bitmapNeedsUpdate = NO;
 	
 	//the view used to select the colour
     _selectionView = [[RSSelectionView alloc] initWithFrame:CGRectMake(0.0, 0.0, 22.0, 22.0)];
@@ -78,18 +80,18 @@
 	_gradientContainer.backgroundColor = [UIColor blackColor];
 	_gradientContainer.clipsToBounds = YES;
 	_gradientContainer.layer.shouldRasterize = YES;
-	_gradientContainer.layer.contentsScale = [UIScreen mainScreen].scale;
 	[self addSubview:_gradientContainer];
 	
 	_gradientView = [[UIImageView alloc] initWithFrame:_gradientContainer.bounds];
+    _gradientView.contentMode = UIViewContentModeScaleAspectFill;
+    _gradientView.backgroundColor = [UIColor blackColor];
+    _gradientView.clipsToBounds = YES;
+    _gradientView.layer.shouldRasterize = YES;
 	[_gradientContainer addSubview:_gradientView];
 	
     [self updateSelectionLocationDisableActions:NO];
     [self addSubview:_selectionView];
-	
-    _rep = [[ANImageBitmapRep alloc] initWithSize:BMPointFromSize(_gradientView.bounds.size)];
-	[self genBitmap];
-
+	    
 	self.cropToCircle = YES;
     self.brightness = 1.0;
 	self.selectionColor = [UIColor whiteColor];
@@ -99,13 +101,25 @@
     _loupeLayer = nil;
 }
 
+-(void)didMoveToWindow {
+    NSLog(@"-didMoveToWindow");
+    // Anything that depends on _scale to init needs to be here
+    _scale = self.window.screen.scale;
+    
+    _gradientContainer.layer.contentsScale = _scale;
+    _rep = [[ANImageBitmapRep alloc] initWithSize:BMPointFromSize(RSCGSizeWithScale(_gradientView.bounds.size, _scale))];
+    
+    _colorPickerViewFlags.bitmapNeedsUpdate = YES;
+    [self genBitmap];
+}
 
 #pragma mark - Business
 
 - (void)genBitmap {
+    NSLog(@"-genBitmap");
 	if (!_colorPickerViewFlags.bitmapNeedsUpdate) return;
     
-    CGFloat paddingDistance = _selectionView.bounds.size.width / 2.0;
+    CGFloat paddingDistance = (_selectionView.bounds.size.width / 2.0) * _scale;
 	CGFloat radius = _rep.bitmapSize.x / 2.0;
     CGFloat relRadius = radius - paddingDistance;
 	CGFloat relX = 0.0;
@@ -129,14 +143,10 @@
 		}
 	}
 	_colorPickerViewFlags.bitmapNeedsUpdate = NO;
-	_gradientView.image = [_rep image];
+	_gradientView.image = [_rep image];//RSUIImageWithScale([_rep image], _scale);
 }
 
 #pragma mark - Getters
-
-- (void)selectionToHue:(CGFloat *)pH saturation:(CGFloat *)pS brightness:(CGFloat *)pV {
-	[_selectionColor getHue:pH saturation:pS brightness:pV alpha:NULL];
-}
 
 - (UIColor*)colorAtPoint:(CGPoint)point {
 	CGPoint convertedPoint = [self convertViewPointToGradient:point];
@@ -148,7 +158,7 @@
 	if (convertedPoint.y < 0) convertedPoint.y = 0;
 	if (convertedPoint.y >= _gradientContainer.bounds.size.height) convertedPoint.y = _gradientContainer.bounds.size.height - 1;
 	
-	BMPixel pixel = [_rep getPixelAtPoint:BMPointFromPoint(convertedPoint)];
+	BMPixel pixel = [_rep getPixelAtPoint:BMPointFromPoint(RSCGPointWithScale(convertedPoint, _scale))];
 	UIColor *rgbColor = [UIColor colorWithRed:pixel.red green:pixel.green blue:pixel.blue alpha:1];
 	CGFloat h, s, v;
 	[rgbColor getHue:&h saturation:&s brightness:&v alpha:NULL];
@@ -186,9 +196,10 @@
     CGFloat h, s, v;
 	BOOL gotHSV = [selectionColor getHue:&h saturation:&s brightness:&v alpha:NULL];
     if (!gotHSV) {
+        NSLog(@"Failed to get HSV");
         return;
     }
-    CGFloat paddingDistance = _selectionView.bounds.size.width / 2.0;
+    CGFloat paddingDistance = (_selectionView.bounds.size.width / 2.0) * _scale;
     
     CGFloat radius = (_rep.bitmapSize.x / 2.0);
 	CGFloat angle = h * (2.0 * M_PI);
@@ -198,7 +209,7 @@
     CGFloat pointX = (cos(angle) * r_distance) + radius;
     CGFloat pointY = radius - (sin(angle) * r_distance);
     
-    _selection = [self convertGradientPointToView:CGPointMake(pointX, pointY)];
+    _selection = [self convertGradientPointToView:RSCGPointWithScale(CGPointMake(pointX, pointY), _scale == 0 ? 1 : 1/_scale)];
     _selectionColor = selectionColor;
     
     [self updateSelectionLocation];
@@ -249,7 +260,6 @@
 #pragma mark - Touch events
 
 - (CGPoint)validPointForTouch:(CGPoint)touchPoint {
-	
 	CGPoint returnedPoint;
 	if ([_activeAreaShape containsPoint:touchPoint]) {
 		returnedPoint = touchPoint;

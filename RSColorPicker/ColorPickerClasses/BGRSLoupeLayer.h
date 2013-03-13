@@ -33,7 +33,10 @@
 
 @class RSColorPickerView;
 
-@interface BGRSLoupeLayer : CALayer
+@interface BGRSLoupeLayer : CALayer {
+    BOOL isReadyToDismiss;
+    BOOL isRunningInitialAnimation;
+}
 
 @property (nonatomic) CGPoint loupeCenter;
 @property (nonatomic, weak) RSColorPickerView* colorPicker;

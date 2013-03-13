@@ -223,17 +223,24 @@ const int NUM_PIXELS = 5, NUM_SKIP = 15;
 	if (self.colorPicker != aColorPicker){
 		self.colorPicker = aColorPicker;
 	}
+    
+    [self removeAllAnimations];
+    self.transform = CATransform3DIdentity;
+    isReadyToDismiss = NO;
+    
 	//Add Layer to color picker
 	[CATransaction setDisableActions:YES];
 	[self.colorPicker.layer addSublayer:self];
 	
 	//Animate Arival
+    isRunningInitialAnimation = YES;
 	CAKeyframeAnimation *springEffect = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale"];
 	springEffect.values = @[@(0.1), @(1.4), @(0.95), @(1)];
 	springEffect.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
 	springEffect.removedOnCompletion = NO;
 	springEffect.duration = 0.3;
-
+    springEffect.delegate = self;
+    
 	// Animate
 	[self addAnimation:springEffect forKey:@"appear"];
 }
@@ -245,6 +252,9 @@ static NSString* const kDisapearKey = @"disapear";
 
 - (void)disapear
 {
+    isReadyToDismiss = YES;
+    if (isRunningInitialAnimation) return;
+    
 	self.transform = CATransform3DMakeScale(0.01, 0.01, 1);
 	
 	CABasicAnimation* disapear = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
@@ -256,11 +266,17 @@ static NSString* const kDisapearKey = @"disapear";
 	[self addAnimation:disapear forKey:kDisapearKey];
 }
 
-- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag{
+- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag {
+    if (!flag) return;
 	if (anim == [self animationForKey:kDisapearKey]){
 		[self removeFromSuperlayer];
 		self.transform = CATransform3DIdentity;
-	}
+	} else {
+        isRunningInitialAnimation = NO;
+        if (isReadyToDismiss) {
+            [self disapear];
+        }
+    }
 }
 
 @end
