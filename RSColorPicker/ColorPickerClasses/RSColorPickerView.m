@@ -344,7 +344,8 @@
 #pragma mark - Helpers
 
 - (CGPoint)convertGradientPointToView:(CGPoint)point {
-	return CGPointMake(point.x + CGRectGetMinX(_gradientContainer.frame), point.y + CGRectGetMinY(_gradientContainer.frame));
+    CGRect frame = _gradientContainer.frame;
+	return CGPointMake(point.x + CGRectGetMinX(frame), point.y + CGRectGetMinY(frame));
 }
 
 - (CGPoint)convertViewPointToGradient:(CGPoint)point {
