@@ -96,10 +96,6 @@
 	[self addSubview:_gradientContainer];
 	
 	_gradientView = [[UIImageView alloc] initWithFrame:_gradientContainer.bounds];
-    _gradientView.contentMode = UIViewContentModeScaleAspectFill;
-    _gradientView.backgroundColor = [UIColor blackColor];
-    _gradientView.clipsToBounds = YES;
-    _gradientView.layer.shouldRasterize = YES;
 	[_gradientContainer addSubview:_gradientView];
 	
     [self updateSelectionLocationDisableActions:NO];
@@ -114,7 +110,6 @@
 }
 
 -(void)didMoveToWindow {
-    NSLog(@"-didMoveToWindow");
     // Anything that depends on _scale to init needs to be here
     _scale = self.window.screen.scale;
     
@@ -131,7 +126,6 @@
 #pragma mark - Business
 
 - (void)genBitmap {
-    NSLog(@"-genBitmap");
 	if (!_colorPickerViewFlags.bitmapNeedsUpdate) return;
     
     CGFloat paddingDistance = (_selectionView.bounds.size.width / 2.0) * _scale;
@@ -158,7 +152,7 @@
 		}
 	}
 	_colorPickerViewFlags.bitmapNeedsUpdate = NO;
-	_gradientView.image = [_rep image];//RSUIImageWithScale([_rep image], _scale);
+    _gradientView.image = RSUIImageWithScale([_rep image], _scale);
 }
 
 #pragma mark - Getters

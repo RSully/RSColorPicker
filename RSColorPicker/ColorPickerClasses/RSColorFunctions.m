@@ -43,5 +43,5 @@ CGPoint RSCGPointWithScale(CGPoint point, CGFloat scale) {
     return CGPointMake(point.x * scale, point.y * scale);
 }
 UIImage* RSUIImageWithScale(UIImage *img, CGFloat scale) {
-    return [UIImage imageWithCGImage:img.CGImage scale:scale orientation:UIImageOrientationDown];
+    return [UIImage imageWithCGImage:img.CGImage scale:scale orientation:UIImageOrientationUp];
 }
