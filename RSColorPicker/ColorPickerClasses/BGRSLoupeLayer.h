@@ -33,7 +33,10 @@
 
 @class RSColorPickerView;
 
-@interface BGRSLoupeLayer : CALayer
+@interface BGRSLoupeLayer : CALayer {
+    BOOL isReadyToDismiss;
+    BOOL isRunningInitialAnimation;
+}
 
 @property (nonatomic) CGPoint loupeCenter;
 @property (nonatomic, weak) RSColorPickerView* colorPicker;
@@ -43,6 +46,6 @@
 
 #pragma mark - Animation
 - (void)appearInColorPicker:(RSColorPickerView*)aColorPicker;
-- (void)disapear;
+- (void)disappear;
 
 @end
