@@ -59,25 +59,24 @@
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
-    // self = [super initWithFrame:CGRectMake(10.0, 20.0, 300.0, 300.0)];
     if (self) {
         [self initRoutine];
         
-        if ([aDecoder containsValueForKey:@"selectionColor"]) {
-            self.selectionColor = [aDecoder decodeObjectForKey:@"selectionColor"];
-        }
-        if ([aDecoder containsValueForKey:@"cropToCircle"]) {
-            self.cropToCircle = [aDecoder decodeBoolForKey:@"cropToCircle"];
-        }
+//        if ([aDecoder containsValueForKey:@"selectionColor"]) {
+//            _selectionColor = [aDecoder decodeObjectForKey:@"selectionColor"];
+//        }
+//        if ([aDecoder containsValueForKey:@"cropToCircle"]) {
+//            _cropToCircle = [aDecoder decodeBoolForKey:@"cropToCircle"];
+//        }
     }
     return self;
 }
 
-- (void)encodeWithCoder:(NSCoder *)aCoder {
-    [super encodeWithCoder:aCoder];
-    [aCoder encodeObject:self.selectionColor forKey:@"selectionColor"];
-    [aCoder encodeBool:self.cropToCircle forKey:@"cropToCircle"];
-}
+//- (void)encodeWithCoder:(NSCoder *)aCoder {
+//    [super encodeWithCoder:aCoder];
+//    [aCoder encodeObject:self.selectionColor forKey:@"selectionColor"];
+//    [aCoder encodeBool:self.cropToCircle forKey:@"cropToCircle"];
+//}
 
 - (void)initRoutine
 {

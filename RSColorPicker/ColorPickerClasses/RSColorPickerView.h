@@ -16,7 +16,7 @@
 -(void)colorPickerDidChangeSelection:(RSColorPickerView*)cp;
 @end
 
-@interface RSColorPickerView : UIView <NSCoding>
+@interface RSColorPickerView : UIView
 
 @property (nonatomic) BOOL cropToCircle;
 @property (nonatomic) CGFloat brightness;
