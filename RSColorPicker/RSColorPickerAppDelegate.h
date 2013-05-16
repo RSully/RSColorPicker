@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "ColorPickerClasses/RSColorPickerView.h"
+#import "ColorPickerClasses/RSOpacitySlider.h"
 
 @class RSBrightnessSlider;
 
@@ -19,6 +20,7 @@
 
 @property (nonatomic) RSColorPickerView *colorPicker;
 @property (nonatomic) RSBrightnessSlider *brightnessSlider;
+@property (nonatomic) RSOpacitySlider *opacitySlider;
 @property (nonatomic) UIView *colorPatch;
 
 @end

@@ -9,6 +9,7 @@
 #import "RSColorPickerAppDelegate.h"
 #import "ColorPickerClasses/RSBrightnessSlider.h"
 
+
 @implementation RSColorPickerAppDelegate
 
 @synthesize window=_window;
@@ -27,22 +28,27 @@
 //    }
     
     // View that displays color picker (needs to be square)
-    _colorPicker = [[RSColorPickerView alloc] initWithFrame:CGRectMake(10.0, 20.0, 300.0, 300.0)];
+    _colorPicker = [[RSColorPickerView alloc] initWithFrame:CGRectMake(20.0, 10.0, 280.0, 280.0)];
     [_colorPicker setCropToCircle:YES]; // Defaults to YES (and you can set BG color)
 	[_colorPicker setDelegate:self];
 	[rootController.view addSubview:_colorPicker];
 	
     
     // On/off circle or square
-    UISwitch *circleSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(10, 340, 0, 0)];
+    UISwitch *circleSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(10, 300, 0, 0)];
     [circleSwitch setOn:_colorPicker.cropToCircle];
 	[circleSwitch addTarget:self action:@selector(circleSwitchAction:) forControlEvents:UIControlEventValueChanged];
 	[rootController.view addSubview:circleSwitch];
     
     // View that controls brightness
-	_brightnessSlider = [[RSBrightnessSlider alloc] initWithFrame:CGRectMake(CGRectGetMaxX(circleSwitch.frame) + 4, 340.0, 320 - (20 + CGRectGetWidth(circleSwitch.frame)), 30.0)];
+	_brightnessSlider = [[RSBrightnessSlider alloc] initWithFrame:CGRectMake(CGRectGetMaxX(circleSwitch.frame) + 4, 300.0, 320 - (20 + CGRectGetWidth(circleSwitch.frame)), 30.0)];
 	[_brightnessSlider setColorPicker:_colorPicker];
 	[rootController.view addSubview:_brightnessSlider];
+	
+	// View that controls opacity
+	_opacitySlider = [[RSOpacitySlider alloc] initWithFrame:CGRectMake(CGRectGetMaxX(circleSwitch.frame) + 4, 340.0, 320 - (20 + CGRectGetWidth(circleSwitch.frame)), 30.0)];
+	[_opacitySlider setColorPicker:_colorPicker];
+	[rootController.view addSubview:_opacitySlider];
 	   
     // View that shows selected color
 	_colorPatch = [[UIView alloc] initWithFrame:CGRectMake(160, 380.0, 150, 30.0)];
@@ -91,7 +97,7 @@
     [selectCyan setTitle:@"Cyan" forState:UIControlStateNormal];
     [selectCyan addTarget:self action:@selector(selectCyan:) forControlEvents:UIControlEventTouchUpInside];
     [rootController.view addSubview:selectCyan];
-    
+  
 	self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
 	self.window.rootViewController = rootController;
     
@@ -108,7 +114,9 @@
 -(void)colorPickerDidChangeSelection:(RSColorPickerView *)cp
 {
 	_colorPatch.backgroundColor = [cp selectionColor];
-    _brightnessSlider.value = [cp brightness];
+	_brightnessSlider.value = [cp brightness];
+	_opacitySlider.value = [cp opacity];
+	NSLog(@"%f", cp.opacity);
 }
 
 #pragma mark - User action

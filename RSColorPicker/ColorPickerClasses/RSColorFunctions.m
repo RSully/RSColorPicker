@@ -22,16 +22,16 @@ void RSHSVFromPixel(BMPixel pixel, CGFloat *h, CGFloat *s, CGFloat *v)
 	[color getHue:h saturation:s brightness:v alpha:NULL];
 }
 
-void RSGetComponentsForColor(float components[3], UIColor *color) {
+void RSGetComponentsForColor(float components[4], UIColor *color) {
     CGColorSpaceRef rgbColorSpace = CGColorSpaceCreateDeviceRGB();
     unsigned char resultingPixel[4];
-    CGContextRef context = CGBitmapContextCreate(&resultingPixel, 1, 1, 8, 4, rgbColorSpace, kCGImageAlphaNoneSkipLast);
+    CGContextRef context = CGBitmapContextCreate(&resultingPixel, 1, 1, 8, 4, rgbColorSpace, kCGImageAlphaPremultipliedLast);
     CGContextSetFillColorWithColor(context, [color CGColor]);
     CGContextFillRect(context, CGRectMake(0, 0, 1, 1));
     CGContextRelease(context);
     CGColorSpaceRelease(rgbColorSpace);
     
-    for (int component = 0; component < 3; component++) {
+    for (int component = 0; component < 4; component++) {
         components[component] = resultingPixel[component] / 255.0f;
     }
 }
