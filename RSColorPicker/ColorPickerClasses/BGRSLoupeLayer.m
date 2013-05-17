@@ -158,18 +158,20 @@ const int NUM_PIXELS = 5, NUM_SKIP = 15;
 	CGContextClip(ctx);
 	
 	//Draw Opacity Background
-	CGFloat w = 15.f;
-	int cols = ceil(LOUPE_SIZE/w);
-	int rows = ceil(LOUPE_SIZE/w);
-	int i,j;
+	NSInteger numCols = 6;
+	CGFloat loupeLength = LOUPE_SIZE ;
+	CGFloat pixelLength = loupeLength / numCols;
 	UIColor *color1;
 	UIColor *color2;
-	for (j=0; j<cols; j++){
+	for (int j = 0; j < numCols; j++){
 		color1 = (j % 2) ? [UIColor whiteColor] : [UIColor grayColor];
 		color2 = (j % 2) ? [UIColor grayColor] : [UIColor whiteColor];
-		for (i=0; i<rows; i++){
-			CGRect pixelRect = CGRectMake(w*i-LOUPE_SIZE/2, w*j-LOUPE_SIZE/2, w, w);
-			UIColor* pixelColor = (i % 2) ? color1 : color2;
+		for (int i = 0; i  < numCols; i++){
+			CGRect pixelRect = CGRectMake((pixelLength * i) - (loupeLength / 2),
+																		(pixelLength * j) - (loupeLength / 2),
+																		pixelLength,
+																		pixelLength);
+			UIColor *pixelColor = (i % 2) ? color1 : color2;
 			CGContextSetFillColorWithColor(ctx, pixelColor.CGColor);
 			CGContextFillRect(ctx, pixelRect);
 		}
