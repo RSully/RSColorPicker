@@ -116,7 +116,6 @@
 	_colorPatch.backgroundColor = [cp selectionColor];
 	_brightnessSlider.value = [cp brightness];
 	_opacitySlider.value = [cp opacity];
-	NSLog(@"%f", cp.opacity);
 }
 
 #pragma mark - User action
