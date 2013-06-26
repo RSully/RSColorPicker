@@ -10,6 +10,7 @@
 #import "BGRSLoupeLayer.h"
 #import "RSSelectionView.h"
 #import "RSColorFunctions.h"
+#import "ANImageBitmapRep.h"
 
 
 @interface RSColorPickerView () {
