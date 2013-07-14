@@ -28,6 +28,9 @@
 {
     [super viewDidLoad];
 
+    self.view.backgroundColor = [self randomColor];
+    
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Push" style:UIBarButtonItemStyleBordered target:self action:@selector(pushNext:)];
     
     // View that displays color picker (needs to be square)
     _colorPicker = [[RSColorPickerView alloc] initWithFrame:CGRectMake(10.0, 20.0, 300.0, 300.0)];
@@ -98,7 +101,7 @@
 
 #pragma mark - RSColorPickerView delegate methods
 
--(void)colorPickerDidChangeSelection:(RSColorPickerView *)cp
+- (void)colorPickerDidChangeSelection:(RSColorPickerView *)cp
 {
 	_colorPatch.backgroundColor = [cp selectionColor];
     _brightnessSlider.value = [cp brightness];
@@ -106,25 +109,25 @@
 
 #pragma mark - User action
 
--(void)selectRed:(id)sender {
+- (void)selectRed:(id)sender {
     [_colorPicker setSelectionColor:[UIColor redColor]];
 }
--(void)selectGreen:(id)sender {
+- (void)selectGreen:(id)sender {
     [_colorPicker setSelectionColor:[UIColor greenColor]];
 }
--(void)selectBlue:(id)sender {
+- (void)selectBlue:(id)sender {
     [_colorPicker setSelectionColor:[UIColor blueColor]];
 }
--(void)selectBlack:(id)sender {
+- (void)selectBlack:(id)sender {
     [_colorPicker setSelectionColor:[UIColor blackColor]];
 }
--(void)selectWhite:(id)sender {
+- (void)selectWhite:(id)sender {
     [_colorPicker setSelectionColor:[UIColor whiteColor]];
 }
--(void)selectPurple:(id)sender {
+- (void)selectPurple:(id)sender {
     [_colorPicker setSelectionColor:[UIColor purpleColor]];
 }
--(void)selectCyan:(id)sender {
+- (void)selectCyan:(id)sender {
     [_colorPicker setSelectionColor:[UIColor cyanColor]];
 }
 
@@ -133,12 +136,56 @@
 	_colorPicker.cropToCircle = s.isOn;
 }
 
+#pragma mark - Push the stack
+
+- (void)pushNext:(id)sender {
+    TestColorViewController *colorController = [[TestColorViewController alloc] initWithNibName:nil bundle:nil];
+    [self.navigationController pushViewController:colorController animated:YES];
+}
+
 #pragma mark - Generated methods
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - Random color for testing
+
+- (UIColor*)randomColor {
+    /*
+     From https://gist.github.com/kylefox/1689973
+
+     ***
+     
+     Distributed under The MIT License:
+     http://opensource.org/licenses/mit-license.php
+     
+     Permission is hereby granted, free of charge, to any person obtaining
+     a copy of this software and associated documentation files (the
+     "Software"), to deal in the Software without restriction, including
+     without limitation the rights to use, copy, modify, merge, publish,
+     distribute, sublicense, and/or sell copies of the Software, and to
+     permit persons to whom the Software is furnished to do so, subject to
+     the following conditions:
+     
+     The above copyright notice and this permission notice shall be
+     included in all copies or substantial portions of the Software.
+     
+     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+     MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+     LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+     OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+     WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+     */
+    
+    CGFloat hue = ( arc4random() % 256 / 256.0 );  //  0.0 to 1.0
+    CGFloat saturation = ( arc4random() % 128 / 256.0 ) + 0.5;  //  0.5 to 1.0, away from white
+    CGFloat brightness = ( arc4random() % 128 / 256.0 ) + 0.5;  //  0.5 to 1.0, away from black
+    return [UIColor colorWithHue:hue saturation:saturation brightness:brightness alpha:1];
 }
 
 @end
