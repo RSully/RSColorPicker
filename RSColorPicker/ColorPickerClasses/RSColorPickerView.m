@@ -10,6 +10,7 @@
 #import "BGRSLoupeLayer.h"
 #import "RSSelectionView.h"
 #import "RSColorFunctions.h"
+#import "ANImageBitmapRep.h"
 
 
 @interface RSColorPickerView () {
@@ -92,6 +93,7 @@
 	_gradientContainer = [[UIView alloc] initWithFrame:self.bounds];
 	_gradientContainer.backgroundColor = [UIColor blackColor];
 	_gradientContainer.clipsToBounds = YES;
+	_gradientContainer.exclusiveTouch = YES;
 	_gradientContainer.layer.shouldRasterize = YES;
 	[self addSubview:_gradientContainer];
 	

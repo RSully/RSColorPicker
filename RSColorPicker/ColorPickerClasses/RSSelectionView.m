@@ -22,6 +22,7 @@
 	self = [super initWithFrame:frame];
 	if (self) {
 		self.opaque = NO;
+		self.exclusiveTouch = YES;
 		_outerRingColor = [UIColor colorWithWhite:1 alpha:0.4];
 		_innerRingColor = [UIColor colorWithWhite:0 alpha:1];
 	}
