@@ -12,10 +12,10 @@ BMPixel RSPixelFromHSV(CGFloat H, CGFloat S, CGFloat V) {
 	if (S == 0) {
 		return BMPixelMake(V, V, V, 1.0);
 	}
+    if (H == 1) {
+        H = 0;
+    }
 	CGFloat var_h = H * 6.0;
-	if (var_h == 6.0) {
-		var_h = 0.0;
-	}
 	CGFloat var_i = floor(var_h);
 	CGFloat var_1 = V * (1.0 - S);
 	CGFloat var_2 = V * (1.0 - S * (var_h - var_i));
