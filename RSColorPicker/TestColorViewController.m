@@ -8,6 +8,7 @@
 
 #import "TestColorViewController.h"
 #import "ColorPickerClasses/RSBrightnessSlider.h"
+#import "ColorPickerClasses/RSOpacitySlider.h"
 
 @interface TestColorViewController ()
 
@@ -50,6 +51,12 @@
 	[_brightnessSlider setColorPicker:_colorPicker];
 	[self.view addSubview:_brightnessSlider];
     
+    // View that controls opacity
+    _opacitySlider = [[RSOpacitySlider alloc] initWithFrame:CGRectMake(CGRectGetMaxX(circleSwitch.frame) + 4, 340.0, 320 - (20 + CGRectGetWidth(circleSwitch.frame)), 30.0)];
+    [_opacitySlider setColorPicker:_colorPicker];
+    [self.view addSubview:_opacitySlider];
+
+
     // View that shows selected color
 	_colorPatch = [[UIView alloc] initWithFrame:CGRectMake(160, 380.0, 150, 30.0)];
 	[self.view addSubview:_colorPatch];
@@ -105,6 +112,7 @@
 {
 	_colorPatch.backgroundColor = [cp selectionColor];
     _brightnessSlider.value = [cp brightness];
+    _opacitySlider.value = [cp opacity];
 }
 
 #pragma mark - User action

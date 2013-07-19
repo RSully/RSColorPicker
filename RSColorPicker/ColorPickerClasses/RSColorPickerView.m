@@ -11,7 +11,7 @@
 #import "RSSelectionView.h"
 #import "RSColorFunctions.h"
 #import "ANImageBitmapRep.h"
-
+#import "RSOpacitySlider.h"
 
 @interface RSColorPickerView () {
     struct {
@@ -28,6 +28,8 @@
 @property (nonatomic) RSSelectionView *selectionView;
 @property (nonatomic) UIImageView *gradientView;
 @property (nonatomic) UIView *gradientContainer;
+@property (nonatomic) UIView *brightnessView;
+@property (nonatomic) UIView *opacityView;
 
 @property (nonatomic) BGRSLoupeLayer *loupeLayer;
 @property (nonatomic) CGPoint selection;
@@ -97,8 +99,17 @@
 	_gradientContainer.layer.shouldRasterize = YES;
 	[self addSubview:_gradientContainer];
 	
+	_brightnessView = [[UIView alloc] initWithFrame:self.bounds];
+	_brightnessView.backgroundColor = [UIColor blackColor];
+	[_gradientContainer addSubview:_brightnessView];
+	
 	_gradientView = [[UIImageView alloc] initWithFrame:_gradientContainer.bounds];
 	[_gradientContainer addSubview:_gradientView];
+	
+	UIImage *opacityBackground = RSOpacityBackgroundImage(20, [UIColor colorWithWhite:0.5 alpha:1.0]);
+	_opacityView = [[UIView alloc] initWithFrame:self.bounds];
+	_opacityView.backgroundColor = [UIColor colorWithPatternImage:opacityBackground];
+	[_gradientContainer addSubview:_opacityView];
 	
     [self updateSelectionLocationDisableActions:NO];
     [self addSubview:_selectionView];
@@ -192,14 +203,22 @@
 	UIColor *rgbColor = [UIColor colorWithRed:pixel.red green:pixel.green blue:pixel.blue alpha:1];
 	CGFloat h, s, v;
 	[rgbColor getHue:&h saturation:&s brightness:&v alpha:NULL];
-	return [UIColor colorWithHue:h saturation:s brightness:_brightness alpha:1];
+	return [UIColor colorWithHue:h saturation:s brightness:_brightness alpha:_opacity];
 }
 
 #pragma mark - Setters
 
 - (void)setBrightness:(CGFloat)bright {
 	_brightness = bright;
-	_gradientView.alpha = bright;
+	
+//	_brightnessView.alpha = 1 - _brightness;
+	_gradientView.alpha = _brightness;
+	[self updateSelectionAtPoint:_selection];
+}
+
+- (void)setOpacity:(CGFloat)opacity {
+	_opacity = opacity;
+	_opacityView.alpha = 1 - _opacity;
 	[self updateSelectionAtPoint:_selection];
 }
 
@@ -222,14 +241,14 @@
 
 - (void)setSelectionColor:(UIColor *)selectionColor
 {
-    // Force color into correct colorspace to get HSV from
-    float components[3];
+	// Force color into correct colorspace to get HSV from
+    float components[4];
     RSGetComponentsForColor(components, selectionColor);
-    selectionColor = [UIColor colorWithRed:components[0] green:components[1] blue:components[2] alpha:1.0];
-    
+    selectionColor = [UIColor colorWithRed:components[0] green:components[1] blue:components[2] alpha:components[3]];
+  
     // convert to HSV
-    CGFloat h, s, v;
-	BOOL gotHSV = [selectionColor getHue:&h saturation:&s brightness:&v alpha:NULL];
+    CGFloat h, s, v, o;
+	BOOL gotHSV = [selectionColor getHue:&h saturation:&s brightness:&v alpha:&o];
     if (!gotHSV) {
         NSLog(@"Failed to get HSV");
         return;
@@ -249,6 +268,8 @@
     
     [self updateSelectionLocation];
     [self setBrightness:v];
+	[self setOpacity:o];
+	
 }
 
 - (void)setDelegate:(id<RSColorPickerViewDelegate>)delegate

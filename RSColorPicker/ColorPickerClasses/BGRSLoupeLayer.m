@@ -30,6 +30,7 @@
 
 #import "BGRSLoupeLayer.h"
 #import "RSColorPickerView.h"
+#import "RSOpacitySlider.h"
 
 @interface BGRSLoupeLayer ()
 
@@ -56,7 +57,7 @@ const int NUM_PIXELS = 5, NUM_SKIP = 15;
 		self.bounds = CGRectMake(-size/2,-size/2,size,size);
 		self.anchorPoint = CGPointMake(0.5, 1);
 		self.contentsScale = [UIScreen mainScreen].scale;
-
+		
 		UIImage *loupeImage = [self loupeImage];
 		CALayer *loupeLayer = [CALayer layer];
 		loupeLayer.bounds = self.bounds;
@@ -155,6 +156,26 @@ const int NUM_PIXELS = 5, NUM_SKIP = 15;
 {
 	CGContextAddPath(ctx, self.gridCirclePath);  //Clip gird drawing to inside of loupe
 	CGContextClip(ctx);
+	
+	//Draw Opacity Background
+	NSInteger numCols = 6;
+	CGFloat loupeLength = LOUPE_SIZE ;
+	CGFloat pixelLength = loupeLength / numCols;
+	UIColor *color1;
+	UIColor *color2;
+	for (int j = 0; j < numCols; j++){
+		color1 = (j % 2) ? [UIColor whiteColor] : [UIColor grayColor];
+		color2 = (j % 2) ? [UIColor grayColor] : [UIColor whiteColor];
+		for (int i = 0; i  < numCols; i++){
+			CGRect pixelRect = CGRectMake((pixelLength * i) - (loupeLength / 2),
+																		(pixelLength * j) - (loupeLength / 2),
+																		pixelLength,
+																		pixelLength);
+			UIColor *pixelColor = (i % 2) ? color1 : color2;
+			CGContextSetFillColorWithColor(ctx, pixelColor.CGColor);
+			CGContextFillRect(ctx, pixelRect);
+		}
+	}
 	
 	[self drawGridInContext:ctx];
 }
