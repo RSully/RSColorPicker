@@ -151,48 +151,45 @@
     CGFloat relRadius = radius - paddingDistance;
 	CGFloat relX = 0.0;
 	CGFloat relY = 0.0;
-	
-    /*
-     float * array = (float *)malloc(sizeof(float) * theCount);
-     array[myIndex] = myValues;
-     ... call function by passing array
-     free(array)
-     */
-    
 
     int arrSize = _rep.bitmapSize.x * _rep.bitmapSize.y;
     int i;
-
+    int x;
+    int y;
+    size_t arrDataSize = sizeof(float) * arrSize;
     
-    float *preAtan2Y = (float *)malloc(sizeof(float) * arrSize);
-    float *preAtan2X = (float *)malloc(sizeof(float) * arrSize);
-    float *atan2Vals = (float *)malloc(sizeof(float) * arrSize);
+    // data
+    float *preComputeX = (float *)malloc(arrDataSize);
+    float *preComputeY = (float *)malloc(arrDataSize);
+    // atan2
+    float *atan2Vals = (float *)malloc(arrDataSize);
+    // distance
+    float *distVals = (float *)malloc(arrDataSize);
     
     i = 0;
-	for (int x = 0; x < _rep.bitmapSize.x; x++) {
+	for (x = 0; x < _rep.bitmapSize.x; x++) {
 		relX = x - radius;
-		for (int y = 0; y < _rep.bitmapSize.y; y++) {
+		for (y = 0; y < _rep.bitmapSize.y; y++) {
             relY = radius - y;
 
-            preAtan2Y[i] = relY;
-            preAtan2X[i] = relX;
+            preComputeY[i] = relY;
+            preComputeX[i] = relX;
             i++;
 		}
 	}
 
-    // void vvatan2 (double * /* z */, const double * /* y */, const double * /* x */, const int * /* n */) __OSX_AVAILABLE_STARTING(__MAC_10_4, __IPHONE_5_0);
-    vvatan2f(atan2Vals, preAtan2Y, preAtan2X, &arrSize);
-    free(preAtan2X);
-    free(preAtan2Y);
+    // Use accelerate.framework to compute
+    vvatan2f(atan2Vals, preComputeY, preComputeX, &arrSize);
+    vDSP_vdist(preComputeX, 1, preComputeY, 1, distVals, 1, arrSize);
+    
+    // Compution done, free these
+    free(preComputeX);
+    free(preComputeY);
     
     i = 0;
-	for (int x = 0; x < _rep.bitmapSize.x; x++) {
-		relX = x - radius;
-		
-		for (int y = 0; y < _rep.bitmapSize.y; y++) {
-			relY = radius - y;
-			
-			CGFloat r_distance = sqrt((relX * relX)+(relY * relY));
+	for (x = 0; x < _rep.bitmapSize.x; x++) {		
+		for (y = 0; y < _rep.bitmapSize.y; y++) {			
+			CGFloat r_distance = distVals[i];
 			r_distance = fmin(r_distance, relRadius);
 			
 			CGFloat angle = atan2Vals[i];
@@ -205,7 +202,9 @@
             i++;
 		}
 	}
+    // Bitmap generated, free these
     free(atan2Vals);
+    free(distVals);
     
 	_colorPickerViewFlags.bitmapNeedsUpdate = NO;
     _gradientView.image = RSUIImageWithScale([_rep image], _scale);
