@@ -15,8 +15,10 @@ BMPixel RSPixelFromHSV(CGFloat H, CGFloat S, CGFloat V) {
     if (H == 1) {
         H = 0;
     }
+    
 	CGFloat var_h = H * 6.0;
-	CGFloat var_i = floor(var_h);
+    // Verified `H` is never <0 so (int) is OK:
+	int var_i = (int)var_h;
 	CGFloat var_1 = V * (1.0 - S);
 	
 	if (var_i == 0) {
