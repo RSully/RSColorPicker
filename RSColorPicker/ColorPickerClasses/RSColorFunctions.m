@@ -8,7 +8,7 @@
 
 #import "RSColorFunctions.h"
 
-BMPixel OldRSPixelFromHSV(CGFloat H, CGFloat S, CGFloat V) {
+BMPixel RSPixelFromHSV(CGFloat H, CGFloat S, CGFloat V) {
 	if (S == 0) {
 		return BMPixelMake(V, V, V, 1.0);
 	}
@@ -35,16 +35,6 @@ BMPixel OldRSPixelFromHSV(CGFloat H, CGFloat S, CGFloat V) {
 	return BMPixelMake(V, var_1, var_2, 1.0);
 }
 
-
-
-BMPixel RSPixelFromHSV(CGFloat H, CGFloat S, CGFloat V)
-{
-    return OldRSPixelFromHSV(H, S, V);
-//	UIColor *color = [UIColor colorWithHue:H saturation:S brightness:V alpha:1];
-//	CGFloat r, g, b;
-//	[color getRed:&r green:&g blue:&b alpha:NULL];
-//	return BMPixelMake(r, g, b, 1.0);
-}
 
 void RSHSVFromPixel(BMPixel pixel, CGFloat *h, CGFloat *s, CGFloat *v)
 {
