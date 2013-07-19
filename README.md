@@ -34,9 +34,7 @@ This is licensed under the BSD license (see License.md). You know the drill, use
 
 ***
 
-<img alt="Color Picker - Default" src="https://github.com/RSully/RSColorPicker/raw/master/Example01.png" width="320">
+<img alt="Color Picker - Circle" src="https://github.com/RSully/RSColorPicker/raw/master/Example01.png" width="320">
 <img alt="Color Picker - Loupe popup" src="https://github.com/RSully/RSColorPicker/raw/master/Example02.png" width="320">
-<img alt="Color Picker - Brightness" src="https://github.com/RSully/RSColorPicker/raw/master/Example03.png" width="320">
-<img alt="Color Picker - Opacity" src="https://github.com/RSully/RSColorPicker/raw/master/Example04.png" width="320">
-<img alt="Color Picker - Square" src="https://github.com/RSully/RSColorPicker/raw/master/Example05.png" width="320">
-<img alt="Color Picker - External selection" src="https://github.com/RSully/RSColorPicker/raw/master/Example05.png" width="320">
+<img alt="Color Picker - Square" src="https://github.com/RSully/RSColorPicker/raw/master/Example03.png" width="320">
+<img alt="Color Picker - Square, default slider style" src="https://github.com/RSully/RSColorPicker/raw/master/Example04.png" width="320">
