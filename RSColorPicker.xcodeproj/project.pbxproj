@@ -32,6 +32,7 @@
 		2B85423F16EFC8970047FFBE /* RSColorFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B85422C16EFC8970047FFBE /* RSColorFunctions.m */; };
 		2B85424016EFC8970047FFBE /* RSColorPickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B85422E16EFC8970047FFBE /* RSColorPickerView.m */; };
 		2B85424116EFC8970047FFBE /* RSSelectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B85423016EFC8970047FFBE /* RSSelectionView.m */; };
+		7FB5E81717455D820034FFB8 /* RSOpacitySlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FB5E81617455D820034FFB8 /* RSOpacitySlider.m */; };
 		930D5A8016DE4D36006C38D4 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 930D5A7F16DE4D36006C38D4 /* Default-568h@2x.png */; };
 /* End PBXBuildFile section */
 
@@ -83,6 +84,8 @@
 		2B85422E16EFC8970047FFBE /* RSColorPickerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSColorPickerView.m; sourceTree = "<group>"; };
 		2B85422F16EFC8970047FFBE /* RSSelectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSSelectionView.h; sourceTree = "<group>"; };
 		2B85423016EFC8970047FFBE /* RSSelectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSSelectionView.m; sourceTree = "<group>"; };
+		7FB5E81517455D820034FFB8 /* RSOpacitySlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSOpacitySlider.h; sourceTree = "<group>"; };
+		7FB5E81617455D820034FFB8 /* RSOpacitySlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSOpacitySlider.m; sourceTree = "<group>"; };
 		930D5A7F16DE4D36006C38D4 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -162,6 +165,8 @@
 				2B85422816EFC8970047FFBE /* BGRSLoupeLayer.m */,
 				2B85422916EFC8970047FFBE /* RSBrightnessSlider.h */,
 				2B85422A16EFC8970047FFBE /* RSBrightnessSlider.m */,
+				7FB5E81517455D820034FFB8 /* RSOpacitySlider.h */,
+				7FB5E81617455D820034FFB8 /* RSOpacitySlider.m */,
 				2B85422B16EFC8970047FFBE /* RSColorFunctions.h */,
 				2B85422C16EFC8970047FFBE /* RSColorFunctions.m */,
 				2B85422D16EFC8970047FFBE /* RSColorPickerView.h */,
@@ -310,6 +315,7 @@
 				2B85424016EFC8970047FFBE /* RSColorPickerView.m in Sources */,
 				2B85424116EFC8970047FFBE /* RSSelectionView.m in Sources */,
 				2B12A0DF1792FF46007F2A0A /* TestColorViewController.m in Sources */,
+				7FB5E81717455D820034FFB8 /* RSOpacitySlider.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

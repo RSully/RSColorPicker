@@ -10,12 +10,13 @@
 #import "ColorPickerClasses/RSColorPickerView.h"
 
 @class RSBrightnessSlider;
-
+@class RSOpacitySlider;
 
 @interface TestColorViewController : UIViewController <RSColorPickerViewDelegate>
 
 @property (nonatomic) RSColorPickerView *colorPicker;
 @property (nonatomic) RSBrightnessSlider *brightnessSlider;
+@property (nonatomic) RSOpacitySlider *opacitySlider;
 @property (nonatomic) UIView *colorPatch;
 
 @end

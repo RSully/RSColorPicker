@@ -2,13 +2,9 @@
 
 ## RSColorPickerView
 
-Square (circle) color-picker that handles touch events and allows for brightness control. Uses delegation to report color selection as-changed
+Square (circle) color-picker that handles touch events, allows for brightness control, and allows for opacity control. Uses delegation to report color selection as-changed
 
-## BGRSLoupeLayer
-
-Loupe used by RSColorPickerView for selection
-
-## RSBrightnessSlider
+## RSBrightnessSlider, RSOpacitySlider
 
 Basic UISlider subclass that can be used easily with RSColorPickerView. 
 

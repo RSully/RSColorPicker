@@ -8,6 +8,7 @@
 
 #import "RSColorPickerAppDelegate.h"
 
+
 @implementation RSColorPickerAppDelegate
 
 @synthesize window=_window;
@@ -16,7 +17,7 @@
 {
     // Setup root controller as color
     TestColorViewController *rootController = [[TestColorViewController alloc] initWithNibName:nil bundle:nil];
-	
+
     // Then add it to a nav controller so we can experiment with pushing
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:rootController];
     
