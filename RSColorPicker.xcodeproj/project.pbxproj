@@ -14,6 +14,7 @@
 		1FA35E6D13F57B2800A6B347 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA35E6C13F57B2800A6B347 /* main.m */; };
 		1FA35E7013F57B2800A6B347 /* RSColorPickerAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA35E6F13F57B2800A6B347 /* RSColorPickerAppDelegate.m */; };
 		1FA35E9913F5A17E00A6B347 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FA35E9813F5A17E00A6B347 /* QuartzCore.framework */; };
+		2B12A0DF1792FF46007F2A0A /* TestColorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B12A0DE1792FF46007F2A0A /* TestColorViewController.m */; };
 		2B85423116EFC8970047FFBE /* ANImageBitmapRep.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B85420D16EFC8970047FFBE /* ANImageBitmapRep.m */; };
 		2B85423216EFC8970047FFBE /* BitmapContextRep.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B85420F16EFC8970047FFBE /* BitmapContextRep.m */; };
 		2B85423316EFC8970047FFBE /* NSImage+ANImageBitmapRep.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B85421216EFC8970047FFBE /* NSImage+ANImageBitmapRep.m */; };
@@ -47,6 +48,8 @@
 		1FA35E6E13F57B2800A6B347 /* RSColorPickerAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RSColorPickerAppDelegate.h; sourceTree = "<group>"; };
 		1FA35E6F13F57B2800A6B347 /* RSColorPickerAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RSColorPickerAppDelegate.m; sourceTree = "<group>"; };
 		1FA35E9813F5A17E00A6B347 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		2B12A0DD1792FF46007F2A0A /* TestColorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestColorViewController.h; sourceTree = "<group>"; };
+		2B12A0DE1792FF46007F2A0A /* TestColorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestColorViewController.m; sourceTree = "<group>"; };
 		2B85420C16EFC8970047FFBE /* ANImageBitmapRep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ANImageBitmapRep.h; sourceTree = "<group>"; };
 		2B85420D16EFC8970047FFBE /* ANImageBitmapRep.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ANImageBitmapRep.m; sourceTree = "<group>"; };
 		2B85420E16EFC8970047FFBE /* BitmapContextRep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BitmapContextRep.h; sourceTree = "<group>"; };
@@ -136,6 +139,8 @@
 			children = (
 				1FA35E6E13F57B2800A6B347 /* RSColorPickerAppDelegate.h */,
 				1FA35E6F13F57B2800A6B347 /* RSColorPickerAppDelegate.m */,
+				2B12A0DD1792FF46007F2A0A /* TestColorViewController.h */,
+				2B12A0DE1792FF46007F2A0A /* TestColorViewController.m */,
 				2B85420A16EFC8970047FFBE /* ColorPickerClasses */,
 				1FA35E6613F57B2700A6B347 /* Supporting Files */,
 			);
@@ -308,6 +313,7 @@
 				2B85423F16EFC8970047FFBE /* RSColorFunctions.m in Sources */,
 				2B85424016EFC8970047FFBE /* RSColorPickerView.m in Sources */,
 				2B85424116EFC8970047FFBE /* RSSelectionView.m in Sources */,
+				2B12A0DF1792FF46007F2A0A /* TestColorViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

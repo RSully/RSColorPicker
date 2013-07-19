@@ -47,5 +47,6 @@
 #pragma mark - Animation
 - (void)appearInColorPicker:(RSColorPickerView*)aColorPicker;
 - (void)disappear;
+- (void)disappearAnimated:(BOOL)anim;
 
 @end
