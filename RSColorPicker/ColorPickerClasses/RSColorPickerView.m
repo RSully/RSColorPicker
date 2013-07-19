@@ -151,13 +151,10 @@
     CGFloat paddingDistance = (_selectionView.bounds.size.width / 2.0) * _scale;
 	CGFloat radius = _rep.bitmapSize.x / 2.0;
     CGFloat relRadius = radius - paddingDistance;
-	CGFloat relX = 0.0;
-	CGFloat relY = 0.0;
+	CGFloat relX = 0.0, relY = 0.0;
 
+    int i, x, y;
     int arrSize = _rep.bitmapSize.x * _rep.bitmapSize.y;
-    int i;
-    int x;
-    int y;
     size_t arrDataSize = sizeof(float) * arrSize;
     
     // data
@@ -180,7 +177,7 @@
 		}
 	}
 
-    // Use accelerate.framework to compute
+    // Use Accelerate.framework to compute
     vvatan2f(atan2Vals, preComputeY, preComputeX, &arrSize);
     vDSP_vdist(preComputeX, 1, preComputeY, 1, distVals, 1, arrSize);
     
@@ -268,7 +265,6 @@
     CGFloat h, s, v;
 	BOOL gotHSV = [selectionColor getHue:&h saturation:&s brightness:&v alpha:NULL];
     if (!gotHSV) {
-        NSLog(@"Failed to get HSV");
         return;
     }
     CGFloat paddingDistance = (_selectionView.bounds.size.width / 2.0) * _scale;
