@@ -110,15 +110,33 @@
 }
 
 -(void)didMoveToWindow {
+    if (!self.window) {
+        [_loupeLayer disappearAnimated:NO];
+        return;
+    }
+    
     // Anything that depends on _scale to init needs to be here
     _scale = self.window.screen.scale;
     
     _gradientContainer.layer.contentsScale = _scale;
-    _rep = [[ANImageBitmapRep alloc] initWithSize:BMPointFromSize(RSCGSizeWithScale(_gradientView.bounds.size, _scale))];
+    BMPoint repSize = BMPointFromSize(RSCGSizeWithScale(_gradientView.bounds.size, _scale));
+    
+    // Don't reinit if we're the same as original
+    if (_rep) {
+        BMPoint oldSize = [_rep bitmapSize];
+        if (oldSize.x == repSize.x && oldSize.y == repSize.y) {
+            self.selectionColor = _selectionColor;
+            self.cropToCircle = _cropToCircle;
+
+            return;
+        }
+    }
+    
+    _rep = [[ANImageBitmapRep alloc] initWithSize:repSize];
     
     _colorPickerViewFlags.bitmapNeedsUpdate = YES;
     [self genBitmap];
-    
+
     self.selectionColor = _selectionColor;
     self.cropToCircle = _cropToCircle;
 }
@@ -380,6 +398,10 @@
 	}
 	_colorPickerViewFlags.badTouch = NO;
 	[_loupeLayer disappear];
+}
+
+-(void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
+    [_loupeLayer disappear];
 }
 
 #pragma mark - Helpers
