@@ -212,9 +212,8 @@ const int NUM_PIXELS = 5, NUM_SKIP = 15;
 	CGContextClip(ctx);
 	
 	CGColorSpaceRef space = CGColorSpaceCreateDeviceGray();
-	NSArray* colors = [[NSArray alloc] initWithObjects:
-					   (id)[UIColor colorWithWhite:1.0 alpha:0.65].CGColor,
-					   (id)[UIColor colorWithWhite:1.0 alpha:0.15].CGColor,nil];
+	NSArray* colors = @[(id)[UIColor colorWithWhite:1.0 alpha:0.65].CGColor,
+					    (id)[UIColor colorWithWhite:1.0 alpha:0.15].CGColor];
 	
 	CGGradientRef myGradient = CGGradientCreateWithColors(space, (__bridge CFArrayRef)colors, NULL);
 	
@@ -232,9 +231,8 @@ const int NUM_PIXELS = 5, NUM_SKIP = 15;
 	CGContextSaveGState(ctx);     //Save context for cliping
 	CGContextClip(ctx);
 	
-	colors = [[NSArray alloc] initWithObjects:
-			  (id)[UIColor colorWithWhite:1.0 alpha:0.5].CGColor,
-			  (id)[UIColor colorWithWhite:1.0 alpha:0.0].CGColor,nil];
+	colors = @[(id)[UIColor colorWithWhite:1.0 alpha:0.5].CGColor,
+			   (id)[UIColor colorWithWhite:1.0 alpha:0.0].CGColor];
 	
 	myGradient = CGGradientCreateWithColors(space, (__bridge CFArrayRef)colors, NULL);
 	
