@@ -283,20 +283,10 @@ static NSString* const kDisappearKey = @"cp_l_disappear";
 
 - (void)disappear
 {
-    [self disappearAnimated:YES];
-}
-
-- (void)disappearAnimated:(BOOL)anim
-{
     isReadyToDismiss = YES;
     if (isRunningInitialAnimation) return;
-
-    if (!anim) {
-        [self removeFromSuperlayer];
-        return;
-    }
     
-    self.transform = CATransform3DMakeScale(0.01, 0.01, 1);
+	self.transform = CATransform3DMakeScale(0.01, 0.01, 1);
 	
 	CABasicAnimation* disapear = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
 	disapear.fromValue = @(1);

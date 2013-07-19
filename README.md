@@ -22,7 +22,7 @@ And of course, thanks to [Wikipedia](http://en.wikipedia.org/wiki/HSL_and_HSV).
 
 # Usage:
 
-See included example project (`TestColorViewController`).
+See included example project (application delegate).
 
 ## Requirements:
 
