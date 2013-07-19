@@ -8,12 +8,42 @@
 
 #import "RSColorFunctions.h"
 
+BMPixel OldRSPixelFromHSV(CGFloat H, CGFloat S, CGFloat V) {
+	if (S == 0) {
+		return BMPixelMake(V, V, V, 1.0);
+	}
+	CGFloat var_h = H * 6.0;
+	if (var_h == 6.0) {
+		var_h = 0.0;
+	}
+	CGFloat var_i = floor(var_h);
+	CGFloat var_1 = V * (1.0 - S);
+	CGFloat var_2 = V * (1.0 - S * (var_h - var_i));
+	CGFloat var_3 = V * (1.0 - S * (1.0 - (var_h - var_i)));
+	
+	if (var_i == 0) {
+		return BMPixelMake(V, var_3, var_1, 1.0);
+	} else if (var_i == 1) {
+		return BMPixelMake(var_2, V, var_1, 1.0);
+	} else if (var_i == 2) {
+		return BMPixelMake(var_1, V, var_3, 1.0);
+	} else if (var_i == 3) {
+		return BMPixelMake(var_1, var_2, V, 1.0);
+	} else if (var_i == 4) {
+		return BMPixelMake(var_3, var_1, V, 1.0);
+	}
+	return BMPixelMake(V, var_1, var_2, 1.0);
+}
+
+
+
 BMPixel RSPixelFromHSV(CGFloat H, CGFloat S, CGFloat V)
 {
-	UIColor *color = [UIColor colorWithHue:H saturation:S brightness:V alpha:1];
-	CGFloat r, g, b;
-	[color getRed:&r green:&g blue:&b alpha:NULL];
-	return BMPixelMake(r, g, b, 1.0);
+    return OldRSPixelFromHSV(H, S, V);
+//	UIColor *color = [UIColor colorWithHue:H saturation:S brightness:V alpha:1];
+//	CGFloat r, g, b;
+//	[color getRed:&r green:&g blue:&b alpha:NULL];
+//	return BMPixelMake(r, g, b, 1.0);
 }
 
 void RSHSVFromPixel(BMPixel pixel, CGFloat *h, CGFloat *s, CGFloat *v)
