@@ -134,6 +134,40 @@
 	CGFloat relX = 0.0;
 	CGFloat relY = 0.0;
 	
+    /*
+     float * array = (float *)malloc(sizeof(float) * theCount);
+     array[myIndex] = myValues;
+     ... call function by passing array
+     free(array)
+     */
+    
+
+    int arrSize = _rep.bitmapSize.x * _rep.bitmapSize.y;
+    int i;
+
+    
+    float *preAtan2Y = (float *)malloc(sizeof(float) * arrSize);
+    float *preAtan2X = (float *)malloc(sizeof(float) * arrSize);
+    float *atan2Vals = (float *)malloc(sizeof(float) * arrSize);
+    
+    i = 0;
+	for (int x = 0; x < _rep.bitmapSize.x; x++) {
+		relX = x - radius;
+		for (int y = 0; y < _rep.bitmapSize.y; y++) {
+            relY = radius - y;
+
+            preAtan2Y[i] = relY;
+            preAtan2X[i] = relX;
+            i++;
+		}
+	}
+
+    // void vvatan2 (double * /* z */, const double * /* y */, const double * /* x */, const int * /* n */) __OSX_AVAILABLE_STARTING(__MAC_10_4, __IPHONE_5_0);
+    vvatan2f(atan2Vals, preAtan2Y, preAtan2X, &arrSize);
+    free(preAtan2X);
+    free(preAtan2Y);
+    
+    i = 0;
 	for (int x = 0; x < _rep.bitmapSize.x; x++) {
 		relX = x - radius;
 		
@@ -143,14 +177,18 @@
 			CGFloat r_distance = sqrt((relX * relX)+(relY * relY));
 			r_distance = fmin(r_distance, relRadius);
 			
-			CGFloat angle = atan2(relY, relX);
+			CGFloat angle = atan2Vals[i];
 			if (angle < 0.0) { angle = (2.0 * M_PI)+angle; }
 			
 			CGFloat perc_angle = angle / (2.0 * M_PI);
 			BMPixel thisPixel = RSPixelFromHSV(perc_angle, r_distance/relRadius, 1); //full brightness
 			[_rep setPixel:thisPixel atPoint:BMPointMake(x, y)];
+            
+            i++;
 		}
 	}
+    free(atan2Vals);
+    
 	_colorPickerViewFlags.bitmapNeedsUpdate = NO;
     _gradientView.image = RSUIImageWithScale([_rep image], _scale);
 }
