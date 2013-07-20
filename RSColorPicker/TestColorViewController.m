@@ -109,7 +109,6 @@
 
 - (void)colorPickerDidChangeSelection:(RSColorPickerView *)cp
 {
-    NSLog(@"changed");
 	_colorPatch.backgroundColor = [cp selectionColor];
     _brightnessSlider.value = [cp brightness];
     _opacitySlider.value = [cp opacity];
