@@ -36,9 +36,8 @@
     // View that displays color picker (needs to be square)
     _colorPicker = [[RSColorPickerView alloc] initWithFrame:CGRectMake(20.0, 10.0, 280.0, 280.0)];
     [_colorPicker setCropToCircle:YES]; // Defaults to YES (and you can set BG color)
-	[_colorPicker setDelegate:self];
-	[self.view addSubview:_colorPicker];
-	
+    [_colorPicker setDelegate:self];
+    [self.view addSubview:_colorPicker];
     
     // On/off circle or square
     UISwitch *circleSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(10, 340, 0, 0)];
@@ -110,6 +109,7 @@
 
 - (void)colorPickerDidChangeSelection:(RSColorPickerView *)cp
 {
+    NSLog(@"changed");
 	_colorPatch.backgroundColor = [cp selectionColor];
     _brightnessSlider.value = [cp brightness];
     _opacitySlider.value = [cp opacity];

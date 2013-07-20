@@ -7,7 +7,7 @@
 //
 
 #import "RSColorPickerAppDelegate.h"
-
+#import "RSColorPickerView.h"
 
 @implementation RSColorPickerAppDelegate
 
@@ -15,6 +15,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [RSColorPickerView prepareForDiameter:280.0];
+    
     // Setup root controller as color
     TestColorViewController *rootController = [[TestColorViewController alloc] initWithNibName:nil bundle:nil];
 

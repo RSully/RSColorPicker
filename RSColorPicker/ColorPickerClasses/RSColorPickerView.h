@@ -28,4 +28,6 @@
 
 -(UIColor*)colorAtPoint:(CGPoint)point; //Returns UIColor at a point in the RSColorPickerView
 
++(void)prepareForDiameter:(CGFloat)diameter;
+
 @end

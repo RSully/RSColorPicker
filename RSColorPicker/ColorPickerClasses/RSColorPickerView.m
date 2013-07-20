@@ -13,6 +13,8 @@
 #import "ANImageBitmapRep.h"
 #import "RSOpacitySlider.h"
 
+#define kSelectionViewSize 22.0
+
 @interface RSColorPickerView () {
     struct {
         unsigned int bitmapNeedsUpdate:1;
@@ -90,7 +92,7 @@
 	_colorPickerViewFlags.bitmapNeedsUpdate = NO;
 	
 	//the view used to select the colour
-    _selectionView = [[RSSelectionView alloc] initWithFrame:CGRectMake(0.0, 0.0, 22.0, 22.0)];
+    _selectionView = [[RSSelectionView alloc] initWithFrame:CGRectMake(0.0, 0.0, kSelectionViewSize, kSelectionViewSize)];
 	
 	_selection = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
 	
@@ -116,8 +118,8 @@
     [self updateSelectionLocationDisableActions:NO];
     [self addSubview:_selectionView];
 	    
-	self.cropToCircle = YES;
-	self.selectionColor = [UIColor whiteColor];
+	_cropToCircle = YES;
+	_selectionColor = [UIColor whiteColor];
 }
 
 - (void)dealloc {
@@ -149,7 +151,7 @@
 	if (!_colorPickerViewFlags.bitmapNeedsUpdate) return;
     
     CGFloat paddingDistance = _selectionView.bounds.size.width / 2.0;
-    _rep = [[self class] bitmapForDiameter:_gradientView.bounds.size.width withScale:_scale withPadding:paddingDistance shouldCache:NO];
+    _rep = [[self class] bitmapForDiameter:_gradientView.bounds.size.width withScale:_scale withPadding:paddingDistance shouldCache:YES];
     
 	_colorPickerViewFlags.bitmapNeedsUpdate = NO;
     _gradientView.image = RSUIImageWithScale([_rep image], _scale);
@@ -252,13 +254,13 @@
     [self updateSelectionLocationDisableActions:YES];
 }
 
-- (void)updateSelectionLocationDisableActions: (BOOL)disable {
+- (void)updateSelectionLocationDisableActions:(BOOL)disable {
 	_selectionView.center = _selection;
-	if(disable) {
+	if (disable) {
 		[CATransaction setDisableActions:YES];
 	}
 	_loupeLayer.position = _selection;
-	//make loupeLayer sharp on screen
+	// Make loupeLayer sharp on screen
 	CGRect loupeFrame = _loupeLayer.frame;
 	loupeFrame.origin = CGPointMake(round(loupeFrame.origin.x), round(loupeFrame.origin.y));
 	_loupeLayer.frame = loupeFrame;
@@ -370,29 +372,41 @@
 
 #pragma mark - Class methods
 
-//static dispatch_queue_t backgroundQueue;
-//static NSLock *backgroundLock;
-//static NSMutableDictionary *generatedBitmaps;
-//
-//+(void)initialize {
-//    backgroundQueue = dispatch_queue_create("com.github.rsully.rscolorpicker", NULL);
-//    generatedBitmaps = [NSMutableDictionary new];
-//    backgroundLock = [NSLock new];
-//}
-//
-//+(void)prepareForSize:(CGSize)size {
-//    dispatch_async(backgroundQueue, ^{
-//        
-//    });
-//}
+static dispatch_queue_t backgroundQueue;
+static NSLock *backgroundLock;
+static NSMutableDictionary *generatedBitmaps;
+
++(void)initialize {
+    backgroundQueue = dispatch_queue_create("com.github.rsully.rscolorpicker", NULL);
+    generatedBitmaps = [NSMutableDictionary new];
+    backgroundLock = [NSLock new];
+}
+
+// Background methods
++(void)prepareForDiameter:(CGFloat)diameter {
+    [self prepareForDiameter:diameter padding:kSelectionViewSize];
+}
++(void)prepareForDiameter:(CGFloat)diameter padding:(CGFloat)padding {
+    dispatch_async(backgroundQueue, ^{
+        [self bitmapForDiameter:diameter withScale:1.0 withPadding:padding shouldCache:YES];
+    });
+}
 
 +(ANImageBitmapRep*)bitmapForDiameter:(CGFloat)diameter withScale:(CGFloat)scale withPadding:(CGFloat)paddingDistance shouldCache:(BOOL)cache {
-    NSString *dictionaryCacheKey = [NSString stringWithFormat:@"%f-%f-%f", diameter, scale, paddingDistance];
+    ANImageBitmapRep *rep = nil;
     BMPoint repSize = BMPointFromSize(RSCGSizeWithScale(CGSizeMake(diameter, diameter), scale));
+    if (repSize.x <= 0) return rep;
     
-    NSLog(@"%@ - %ld, %ld", dictionaryCacheKey, repSize.x, repSize.y);
+    // Check cache first
+    NSString *dictionaryCacheKey = [NSString stringWithFormat:@"%lu-%f", repSize.x, paddingDistance];
+    [backgroundLock lock];
+    rep = [generatedBitmaps objectForKey:dictionaryCacheKey];
+    [backgroundLock unlock];
+    NSLog(@"%@, %@", dictionaryCacheKey, rep);
+    if (rep) return rep;
     
-    ANImageBitmapRep *rep = [[ANImageBitmapRep alloc] initWithSize:repSize];
+    // Create fresh
+    rep = [[ANImageBitmapRep alloc] initWithSize:repSize];
 
     paddingDistance *= scale;
     diameter *= scale;
@@ -453,10 +467,13 @@
     free(atan2Vals);
     free(distVals);
     
-//    if (cache) {
-//        // Add to dictionary cache
-//    }
-    
+    if (cache) {
+        // Add to dictionary cache
+        [backgroundLock lock];
+        [generatedBitmaps setObject:rep forKey:dictionaryCacheKey];
+        [backgroundLock unlock];
+    }
+
     return rep;
 }
 
