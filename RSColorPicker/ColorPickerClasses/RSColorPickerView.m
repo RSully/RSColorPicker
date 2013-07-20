@@ -126,6 +126,7 @@
 
 -(void)didMoveToWindow {
     if (!self.window) {
+        _scale = 0;
         [_loupeLayer disappearAnimated:NO];
         return;
     }
@@ -134,20 +135,6 @@
     _scale = self.window.screen.scale;
     
     _gradientContainer.layer.contentsScale = _scale;
-    BMPoint repSize = BMPointFromSize(RSCGSizeWithScale(_gradientView.bounds.size, _scale));
-    
-    // Don't reinit if we're the same as original
-    if (_rep) {
-        BMPoint oldSize = [_rep bitmapSize];
-        if (oldSize.x == repSize.x && oldSize.y == repSize.y) {
-            self.selectionColor = _selectionColor;
-            self.cropToCircle = _cropToCircle;
-
-            return;
-        }
-    }
-    
-    _rep = [[ANImageBitmapRep alloc] initWithSize:repSize];
     
     _colorPickerViewFlags.bitmapNeedsUpdate = YES;
     [self genBitmap];
@@ -161,62 +148,8 @@
 - (void)genBitmap {
 	if (!_colorPickerViewFlags.bitmapNeedsUpdate) return;
     
-    CGFloat paddingDistance = (_selectionView.bounds.size.width / 2.0) * _scale;
-	CGFloat radius = _rep.bitmapSize.x / 2.0;
-    CGFloat relRadius = radius - paddingDistance;
-	CGFloat relX = 0.0, relY = 0.0;
-
-    int i, x, y;
-    int arrSize = _rep.bitmapSize.x * _rep.bitmapSize.y;
-    size_t arrDataSize = sizeof(float) * arrSize;
-    
-    // data
-    float *preComputeX = (float *)malloc(arrDataSize);
-    float *preComputeY = (float *)malloc(arrDataSize);
-    // atan2
-    float *atan2Vals = (float *)malloc(arrDataSize);
-    // distance
-    float *distVals = (float *)malloc(arrDataSize);
-    
-    i = 0;
-	for (x = 0; x < _rep.bitmapSize.x; x++) {
-		relX = x - radius;
-		for (y = 0; y < _rep.bitmapSize.y; y++) {
-            relY = radius - y;
-
-            preComputeY[i] = relY;
-            preComputeX[i] = relX;
-            i++;
-		}
-	}
-
-    // Use Accelerate.framework to compute
-    vvatan2f(atan2Vals, preComputeY, preComputeX, &arrSize);
-    vDSP_vdist(preComputeX, 1, preComputeY, 1, distVals, 1, arrSize);
-    
-    // Compution done, free these
-    free(preComputeX);
-    free(preComputeY);
-    
-    i = 0;
-	for (x = 0; x < _rep.bitmapSize.x; x++) {		
-		for (y = 0; y < _rep.bitmapSize.y; y++) {			
-			CGFloat r_distance = distVals[i];
-			r_distance = fmin(r_distance, relRadius);
-			
-			CGFloat angle = atan2Vals[i];
-			if (angle < 0.0) { angle = (2.0 * M_PI)+angle; }
-			
-			CGFloat perc_angle = angle / (2.0 * M_PI);
-			BMPixel thisPixel = RSPixelFromHSV(perc_angle, r_distance/relRadius, 1); //full brightness
-			[_rep setPixel:thisPixel atPoint:BMPointMake(x, y)];
-            
-            i++;
-		}
-	}
-    // Bitmap generated, free these
-    free(atan2Vals);
-    free(distVals);
+    CGFloat paddingDistance = _selectionView.bounds.size.width / 2.0;
+    _rep = [[self class] bitmapForDiameter:_gradientView.bounds.size.width withScale:_scale withPadding:paddingDistance shouldCache:NO];
     
 	_colorPickerViewFlags.bitmapNeedsUpdate = NO;
     _gradientView.image = RSUIImageWithScale([_rep image], _scale);
@@ -433,6 +366,98 @@
 - (CGPoint)convertViewPointToGradient:(CGPoint)point {
 	CGRect frame = _gradientContainer.frame;
 	return CGPointMake(point.x - CGRectGetMinX(frame), point.y - CGRectGetMinY(frame));
+}
+
+#pragma mark - Class methods
+
+//static dispatch_queue_t backgroundQueue;
+//static NSLock *backgroundLock;
+//static NSMutableDictionary *generatedBitmaps;
+//
+//+(void)initialize {
+//    backgroundQueue = dispatch_queue_create("com.github.rsully.rscolorpicker", NULL);
+//    generatedBitmaps = [NSMutableDictionary new];
+//    backgroundLock = [NSLock new];
+//}
+//
+//+(void)prepareForSize:(CGSize)size {
+//    dispatch_async(backgroundQueue, ^{
+//        
+//    });
+//}
+
++(ANImageBitmapRep*)bitmapForDiameter:(CGFloat)diameter withScale:(CGFloat)scale withPadding:(CGFloat)paddingDistance shouldCache:(BOOL)cache {
+    NSString *dictionaryCacheKey = [NSString stringWithFormat:@"%f-%f-%f", diameter, scale, paddingDistance];
+    BMPoint repSize = BMPointFromSize(RSCGSizeWithScale(CGSizeMake(diameter, diameter), scale));
+    
+    NSLog(@"%@ - %ld, %ld", dictionaryCacheKey, repSize.x, repSize.y);
+    
+    ANImageBitmapRep *rep = [[ANImageBitmapRep alloc] initWithSize:repSize];
+
+    paddingDistance *= scale;
+    diameter *= scale;
+    
+	CGFloat radius = diameter / 2.0;
+    CGFloat relRadius = radius - paddingDistance;
+	CGFloat relX, relY;
+    
+    int i, x, y;
+    int arrSize = powf(diameter, 2);
+    size_t arrDataSize = sizeof(float) * arrSize;
+    
+    // data
+    float *preComputeX = (float *)malloc(arrDataSize);
+    float *preComputeY = (float *)malloc(arrDataSize);
+    // atan2
+    float *atan2Vals = (float *)malloc(arrDataSize);
+    // distance
+    float *distVals = (float *)malloc(arrDataSize);
+    
+    i = 0;
+	for (x = 0; x < diameter; x++) {
+		relX = x - radius;
+		for (y = 0; y < diameter; y++) {
+            relY = radius - y;
+            
+            preComputeY[i] = relY;
+            preComputeX[i] = relX;
+            i++;
+		}
+	}
+    
+    // Use Accelerate.framework to compute
+    vvatan2f(atan2Vals, preComputeY, preComputeX, &arrSize);
+    vDSP_vdist(preComputeX, 1, preComputeY, 1, distVals, 1, arrSize);
+    
+    // Compution done, free these
+    free(preComputeX);
+    free(preComputeY);
+    
+    i = 0;
+	for (x = 0; x < diameter; x++) {
+		for (y = 0; y < diameter; y++) {
+			CGFloat r_distance = fmin(distVals[i], relRadius);
+			
+			CGFloat angle = atan2Vals[i];
+			if (angle < 0.0) { angle = (2.0 * M_PI)+angle; }
+			
+			CGFloat perc_angle = angle / (2.0 * M_PI);
+			BMPixel thisPixel = RSPixelFromHSV(perc_angle, r_distance/relRadius, 1); // full brightness
+			[rep setPixel:thisPixel atPoint:BMPointMake(x, y)];
+            
+            i++;
+		}
+	}
+    
+    // Bitmap generated, free these
+    free(atan2Vals);
+    free(distVals);
+    
+//    if (cache) {
+//        // Add to dictionary cache
+//    }
+    
+    return rep;
 }
 
 @end
