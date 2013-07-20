@@ -37,7 +37,10 @@
 @property (nonatomic) CGFloat scale;
 
 - (void)initRoutine;
+
+- (void)genBitmap;
 - (void)updateSelectionLocation;
+
 - (CGPoint)validPointForTouch:(CGPoint)touchPoint;
 - (CGPoint)convertGradientPointToView:(CGPoint)point;
 - (CGPoint)convertViewPointToGradient:(CGPoint)point;
@@ -81,8 +84,7 @@
 //    [aCoder encodeBool:self.cropToCircle forKey:@"cropToCircle"];
 //}
 
-- (void)initRoutine
-{
+- (void)initRoutine {
 	self.opaque = YES;
 	self.backgroundColor = [UIColor whiteColor];
 	_colorPickerViewFlags.bitmapNeedsUpdate = NO;
@@ -224,6 +226,7 @@
 
 - (UIColor*)colorAtPoint:(CGPoint)point {
     if (!_rep) return nil;
+    
 	CGPoint convertedPoint = [self convertViewPointToGradient:point];
 	convertedPoint.x = round(convertedPoint.x);
 	convertedPoint.y = round(convertedPoint.y);
@@ -244,14 +247,14 @@
 
 - (void)setBrightness:(CGFloat)bright {
 	_brightness = bright;
-	
-//	_brightnessView.alpha = 1 - _brightness;
+
 	_gradientView.alpha = _brightness;
 	[self updateSelectionAtPoint:_selection];
 }
 
 - (void)setOpacity:(CGFloat)opacity {
 	_opacity = opacity;
+
 	_opacityView.alpha = 1 - _opacity;
 	[self updateSelectionAtPoint:_selection];
 }
@@ -273,8 +276,7 @@
 	[self updateSelectionLocation];
 }
 
-- (void)setSelectionColor:(UIColor *)selectionColor
-{
+- (void)setSelectionColor:(UIColor *)selectionColor {
 	// Force color into correct colorspace to get HSV from
     float components[4];
     RSGetComponentsForColor(components, selectionColor);
@@ -331,8 +333,7 @@
 	[_loupeLayer setNeedsDisplay];
 }
 
-- (void)updateSelectionAtPoint:(CGPoint)point
-{
+- (void)updateSelectionAtPoint:(CGPoint)point {
 	CGPoint circlePoint = [self validPointForTouch:point];
 	_selection = circlePoint;
 
