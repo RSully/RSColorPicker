@@ -42,8 +42,7 @@ BMPixel RSPixelFromHSV(CGFloat H, CGFloat S, CGFloat V) {
 }
 
 
-void RSHSVFromPixel(BMPixel pixel, CGFloat *h, CGFloat *s, CGFloat *v)
-{
+void RSHSVFromPixel(BMPixel pixel, CGFloat *h, CGFloat *s, CGFloat *v) {
 	UIColor *color = [UIColor colorWithRed:pixel.red green:pixel.green blue:pixel.blue alpha:1];
 	[color getHue:h saturation:s brightness:v alpha:NULL];
 }
@@ -68,6 +67,7 @@ CGSize RSCGSizeWithScale(CGSize size, CGFloat scale) {
 CGPoint RSCGPointWithScale(CGPoint point, CGFloat scale) {
     return CGPointMake(point.x * scale, point.y * scale);
 }
+
 UIImage* RSUIImageWithScale(UIImage *img, CGFloat scale) {
     return [UIImage imageWithCGImage:img.CGImage scale:scale orientation:UIImageOrientationUp];
 }

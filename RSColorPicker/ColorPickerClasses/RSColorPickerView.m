@@ -140,13 +140,6 @@
     _gradientContainer.layer.contentsScale = _scale;
     
     _colorPickerViewFlags.bitmapNeedsUpdate = YES;
-    
-//    dispatch_queue_t queue = dispatch_queue_create("test", NULL);
-//    dispatch_async(queue, ^{
-//        [self genBitmap];
-//        self.selectionColor = _selectionColor;
-//        self.cropToCircle = _cropToCircle;
-//    });
     [self genBitmap];
 
     self.selectionColor = _selectionColor;
@@ -156,7 +149,6 @@
 #pragma mark - Business
 
 - (void)genBitmap {
-    NSLog(@"%@: genBitmap %u", self, _colorPickerViewFlags.bitmapNeedsUpdate);
 	if (!_colorPickerViewFlags.bitmapNeedsUpdate) return;
     
     CGFloat paddingDistance = _selectionView.bounds.size.width / 2.0;
@@ -408,8 +400,6 @@ static NSMutableDictionary *generatedBitmaps;
     });
     if (rep) return rep;
     
-    NSLog(@"-bitmapForDiameter FRESH GEN");
-    
     // Create fresh
     rep = [[ANImageBitmapRep alloc] initWithSize:repSize];
 
@@ -457,7 +447,7 @@ static NSMutableDictionary *generatedBitmaps;
 			CGFloat r_distance = fmin(distVals[i], relRadius);
 			
 			CGFloat angle = atan2Vals[i];
-			if (angle < 0.0) { angle = (2.0 * M_PI)+angle; }
+			if (angle < 0.0) angle = (2.0 * M_PI) + angle;
 			
 			CGFloat perc_angle = angle / (2.0 * M_PI);
 			BMPixel thisPixel = RSPixelFromHSV(perc_angle, r_distance/relRadius, 1); // full brightness
@@ -477,7 +467,6 @@ static NSMutableDictionary *generatedBitmaps;
             [generatedBitmaps setObject:rep forKey:dictionaryCacheKey];
         });
     }
-
     return rep;
 }
 
