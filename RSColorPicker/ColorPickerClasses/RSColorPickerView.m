@@ -127,6 +127,7 @@
 }
 
 -(void)didMoveToWindow {
+    NSLog(@"%@: didMoveToWindow %@", self, self.window);
     if (!self.window) {
         _scale = 0;
         [_loupeLayer disappearAnimated:NO];
@@ -139,6 +140,13 @@
     _gradientContainer.layer.contentsScale = _scale;
     
     _colorPickerViewFlags.bitmapNeedsUpdate = YES;
+    
+//    dispatch_queue_t queue = dispatch_queue_create("test", NULL);
+//    dispatch_async(queue, ^{
+//        [self genBitmap];
+//        self.selectionColor = _selectionColor;
+//        self.cropToCircle = _cropToCircle;
+//    });
     [self genBitmap];
 
     self.selectionColor = _selectionColor;
@@ -148,6 +156,7 @@
 #pragma mark - Business
 
 - (void)genBitmap {
+    NSLog(@"%@: genBitmap %u", self, _colorPickerViewFlags.bitmapNeedsUpdate);
 	if (!_colorPickerViewFlags.bitmapNeedsUpdate) return;
     
     CGFloat paddingDistance = _selectionView.bounds.size.width / 2.0;
@@ -242,8 +251,7 @@
 	
 }
 
-- (void)setDelegate:(id<RSColorPickerViewDelegate>)delegate
-{
+- (void)setDelegate:(id<RSColorPickerViewDelegate>)delegate {
 	_delegate = delegate;
 	_colorPickerViewFlags.delegateDidChangeSelection = [_delegate respondsToSelector:@selector(colorPickerDidChangeSelection:)];
 }
@@ -329,8 +337,8 @@
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-	//Lazily load loupeLayer
-    if (!_loupeLayer){
+	// Lazily load loupeLayer
+    if (!_loupeLayer) {
         _loupeLayer = [BGRSLoupeLayer layer];
     }
     [_loupeLayer appearInColorPicker:self];
@@ -373,13 +381,11 @@
 #pragma mark - Class methods
 
 static dispatch_queue_t backgroundQueue;
-static NSLock *backgroundLock;
 static NSMutableDictionary *generatedBitmaps;
 
 +(void)initialize {
     backgroundQueue = dispatch_queue_create("com.github.rsully.rscolorpicker", NULL);
     generatedBitmaps = [NSMutableDictionary new];
-    backgroundLock = [NSLock new];
 }
 
 // Background methods
@@ -393,16 +399,15 @@ static NSMutableDictionary *generatedBitmaps;
 }
 
 +(ANImageBitmapRep*)bitmapForDiameter:(CGFloat)diameter withScale:(CGFloat)scale withPadding:(CGFloat)paddingDistance shouldCache:(BOOL)cache {
-    ANImageBitmapRep *rep = nil;
+    __block ANImageBitmapRep *rep = nil;
     BMPoint repSize = BMPointFromSize(RSCGSizeWithScale(CGSizeMake(diameter, diameter), scale));
     if (repSize.x <= 0) return rep;
     
     // Check cache first
     NSString *dictionaryCacheKey = [NSString stringWithFormat:@"%lu-%f", repSize.x, paddingDistance];
-    [backgroundLock lock];
-    rep = [generatedBitmaps objectForKey:dictionaryCacheKey];
-    [backgroundLock unlock];
-    NSLog(@"%@, %@", dictionaryCacheKey, rep);
+    dispatch_sync(backgroundQueue, ^{
+        rep = [generatedBitmaps objectForKey:dictionaryCacheKey];
+    });
     if (rep) return rep;
     
     // Create fresh
@@ -469,9 +474,9 @@ static NSMutableDictionary *generatedBitmaps;
     
     if (cache) {
         // Add to dictionary cache
-        [backgroundLock lock];
-        [generatedBitmaps setObject:rep forKey:dictionaryCacheKey];
-        [backgroundLock unlock];
+        dispatch_async(backgroundQueue, ^{
+            [generatedBitmaps setObject:rep forKey:dictionaryCacheKey];
+        });
     }
 
     return rep;
