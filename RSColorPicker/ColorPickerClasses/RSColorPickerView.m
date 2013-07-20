@@ -248,7 +248,6 @@
     [self updateSelectionLocation];
     [self setBrightness:v];
 	[self setOpacity:o];
-	
 }
 
 - (void)setDelegate:(id<RSColorPickerViewDelegate>)delegate {
@@ -296,43 +295,42 @@
 #pragma mark - Touch events
 
 - (CGPoint)validPointForTouch:(CGPoint)touchPoint {
-	CGPoint returnedPoint;
 	if ([_activeAreaShape containsPoint:touchPoint]) {
-		returnedPoint = touchPoint;
-	} else {
-		//we compute the right point on the gradient border
-		
-		// TouchCircle is the circle which pass by the point 'touchPoint', of radius 'r'
-		//'X' is the x coordinate of the touch in TouchCircle
-		CGFloat X = touchPoint.x - CGRectGetMidX(_gradientContainer.frame);
-		//'Y' is the y coordinate of the touch in TouchCircle
-		CGFloat Y = touchPoint.y - CGRectGetMidY(_gradientContainer.frame);
-		CGFloat r = sqrt(pow(X, 2) + pow(Y, 2));
-		
-		//alpha is the angle in radian of the touch on the unit circle
-		CGFloat alpha = acos( X / r );
-		if (touchPoint.y > CGRectGetMidX(_gradientContainer.frame)) alpha = 2 * M_PI - alpha;
-		
-		//'actual radius' is the distance between the center and the border of the gradient
-        CGFloat actualRadius;
-        if (_cropToCircle) {
-            actualRadius = _gradientShape.bounds.size.width / 2.0 - _selectionView.bounds.size.width / 2.0;
-        } else {
-			//square shape - using the intercept theorem we have "actualRadius / r == 0.5*gradientContainer.height / Y"
-            if ( (alpha >= M_PI_4 && alpha < 3 * M_PI_4) || (alpha >= 5 * M_PI_4 && alpha < 7 * M_PI_4) ) {
-                actualRadius = r * (_gradientContainer.bounds.size.height / 2.0 - _selectionView.bounds.size.height / 2.0 ) / Y;
-            } else {
-                actualRadius = r * (_gradientContainer.bounds.size.width / 2.0 - _selectionView.bounds.size.width / 2.0) / X;
-            }
-		}
-        
-		returnedPoint.x = fabs(actualRadius) * cos(alpha);
-		returnedPoint.y = fabs(actualRadius) * sin(alpha);
-		
-		//we offset the center of the circle, to get the coordinate from the right top left origin
-		returnedPoint.x = returnedPoint.x + CGRectGetMidX(_gradientContainer.frame);
-		returnedPoint.y = CGRectGetMidY(_gradientContainer.frame) - returnedPoint.y;
+		return touchPoint;
 	}
+    // We compute the right point on the gradient border
+	CGPoint returnedPoint;
+    
+    // TouchCircle is the circle which pass by the point 'touchPoint', of radius 'r'
+    // 'X' is the x coordinate of the touch in TouchCircle
+    CGFloat X = touchPoint.x - CGRectGetMidX(_gradientContainer.frame);
+    // 'Y' is the y coordinate of the touch in TouchCircle
+    CGFloat Y = touchPoint.y - CGRectGetMidY(_gradientContainer.frame);
+    CGFloat r = sqrt(pow(X, 2) + pow(Y, 2));
+    
+    // alpha is the angle in radian of the touch on the unit circle
+    CGFloat alpha = acos( X / r );
+    if (touchPoint.y > CGRectGetMidX(_gradientContainer.frame)) alpha = 2 * M_PI - alpha;
+    
+    // 'actual radius' is the distance between the center and the border of the gradient
+    CGFloat actualRadius;
+    if (_cropToCircle) {
+        actualRadius = _gradientShape.bounds.size.width / 2.0 - _selectionView.bounds.size.width / 2.0;
+    } else {
+        // square shape - using the intercept theorem we have "actualRadius / r == 0.5*gradientContainer.height / Y"
+        if ( (alpha >= M_PI_4 && alpha < 3 * M_PI_4) || (alpha >= 5 * M_PI_4 && alpha < 7 * M_PI_4) ) {
+            actualRadius = r * (_gradientContainer.bounds.size.height / 2.0 - _selectionView.bounds.size.height / 2.0 ) / Y;
+        } else {
+            actualRadius = r * (_gradientContainer.bounds.size.width / 2.0 - _selectionView.bounds.size.width / 2.0) / X;
+        }
+    }
+    
+    returnedPoint.x = fabs(actualRadius) * cos(alpha);
+    returnedPoint.y = fabs(actualRadius) * sin(alpha);
+    
+    // we offset the center of the circle, to get the coordinate from the right top left origin
+    returnedPoint.x = returnedPoint.x + CGRectGetMidX(_gradientContainer.frame);
+    returnedPoint.y = CGRectGetMidY(_gradientContainer.frame) - returnedPoint.y;
 	return returnedPoint;
 }
 
@@ -410,6 +408,8 @@ static NSMutableDictionary *generatedBitmaps;
     });
     if (rep) return rep;
     
+    NSLog(@"-bitmapForDiameter FRESH GEN");
+    
     // Create fresh
     rep = [[ANImageBitmapRep alloc] initWithSize:repSize];
 
@@ -427,9 +427,8 @@ static NSMutableDictionary *generatedBitmaps;
     // data
     float *preComputeX = (float *)malloc(arrDataSize);
     float *preComputeY = (float *)malloc(arrDataSize);
-    // atan2
+    // output
     float *atan2Vals = (float *)malloc(arrDataSize);
-    // distance
     float *distVals = (float *)malloc(arrDataSize);
     
     i = 0;
