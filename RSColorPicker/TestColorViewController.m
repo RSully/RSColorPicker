@@ -21,14 +21,12 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        NSLog(@"%@: initWithNib...", self);
     }
     return self;
 }
 
 - (void)viewDidLoad
 {
-    NSLog(@"%@: viewDidLoad", self);
     [super viewDidLoad];
 
     self.view.backgroundColor = [self randomColor];
@@ -110,7 +108,6 @@
 #pragma mark - RSColorPickerView delegate methods
 
 - (void)colorPickerDidChangeSelection:(RSColorPickerView *)cp {
-    NSLog(@"%@: colorPickerDidChangeSelection: %@", self, cp);
 	_colorPatch.backgroundColor = [cp selectionColor];
     _brightnessSlider.value = [cp brightness];
     _opacitySlider.value = [cp opacity];
