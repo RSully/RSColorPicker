@@ -379,7 +379,7 @@ static dispatch_queue_t backgroundQueue;
 static NSMutableDictionary *generatedBitmaps;
 
 +(void)initialize {
-    backgroundQueue = dispatch_queue_create("com.github.rsully.rscolorpicker", NULL);
+    backgroundQueue = dispatch_queue_create("com.github.rsully.rscolorpicker", DISPATCH_QUEUE_SERIAL);
     generatedBitmaps = [NSMutableDictionary new];
 }
 
