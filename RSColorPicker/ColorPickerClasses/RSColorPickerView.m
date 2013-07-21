@@ -393,16 +393,29 @@ static NSMutableDictionary *generatedBitmaps;
     });
 }
 
-+(ANImageBitmapRep*)bitmapForDiameter:(CGFloat)diameter withScale:(CGFloat)scale withPadding:(CGFloat)paddingDistance shouldCache:(BOOL)cache {
++(ANImageBitmapRep*)retreiveBitmap:(NSString*)key {
     __block ANImageBitmapRep *rep = nil;
+    dispatch_block_t execute = ^{
+        rep = [generatedBitmaps objectForKey:key];
+    };
+    
+    // See http://stackoverflow.com/questions/10984732/why-cant-we-use-a-dispatch-sync-on-the-current-queue
+    if (dispatch_get_current_queue() == backgroundQueue) {
+        execute();
+    } else {
+        dispatch_sync(backgroundQueue, execute);
+    }
+    return rep;
+}
+
++(ANImageBitmapRep*)bitmapForDiameter:(CGFloat)diameter withScale:(CGFloat)scale withPadding:(CGFloat)paddingDistance shouldCache:(BOOL)cache {
+    ANImageBitmapRep *rep = nil;
     BMPoint repSize = BMPointFromSize(RSCGSizeWithScale(CGSizeMake(diameter, diameter), scale));
     if (repSize.x <= 0) return rep;
     
     // Check cache first
     NSString *dictionaryCacheKey = [NSString stringWithFormat:@"%lu-%f", repSize.x, paddingDistance];
-    dispatch_sync(backgroundQueue, ^{
-        rep = [generatedBitmaps objectForKey:dictionaryCacheKey];
-    });
+    rep = [self retreiveBitmap:dictionaryCacheKey];
     if (rep) return rep;
     
     // Create fresh
