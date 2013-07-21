@@ -393,21 +393,6 @@ static NSMutableDictionary *generatedBitmaps;
     [self bitmapForDiameter:diameter withScale:1.0 withPadding:padding shouldCache:YES];
 }
 
-//+(ANImageBitmapRep*)retreiveBitmap:(NSString*)key {
-//    __block ANImageBitmapRep *rep = nil;
-//    dispatch_block_t execute = ^{
-//        rep = [generatedBitmaps objectForKey:key];
-//    };
-//    
-//    // See http://stackoverflow.com/questions/10984732/why-cant-we-use-a-dispatch-sync-on-the-current-queue
-//    if (dispatch_get_current_queue() == backgroundQueue) {
-//        execute();
-//    } else {
-//        dispatch_sync(backgroundQueue, execute);
-//    }
-//    return rep;
-//}
-
 +(ANImageBitmapRep*)bitmapForDiameter:(CGFloat)diameter withScale:(CGFloat)scale withPadding:(CGFloat)paddingDistance shouldCache:(BOOL)cache {
     __block ANImageBitmapRep *rep = nil;
     paddingDistance *= scale;
