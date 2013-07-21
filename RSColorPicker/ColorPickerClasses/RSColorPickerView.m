@@ -127,7 +127,6 @@
 }
 
 -(void)didMoveToWindow {
-    NSLog(@"%@: didMoveToWindow %@", self, self.window);
     if (!self.window) {
         _scale = 0;
         [_loupeLayer disappearAnimated:NO];
@@ -254,17 +253,23 @@
 }
 
 - (void)updateSelectionLocationDisableActions:(BOOL)disable {
+    if (disable) {
+        NSDictionary *disabledActions = @{@"position" : [NSNull null], @"frame" : [NSNull null], @"center" : [NSNull null]};
+        _loupeLayer.actions = disabledActions;
+        _selectionView.layer.actions = disabledActions;
+    }
+    
 	_selectionView.center = _selection;
-	if (disable) {
-		[CATransaction setDisableActions:YES];
-	}
-	_loupeLayer.position = _selection;
+    _loupeLayer.position = _selection;
 	// Make loupeLayer sharp on screen
 	CGRect loupeFrame = _loupeLayer.frame;
 	loupeFrame.origin = CGPointMake(round(loupeFrame.origin.x), round(loupeFrame.origin.y));
 	_loupeLayer.frame = loupeFrame;
 	
 	[_loupeLayer setNeedsDisplay];
+    
+    _loupeLayer.actions = nil;
+    _selectionView.layer.actions = nil;
 }
 
 - (void)updateSelectionAtPoint:(CGPoint)point {
