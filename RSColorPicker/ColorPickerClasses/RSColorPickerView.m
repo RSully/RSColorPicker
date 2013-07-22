@@ -382,6 +382,7 @@ static dispatch_queue_t backgroundQueue;
 
 +(void)initialize {
     generatedBitmaps = [NSCache new];
+    [generatedBitmaps setDelegate:self];
     generateQueue = [NSOperationQueue new];
     generateQueue.maxConcurrentOperationCount = NSOperationQueueDefaultMaxConcurrentOperationCount;
     backgroundQueue = dispatch_queue_create("com.github.rsully.rscolorpicker.background", DISPATCH_QUEUE_SERIAL);
@@ -400,8 +401,13 @@ static dispatch_queue_t backgroundQueue;
     });
 }
 
++(void)cache:(NSCache *)cache willEvictObject:(id)obj {
+    NSLog(@"*** cache:willEvictObject: %@ (%f, %f)", obj, [obj padding], [obj diameter]);
+}
+
 +(ANImageBitmapRep*)bitmapForDiameter:(CGFloat)diameter scale:(CGFloat)scale padding:(CGFloat)paddingDistance shouldCache:(BOOL)cache {
     RSGenerateOperation *repOp = nil;
+    int ident = arc4random();
     
     // Handle the scale here so the operation can just work with pixels directly
     paddingDistance *= scale;
@@ -413,21 +419,29 @@ static dispatch_queue_t backgroundQueue;
     NSString *dictionaryCacheKey = [NSString stringWithFormat:@"%.1f-%.1f", diameter, paddingDistance];
     // Check cache
     repOp = [generatedBitmaps objectForKey:dictionaryCacheKey];
+    NSLog(@"%d - size: %@", ident, dictionaryCacheKey);
     
     if (repOp) {
+        NSLog(@"%d - got from cache", ident);
         if (!repOp.isFinished) {
+            NSLog(@"%d - waiting", ident);
             [repOp waitUntilFinished];
         }
+        NSLog(@"%d - finished", ident);
         return repOp.bitmap;
     }
     
+    NSLog(@"%d - creating generate operation", ident);
     repOp = [[RSGenerateOperation alloc] initWithDiameter:diameter andPadding:paddingDistance];
     [generateQueue addOperation:repOp];
+    NSLog(@"%d - added, waiting", ident);
     [repOp waitUntilFinished];
     
     if (cache) {
-        [generatedBitmaps setObject:repOp forKey:dictionaryCacheKey];
+        NSLog(@"%d - caching", ident);
+        [generatedBitmaps setObject:repOp forKey:dictionaryCacheKey cost:diameter];
     }
+    NSLog(@"%d - done", ident);
     return repOp.bitmap;
 }
 
