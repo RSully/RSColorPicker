@@ -402,7 +402,7 @@ static dispatch_queue_t backgroundQueue;
 
 +(ANImageBitmapRep*)bitmapForDiameter:(CGFloat)diameter scale:(CGFloat)scale padding:(CGFloat)paddingDistance shouldCache:(BOOL)cache {
     RSGenerateOperation *repOp = nil;
-    int ident = arc4random();
+//    int ident = abs(arc4random());
     
     // Handle the scale here so the operation can just work with pixels directly
     paddingDistance *= scale;
@@ -414,29 +414,29 @@ static dispatch_queue_t backgroundQueue;
     NSString *dictionaryCacheKey = [NSString stringWithFormat:@"%.1f-%.1f", diameter, paddingDistance];
     // Check cache
     repOp = [generatedBitmaps objectForKey:dictionaryCacheKey];
-    NSLog(@"%d - size: %@", ident, dictionaryCacheKey);
+//    NSLog(@"%d - size: %@", ident, dictionaryCacheKey);
     
     if (repOp) {
-        NSLog(@"%d - got from cache", ident);
+//        NSLog(@"%d - got from cache", ident);
         if (!repOp.isFinished) {
-            NSLog(@"%d - waiting", ident);
+//            NSLog(@"%d - waiting", ident);
             [repOp waitUntilFinished];
         }
-        NSLog(@"%d - finished", ident);
+//        NSLog(@"%d - finished", ident);
         return repOp.bitmap;
     }
     
-    NSLog(@"%d - creating generate operation", ident);
+//    NSLog(@"%d - creating generate operation", ident);
     repOp = [[RSGenerateOperation alloc] initWithDiameter:diameter andPadding:paddingDistance];
     [generateQueue addOperation:repOp];
-    NSLog(@"%d - added, waiting", ident);
+//    NSLog(@"%d - added, waiting", ident);
     [repOp waitUntilFinished];
     
     if (cache) {
-        NSLog(@"%d - caching", ident);
+//        NSLog(@"%d - caching", ident);
         [generatedBitmaps setObject:repOp forKey:dictionaryCacheKey cost:diameter];
     }
-    NSLog(@"%d - done", ident);
+//    NSLog(@"%d - done", ident);
     return repOp.bitmap;
 }
 
