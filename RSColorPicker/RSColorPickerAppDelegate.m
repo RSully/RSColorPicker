@@ -16,6 +16,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     [RSColorPickerView prepareForDiameter:280.0];
+    [RSColorPickerView prepareForDiameter:280.0*2];
     
     // Setup root controller as color
     TestColorViewController *rootController = [[TestColorViewController alloc] initWithNibName:nil bundle:nil];

@@ -12,6 +12,7 @@
 #import "RSColorFunctions.h"
 #import "ANImageBitmapRep.h"
 #import "RSOpacitySlider.h"
+#import "GenerateOperation.h"
 
 #define kSelectionViewSize 22.0
 
@@ -375,14 +376,25 @@
 
 #pragma mark - Class methods
 
-static dispatch_queue_t generateQueue;
-static dispatch_queue_t cacheQueue;
+//static dispatch_queue_t generateQueue;
+//static dispatch_queue_t cacheQueue;
+//static NSMutableDictionary *generatedBitmaps;
+//
+//+(void)initialize {
+//    generateQueue = dispatch_queue_create("com.github.rsully.rscolorpicker.generate", DISPATCH_QUEUE_SERIAL);
+//    cacheQueue = dispatch_queue_create("com.github.rsully.rscolorpicker.cache", DISPATCH_QUEUE_SERIAL);
+//    generatedBitmaps = [NSMutableDictionary new];
+//}
+
+static NSOperationQueue *generateQueue;
 static NSMutableDictionary *generatedBitmaps;
+static dispatch_queue_t cacheQueue;
 
 +(void)initialize {
-    generateQueue = dispatch_queue_create("com.github.rsully.rscolorpicker.generate", DISPATCH_QUEUE_SERIAL);
+    generateQueue = [[NSOperationQueue alloc] init];
+    generateQueue.maxConcurrentOperationCount = 4;
+    generatedBitmaps = [[NSMutableDictionary alloc] init];
     cacheQueue = dispatch_queue_create("com.github.rsully.rscolorpicker.cache", DISPATCH_QUEUE_SERIAL);
-    generatedBitmaps = [NSMutableDictionary new];
 }
 
 // Background methods
@@ -394,100 +406,51 @@ static NSMutableDictionary *generatedBitmaps;
 }
 
 +(ANImageBitmapRep*)bitmapForDiameter:(CGFloat)diameter withScale:(CGFloat)scale withPadding:(CGFloat)paddingDistance shouldCache:(BOOL)cache {
-    __block ANImageBitmapRep *rep = nil;
+    __block GenerateOperation *repOp = nil;
+    
     paddingDistance *= scale;
     diameter *= scale;
     
     BMPoint repSize = BMPointMake(diameter, diameter);
-    if (repSize.x <= 0) return rep;
+    if (repSize.x <= 0) return nil;
     
     // Unique key for this size combo
     NSString *dictionaryCacheKey = [NSString stringWithFormat:@"%lu-%f", repSize.x, paddingDistance];
     
-    // Check cache initially
+    // Check cache
     dispatch_sync(cacheQueue, ^{
-        rep = [generatedBitmaps objectForKey:dictionaryCacheKey];
+        repOp = [generatedBitmaps objectForKey:dictionaryCacheKey];
     });
-    if (rep) return rep;
     
-    // Then wait for the generate queue
-    dispatch_sync(generateQueue, ^{
-        // Now that this queue is free let's make sure we weren't just generating the one we need
-        dispatch_sync(cacheQueue, ^{
-            rep = [generatedBitmaps objectForKey:dictionaryCacheKey];
+    if (repOp) {
+        NSLog(@"got cached");
+    }
+    if (repOp.isFinished) {
+        NSLog(@"returned cached");
+        return repOp.bitmap;
+    }
+    
+    NSLog(@"new op");
+    GenerateOperation *operation = [[GenerateOperation alloc] init];
+    if (repOp.isExecuting) {
+        NSLog(@"is executing (add dep)");
+        [operation addDependency:repOp];
+    } else if (!repOp) {
+        repOp = operation;
+        NSLog(@"assigning vals");
+        operation.diameter = diameter;
+        operation.padding = paddingDistance;
+    }
+    NSLog(@"enqueueing");
+    [generateQueue addOperations:@[operation] waitUntilFinished:YES];
+    NSLog(@"finished");
+    
+    if (cache) {
+        dispatch_async(cacheQueue, ^{
+            [generatedBitmaps setObject:repOp forKey:dictionaryCacheKey];
         });
-        
-        if (!rep) {
-            // Finally we're sure we didn't cache a bitmap so let's create it
-            
-            // Create fresh
-            rep = [[ANImageBitmapRep alloc] initWithSize:repSize];
-                        
-            CGFloat radius = diameter / 2.0;
-            CGFloat relRadius = radius - paddingDistance;
-            CGFloat relX, relY;
-            
-            int i, x, y;
-            int arrSize = powf(diameter, 2);
-            size_t arrDataSize = sizeof(float) * arrSize;
-            
-            // data
-            float *preComputeX = (float *)malloc(arrDataSize);
-            float *preComputeY = (float *)malloc(arrDataSize);
-            // output
-            float *atan2Vals = (float *)malloc(arrDataSize);
-            float *distVals = (float *)malloc(arrDataSize);
-            
-            i = 0;
-            for (x = 0; x < diameter; x++) {
-                relX = x - radius;
-                for (y = 0; y < diameter; y++) {
-                    relY = radius - y;
-                    
-                    preComputeY[i] = relY;
-                    preComputeX[i] = relX;
-                    i++;
-                }
-            }
-            
-            // Use Accelerate.framework to compute
-            vvatan2f(atan2Vals, preComputeY, preComputeX, &arrSize);
-            vDSP_vdist(preComputeX, 1, preComputeY, 1, distVals, 1, arrSize);
-            
-            // Compution done, free these
-            free(preComputeX);
-            free(preComputeY);
-            
-            i = 0;
-            for (x = 0; x < diameter; x++) {
-                for (y = 0; y < diameter; y++) {
-                    CGFloat r_distance = fmin(distVals[i], relRadius);
-                    
-                    CGFloat angle = atan2Vals[i];
-                    if (angle < 0.0) angle = (2.0 * M_PI) + angle;
-                    
-                    CGFloat perc_angle = angle / (2.0 * M_PI);
-                    BMPixel thisPixel = RSPixelFromHSV(perc_angle, r_distance/relRadius, 1); // full brightness
-                    [rep setPixel:thisPixel atPoint:BMPointMake(x, y)];
-                    
-                    i++;
-                }
-            }
-            
-            // Bitmap generated, free these
-            free(atan2Vals);
-            free(distVals);
-            
-            
-            if (cache) {
-                // Add to cache
-                dispatch_async(cacheQueue, ^{
-                    [generatedBitmaps setObject:rep forKey:dictionaryCacheKey];
-                });
-            }
-        }
-    });
-    return rep;
+    }
+    return repOp.bitmap;
 }
 
 @end

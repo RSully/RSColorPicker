@@ -35,6 +35,7 @@
 		7FB5E81717455D820034FFB8 /* RSOpacitySlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FB5E81617455D820034FFB8 /* RSOpacitySlider.m */; };
 		930D5A8016DE4D36006C38D4 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 930D5A7F16DE4D36006C38D4 /* Default-568h@2x.png */; };
 		94A10AFB1799B6A900F0BD7E /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94A10AFA1799B6A900F0BD7E /* Accelerate.framework */; };
+		94A10AFF179DB67C00F0BD7E /* GenerateOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 94A10AFE179DB67C00F0BD7E /* GenerateOperation.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -89,6 +90,8 @@
 		7FB5E81617455D820034FFB8 /* RSOpacitySlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSOpacitySlider.m; sourceTree = "<group>"; };
 		930D5A7F16DE4D36006C38D4 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		94A10AFA1799B6A900F0BD7E /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
+		94A10AFD179DB67C00F0BD7E /* GenerateOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GenerateOperation.h; sourceTree = "<group>"; };
+		94A10AFE179DB67C00F0BD7E /* GenerateOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GenerateOperation.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -175,6 +178,7 @@
 				2B85422C16EFC8970047FFBE /* RSColorFunctions.m */,
 				2B85422D16EFC8970047FFBE /* RSColorPickerView.h */,
 				2B85422E16EFC8970047FFBE /* RSColorPickerView.m */,
+				94A10AFC179DB66400F0BD7E /* Generation */,
 				2B85422F16EFC8970047FFBE /* RSSelectionView.h */,
 				2B85423016EFC8970047FFBE /* RSSelectionView.m */,
 			);
@@ -234,6 +238,15 @@
 				2B85422616EFC8970047FFBE /* BitmapScaleManipulator.m */,
 			);
 			path = Manipulators;
+			sourceTree = "<group>";
+		};
+		94A10AFC179DB66400F0BD7E /* Generation */ = {
+			isa = PBXGroup;
+			children = (
+				94A10AFD179DB67C00F0BD7E /* GenerateOperation.h */,
+				94A10AFE179DB67C00F0BD7E /* GenerateOperation.m */,
+			);
+			name = Generation;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -320,6 +333,7 @@
 				2B85424116EFC8970047FFBE /* RSSelectionView.m in Sources */,
 				2B12A0DF1792FF46007F2A0A /* TestColorViewController.m in Sources */,
 				7FB5E81717455D820034FFB8 /* RSOpacitySlider.m in Sources */,
+				94A10AFF179DB67C00F0BD7E /* GenerateOperation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
