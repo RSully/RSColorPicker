@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+extern CGContextRef RSBitmapContextCreateDefault(CGSize size);
+
 @class RSColorPickerView;
 
 @interface RSBrightnessSlider : UISlider

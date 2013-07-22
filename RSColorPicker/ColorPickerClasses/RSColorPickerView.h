@@ -21,10 +21,13 @@
 
 @property (nonatomic) BOOL cropToCircle;
 @property (nonatomic) CGFloat brightness;
+@property (nonatomic) CGFloat opacity;
 @property (nonatomic) UIColor *selectionColor;
 @property (nonatomic, weak) id <RSColorPickerViewDelegate> delegate;
 @property (nonatomic, readonly) CGPoint selection;
 
 -(UIColor*)colorAtPoint:(CGPoint)point; //Returns UIColor at a point in the RSColorPickerView
+
++(void)prepareForDiameter:(CGFloat)diameter;
 
 @end

@@ -30,6 +30,7 @@
 
 #import "BGRSLoupeLayer.h"
 #import "RSColorPickerView.h"
+#import "RSOpacitySlider.h"
 
 @interface BGRSLoupeLayer ()
 
@@ -56,7 +57,7 @@ const int NUM_PIXELS = 5, NUM_SKIP = 15;
 		self.bounds = CGRectMake(-size/2,-size/2,size,size);
 		self.anchorPoint = CGPointMake(0.5, 1);
 		self.contentsScale = [UIScreen mainScreen].scale;
-
+		
 		UIImage *loupeImage = [self loupeImage];
 		CALayer *loupeLayer = [CALayer layer];
 		loupeLayer.bounds = self.bounds;
@@ -94,8 +95,8 @@ const int NUM_PIXELS = 5, NUM_SKIP = 15;
 	CGFloat size = LOUPE_SIZE+2*SHADOW_SIZE;
 	CGContextTranslateCTM(ctx, size/2, size/2);
 	
-	//Draw Shadow
-	CGContextSaveGState(ctx);     //Save before shadow
+	// Draw Shadow
+	CGContextSaveGState(ctx);     // Save before shadow
 	
 	UIBezierPath *inner = [UIBezierPath bezierPathWithOvalInRect:CGRectInset(self.bounds, SHADOW_SIZE + 1, SHADOW_SIZE + 1)];
 	UIBezierPath *outer = [UIBezierPath bezierPathWithRect:self.bounds];
@@ -110,25 +111,25 @@ const int NUM_PIXELS = 5, NUM_SKIP = 15;
 	CGContextSetFillColorWithColor(ctx, [colorPicker selectionColor].CGColor);
 	CGContextFillPath(ctx);
 	
-	CGContextRestoreGState(ctx);  //Restore context after shadow
+	CGContextRestoreGState(ctx);  // Restore context after shadow
 		
-	//Create Cliping Area
-	CGContextSaveGState(ctx);     //Save context for cliping
+	// Create Cliping Area
+	CGContextSaveGState(ctx);     // Save context for cliping
 	
-	CGContextAddPath(ctx, self.gridCirclePath);  //Clip gird drawing to inside of loupe
+	CGContextAddPath(ctx, self.gridCirclePath);  // Clip gird drawing to inside of loupe
 	CGContextClip(ctx);
 	
 	[self drawGlintInContext:ctx];
 	
-	CGContextRestoreGState(ctx);  //Restor from clip drawing
+	CGContextRestoreGState(ctx);  // Restor from clip drawing
 	
-	//Stroke Rim of Loupe
+	// Stroke Rim of Loupe
 	CGContextSetLineWidth(ctx, RIM_THICKNESS);
 	CGContextSetStrokeColorWithColor(ctx, [UIColor blackColor].CGColor);
 	CGContextAddPath(ctx, self.gridCirclePath);
 	CGContextStrokePath(ctx);
 	
-	//Draw center of rim loupe
+	// Draw center of rim loupe
 	CGContextSetLineWidth(ctx, RIM_THICKNESS-1);
 	CGContextSetStrokeColorWithColor(ctx, [UIColor whiteColor].CGColor);
 	CGContextAddPath(ctx, self.gridCirclePath);
@@ -136,7 +137,7 @@ const int NUM_PIXELS = 5, NUM_SKIP = 15;
 			
 	const CGFloat w = ceilf(LOUPE_SIZE/NUM_PIXELS);
 
-	//Draw Selection Square
+	// Draw Selection Square
 	CGFloat xyOffset = -(w+1)/2;
 	CGRect selectedRect = CGRectMake(xyOffset, xyOffset, w, w);
 	CGContextAddRect(ctx, selectedRect);
@@ -153,8 +154,35 @@ const int NUM_PIXELS = 5, NUM_SKIP = 15;
 
 - (void)drawInContext:(CGContextRef)ctx
 {
-	CGContextAddPath(ctx, self.gridCirclePath);  //Clip gird drawing to inside of loupe
+	CGContextAddPath(ctx, self.gridCirclePath);  // Clip gird drawing to inside of loupe
 	CGContextClip(ctx);
+	
+	// Draw Opacity Background
+	NSInteger numCols = 6;
+	CGFloat loupeLength = LOUPE_SIZE;
+	CGFloat pixelLength = loupeLength / numCols;
+
+    UIColor *colorWhite = [UIColor whiteColor];
+    UIColor *colorGray = [UIColor grayColor];
+
+    UIColor *color1;
+	UIColor *color2;
+    UIColor *pixelColor;
+	for (int j = 0; j < numCols; j++){
+		color1 = (j % 2) ? colorWhite : colorGray;
+		color2 = (j % 2) ? colorGray : colorWhite;
+
+		for (int i = 0; i  < numCols; i++){
+			CGRect pixelRect = CGRectMake((pixelLength * i) - (loupeLength / 2),
+                                          (pixelLength * j) - (loupeLength / 2),
+                                          pixelLength,
+                                          pixelLength);
+
+			pixelColor = (i % 2) ? color1 : color2;
+			CGContextSetFillColorWithColor(ctx, pixelColor.CGColor);
+			CGContextFillRect(ctx, pixelRect);
+		}
+	}
 	
 	[self drawGridInContext:ctx];
 }
@@ -168,7 +196,7 @@ const int NUM_PIXELS = 5, NUM_SKIP = 15;
 	currentPoint.y -= NUM_PIXELS*NUM_SKIP/2;
 	int i,j;
 	
-	//Draw Pixelated Loupe
+	// Draw Pixelated Loupe
 	for (j=0; j<NUM_PIXELS; j++){
 		for (i=0; i<NUM_PIXELS; i++){
 			
@@ -185,22 +213,22 @@ const int NUM_PIXELS = 5, NUM_SKIP = 15;
 }
 
 - (void)drawGlintInContext:(CGContextRef)ctx{
-	//Draw Top Glint
+	// Draw Top Glint
 	CGFloat radius =      LOUPE_SIZE/2;
 	CGFloat glintRadius = 1.50*LOUPE_SIZE;
 	CGFloat drop =        0.25*LOUPE_SIZE;
 	CGFloat yOff = drop + glintRadius - radius;
 	
-	//  Calculations
+	// Calculations
 	CGFloat glintAngle1 = acosf((yOff*yOff + glintRadius*glintRadius - radius*radius)
 								/(2*yOff*glintRadius));
 	CGFloat glintAngle2 = asinf(glintRadius/radius * sinf(glintAngle1));
 	CGFloat glintEdgeHeight = -radius*sinf(glintAngle2-M_PI_2);
 	
-	//  Add bottom arc
+	// Add bottom arc
 	CGContextAddArc(ctx, 0, yOff, glintRadius, -M_PI_2+glintAngle1, -M_PI_2-glintAngle1, YES);
 	
-	//  Add top arc
+	// Add top arc
 	CGContextAddArc(ctx, 0, 0, radius, -M_PI_2-glintAngle2, -M_PI_2+glintAngle2, NO);
 	
 	CGContextSetStrokeColorWithColor(ctx, [UIColor redColor].CGColor);
@@ -208,13 +236,12 @@ const int NUM_PIXELS = 5, NUM_SKIP = 15;
 	//return;
 	
 	CGContextClosePath(ctx);
-	CGContextSaveGState(ctx);     //Save context for cliping
+	CGContextSaveGState(ctx);     // Save context for cliping
 	CGContextClip(ctx);
 	
 	CGColorSpaceRef space = CGColorSpaceCreateDeviceGray();
-	NSArray* colors = [[NSArray alloc] initWithObjects:
-					   (id)[UIColor colorWithWhite:1.0 alpha:0.65].CGColor,
-					   (id)[UIColor colorWithWhite:1.0 alpha:0.15].CGColor,nil];
+	NSArray* colors = @[(id)[UIColor colorWithWhite:1.0 alpha:0.65].CGColor,
+					    (id)[UIColor colorWithWhite:1.0 alpha:0.15].CGColor];
 	
 	CGGradientRef myGradient = CGGradientCreateWithColors(space, (__bridge CFArrayRef)colors, NULL);
 	
@@ -223,18 +250,17 @@ const int NUM_PIXELS = 5, NUM_SKIP = 15;
 	CGContextRestoreGState(ctx);
 	
 	
-	//Draw bottom glint
+	// Draw bottom glint
 	yOff   = 0.40*LOUPE_SIZE;
 	radius = 0.40*LOUPE_SIZE;
 	CGPoint glintCenter = CGPointMake(0, yOff);
 	
 	CGContextAddArc(ctx, 0, yOff, radius, 0, M_2_PI, YES);
-	CGContextSaveGState(ctx);     //Save context for cliping
+	CGContextSaveGState(ctx);     // Save context for cliping
 	CGContextClip(ctx);
 	
-	colors = [[NSArray alloc] initWithObjects:
-			  (id)[UIColor colorWithWhite:1.0 alpha:0.5].CGColor,
-			  (id)[UIColor colorWithWhite:1.0 alpha:0.0].CGColor,nil];
+	colors = @[(id)[UIColor colorWithWhite:1.0 alpha:0.5].CGColor,
+			   (id)[UIColor colorWithWhite:1.0 alpha:0.0].CGColor];
 	
 	myGradient = CGGradientCreateWithColors(space, (__bridge CFArrayRef)colors, NULL);
 	
@@ -242,7 +268,7 @@ const int NUM_PIXELS = 5, NUM_SKIP = 15;
 	CGGradientRelease(myGradient);
 	CGContextRestoreGState(ctx);
 	
-	//Release objects
+	// Release objects
 	CGColorSpaceRelease(space);
 }
 
@@ -259,11 +285,11 @@ static NSString* const kAppearKey = @"cp_l_appear";
     self.transform = CATransform3DIdentity;
     isReadyToDismiss = NO;
     
-	//Add Layer to color picker
+	// Add Layer to color picker
 	[CATransaction setDisableActions:YES];
 	[self.colorPicker.layer addSublayer:self];
 	
-	//Animate Arival
+	// Animate Arival
     isRunningInitialAnimation = YES;
 	CAKeyframeAnimation *springEffect = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale"];
 	springEffect.values = @[@(0.1), @(1.4), @(0.95), @(1)];

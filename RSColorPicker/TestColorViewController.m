@@ -8,6 +8,7 @@
 
 #import "TestColorViewController.h"
 #import "ColorPickerClasses/RSBrightnessSlider.h"
+#import "ColorPickerClasses/RSOpacitySlider.h"
 
 @interface TestColorViewController ()
 
@@ -33,11 +34,10 @@
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Push" style:UIBarButtonItemStyleBordered target:self action:@selector(pushNext:)];
     
     // View that displays color picker (needs to be square)
-    _colorPicker = [[RSColorPickerView alloc] initWithFrame:CGRectMake(10.0, 20.0, 300.0, 300.0)];
+    _colorPicker = [[RSColorPickerView alloc] initWithFrame:CGRectMake(20.0, 10.0, 280.0, 280.0)];
     [_colorPicker setCropToCircle:YES]; // Defaults to YES (and you can set BG color)
-	[_colorPicker setDelegate:self];
-	[self.view addSubview:_colorPicker];
-	
+    [_colorPicker setDelegate:self];
+    [self.view addSubview:_colorPicker];
     
     // On/off circle or square
     UISwitch *circleSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(10, 340, 0, 0)];
@@ -46,10 +46,16 @@
 	[self.view addSubview:circleSwitch];
     
     // View that controls brightness
-	_brightnessSlider = [[RSBrightnessSlider alloc] initWithFrame:CGRectMake(CGRectGetMaxX(circleSwitch.frame) + 4, 340.0, 320 - (20 + CGRectGetWidth(circleSwitch.frame)), 30.0)];
+	_brightnessSlider = [[RSBrightnessSlider alloc] initWithFrame:CGRectMake(CGRectGetMaxX(circleSwitch.frame) + 4, 300.0, 320 - (20 + CGRectGetWidth(circleSwitch.frame)), 30.0)];
 	[_brightnessSlider setColorPicker:_colorPicker];
 	[self.view addSubview:_brightnessSlider];
     
+    // View that controls opacity
+    _opacitySlider = [[RSOpacitySlider alloc] initWithFrame:CGRectMake(CGRectGetMaxX(circleSwitch.frame) + 4, 340.0, 320 - (20 + CGRectGetWidth(circleSwitch.frame)), 30.0)];
+    [_opacitySlider setColorPicker:_colorPicker];
+    [self.view addSubview:_opacitySlider];
+
+
     // View that shows selected color
 	_colorPatch = [[UIView alloc] initWithFrame:CGRectMake(160, 380.0, 150, 30.0)];
 	[self.view addSubview:_colorPatch];
@@ -101,10 +107,10 @@
 
 #pragma mark - RSColorPickerView delegate methods
 
-- (void)colorPickerDidChangeSelection:(RSColorPickerView *)cp
-{
+- (void)colorPickerDidChangeSelection:(RSColorPickerView *)cp {
 	_colorPatch.backgroundColor = [cp selectionColor];
     _brightnessSlider.value = [cp brightness];
+    _opacitySlider.value = [cp opacity];
 }
 
 #pragma mark - User action
@@ -131,8 +137,7 @@
     [_colorPicker setSelectionColor:[UIColor cyanColor]];
 }
 
-- (void)circleSwitchAction:(UISwitch *)s
-{
+- (void)circleSwitchAction:(UISwitch *)s {
 	_colorPicker.cropToCircle = s.isOn;
 }
 
@@ -145,8 +150,7 @@
 
 #pragma mark - Generated methods
 
-- (void)didReceiveMemoryWarning
-{
+- (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }

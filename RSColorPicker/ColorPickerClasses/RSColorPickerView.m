@@ -10,7 +10,10 @@
 #import "BGRSLoupeLayer.h"
 #import "RSSelectionView.h"
 #import "RSColorFunctions.h"
+#import "ANImageBitmapRep.h"
+#import "RSOpacitySlider.h"
 
+#define kSelectionViewSize 22.0
 
 @interface RSColorPickerView () {
     struct {
@@ -27,6 +30,8 @@
 @property (nonatomic) RSSelectionView *selectionView;
 @property (nonatomic) UIImageView *gradientView;
 @property (nonatomic) UIView *gradientContainer;
+@property (nonatomic) UIView *brightnessView;
+@property (nonatomic) UIView *opacityView;
 
 @property (nonatomic) BGRSLoupeLayer *loupeLayer;
 @property (nonatomic) CGPoint selection;
@@ -34,7 +39,10 @@
 @property (nonatomic) CGFloat scale;
 
 - (void)initRoutine;
+
+- (void)genBitmap;
 - (void)updateSelectionLocation;
+
 - (CGPoint)validPointForTouch:(CGPoint)touchPoint;
 - (CGPoint)convertGradientPointToView:(CGPoint)point;
 - (CGPoint)convertViewPointToGradient:(CGPoint)point;
@@ -78,31 +86,40 @@
 //    [aCoder encodeBool:self.cropToCircle forKey:@"cropToCircle"];
 //}
 
-- (void)initRoutine
-{
+- (void)initRoutine {
 	self.opaque = YES;
 	self.backgroundColor = [UIColor whiteColor];
 	_colorPickerViewFlags.bitmapNeedsUpdate = NO;
 	
 	//the view used to select the colour
-    _selectionView = [[RSSelectionView alloc] initWithFrame:CGRectMake(0.0, 0.0, 22.0, 22.0)];
+    _selectionView = [[RSSelectionView alloc] initWithFrame:CGRectMake(0.0, 0.0, kSelectionViewSize, kSelectionViewSize)];
 	
 	_selection = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
 	
 	_gradientContainer = [[UIView alloc] initWithFrame:self.bounds];
 	_gradientContainer.backgroundColor = [UIColor blackColor];
 	_gradientContainer.clipsToBounds = YES;
+	_gradientContainer.exclusiveTouch = YES;
 	_gradientContainer.layer.shouldRasterize = YES;
 	[self addSubview:_gradientContainer];
+	
+	_brightnessView = [[UIView alloc] initWithFrame:self.bounds];
+	_brightnessView.backgroundColor = [UIColor blackColor];
+	[_gradientContainer addSubview:_brightnessView];
 	
 	_gradientView = [[UIImageView alloc] initWithFrame:_gradientContainer.bounds];
 	[_gradientContainer addSubview:_gradientView];
 	
+	UIImage *opacityBackground = RSOpacityBackgroundImage(20, [UIColor colorWithWhite:0.5 alpha:1.0]);
+	_opacityView = [[UIView alloc] initWithFrame:self.bounds];
+	_opacityView.backgroundColor = [UIColor colorWithPatternImage:opacityBackground];
+	[_gradientContainer addSubview:_opacityView];
+	
     [self updateSelectionLocationDisableActions:NO];
     [self addSubview:_selectionView];
 	    
-	self.cropToCircle = YES;
-	self.selectionColor = [UIColor whiteColor];
+	_cropToCircle = YES;
+	_selectionColor = [UIColor whiteColor];
 }
 
 - (void)dealloc {
@@ -111,6 +128,7 @@
 
 -(void)didMoveToWindow {
     if (!self.window) {
+        _scale = 0;
         [_loupeLayer disappearAnimated:NO];
         return;
     }
@@ -119,20 +137,6 @@
     _scale = self.window.screen.scale;
     
     _gradientContainer.layer.contentsScale = _scale;
-    BMPoint repSize = BMPointFromSize(RSCGSizeWithScale(_gradientView.bounds.size, _scale));
-    
-    // Don't reinit if we're the same as original
-    if (_rep) {
-        BMPoint oldSize = [_rep bitmapSize];
-        if (oldSize.x == repSize.x && oldSize.y == repSize.y) {
-            self.selectionColor = _selectionColor;
-            self.cropToCircle = _cropToCircle;
-
-            return;
-        }
-    }
-    
-    _rep = [[ANImageBitmapRep alloc] initWithSize:repSize];
     
     _colorPickerViewFlags.bitmapNeedsUpdate = YES;
     [self genBitmap];
@@ -146,65 +150,8 @@
 - (void)genBitmap {
 	if (!_colorPickerViewFlags.bitmapNeedsUpdate) return;
     
-    CGFloat paddingDistance = (_selectionView.bounds.size.width / 2.0) * _scale;
-	CGFloat radius = _rep.bitmapSize.x / 2.0;
-    CGFloat relRadius = radius - paddingDistance;
-	CGFloat relX = 0.0;
-	CGFloat relY = 0.0;
-
-    int arrSize = _rep.bitmapSize.x * _rep.bitmapSize.y;
-    int i;
-    int x;
-    int y;
-    size_t arrDataSize = sizeof(float) * arrSize;
-    
-    // data
-    float *preComputeX = (float *)malloc(arrDataSize);
-    float *preComputeY = (float *)malloc(arrDataSize);
-    // atan2
-    float *atan2Vals = (float *)malloc(arrDataSize);
-    // distance
-    float *distVals = (float *)malloc(arrDataSize);
-    
-    i = 0;
-	for (x = 0; x < _rep.bitmapSize.x; x++) {
-		relX = x - radius;
-		for (y = 0; y < _rep.bitmapSize.y; y++) {
-            relY = radius - y;
-
-            preComputeY[i] = relY;
-            preComputeX[i] = relX;
-            i++;
-		}
-	}
-
-    // Use accelerate.framework to compute
-    vvatan2f(atan2Vals, preComputeY, preComputeX, &arrSize);
-    vDSP_vdist(preComputeX, 1, preComputeY, 1, distVals, 1, arrSize);
-    
-    // Compution done, free these
-    free(preComputeX);
-    free(preComputeY);
-    
-    i = 0;
-	for (x = 0; x < _rep.bitmapSize.x; x++) {		
-		for (y = 0; y < _rep.bitmapSize.y; y++) {			
-			CGFloat r_distance = distVals[i];
-			r_distance = fmin(r_distance, relRadius);
-			
-			CGFloat angle = atan2Vals[i];
-			if (angle < 0.0) { angle = (2.0 * M_PI)+angle; }
-			
-			CGFloat perc_angle = angle / (2.0 * M_PI);
-			BMPixel thisPixel = RSPixelFromHSV(perc_angle, r_distance/relRadius, 1); //full brightness
-			[_rep setPixel:thisPixel atPoint:BMPointMake(x, y)];
-            
-            i++;
-		}
-	}
-    // Bitmap generated, free these
-    free(atan2Vals);
-    free(distVals);
+    CGFloat paddingDistance = _selectionView.bounds.size.width / 2.0;
+    _rep = [[self class] bitmapForDiameter:_gradientView.bounds.size.width withScale:_scale withPadding:paddingDistance shouldCache:YES];
     
 	_colorPickerViewFlags.bitmapNeedsUpdate = NO;
     _gradientView.image = RSUIImageWithScale([_rep image], _scale);
@@ -214,6 +161,7 @@
 
 - (UIColor*)colorAtPoint:(CGPoint)point {
     if (!_rep) return nil;
+    
 	CGPoint convertedPoint = [self convertViewPointToGradient:point];
 	convertedPoint.x = round(convertedPoint.x);
 	convertedPoint.y = round(convertedPoint.y);
@@ -227,14 +175,22 @@
 	UIColor *rgbColor = [UIColor colorWithRed:pixel.red green:pixel.green blue:pixel.blue alpha:1];
 	CGFloat h, s, v;
 	[rgbColor getHue:&h saturation:&s brightness:&v alpha:NULL];
-	return [UIColor colorWithHue:h saturation:s brightness:_brightness alpha:1];
+	return [UIColor colorWithHue:h saturation:s brightness:_brightness alpha:_opacity];
 }
 
 #pragma mark - Setters
 
 - (void)setBrightness:(CGFloat)bright {
 	_brightness = bright;
-	_gradientView.alpha = bright;
+
+	_gradientView.alpha = _brightness;
+	[self updateSelectionAtPoint:_selection];
+}
+
+- (void)setOpacity:(CGFloat)opacity {
+	_opacity = opacity;
+
+	_opacityView.alpha = 1 - _opacity;
 	[self updateSelectionAtPoint:_selection];
 }
 
@@ -255,18 +211,16 @@
 	[self updateSelectionLocation];
 }
 
-- (void)setSelectionColor:(UIColor *)selectionColor
-{
-    // Force color into correct colorspace to get HSV from
-    float components[3];
+- (void)setSelectionColor:(UIColor *)selectionColor {
+	// Force color into correct colorspace to get HSV from
+    float components[4];
     RSGetComponentsForColor(components, selectionColor);
-    selectionColor = [UIColor colorWithRed:components[0] green:components[1] blue:components[2] alpha:1.0];
-    
+    selectionColor = [UIColor colorWithRed:components[0] green:components[1] blue:components[2] alpha:components[3]];
+  
     // convert to HSV
-    CGFloat h, s, v;
-	BOOL gotHSV = [selectionColor getHue:&h saturation:&s brightness:&v alpha:NULL];
+    CGFloat h, s, v, o;
+	BOOL gotHSV = [selectionColor getHue:&h saturation:&s brightness:&v alpha:&o];
     if (!gotHSV) {
-        NSLog(@"Failed to get HSV");
         return;
     }
     CGFloat paddingDistance = (_selectionView.bounds.size.width / 2.0) * _scale;
@@ -284,10 +238,10 @@
     
     [self updateSelectionLocation];
     [self setBrightness:v];
+	[self setOpacity:o];
 }
 
-- (void)setDelegate:(id<RSColorPickerViewDelegate>)delegate
-{
+- (void)setDelegate:(id<RSColorPickerViewDelegate>)delegate {
 	_delegate = delegate;
 	_colorPickerViewFlags.delegateDidChangeSelection = [_delegate respondsToSelector:@selector(colorPickerDidChangeSelection:)];
 }
@@ -298,22 +252,27 @@
     [self updateSelectionLocationDisableActions:YES];
 }
 
-- (void)updateSelectionLocationDisableActions: (BOOL)disable {
+- (void)updateSelectionLocationDisableActions:(BOOL)disable {
+    if (disable) {
+        NSDictionary *disabledActions = @{@"position" : [NSNull null], @"frame" : [NSNull null], @"center" : [NSNull null]};
+        _loupeLayer.actions = disabledActions;
+        _selectionView.layer.actions = disabledActions;
+    }
+    
 	_selectionView.center = _selection;
-	if(disable) {
-		[CATransaction setDisableActions:YES];
-	}
-	_loupeLayer.position = _selection;
-	//make loupeLayer sharp on screen
+    _loupeLayer.position = _selection;
+	// Make loupeLayer sharp on screen
 	CGRect loupeFrame = _loupeLayer.frame;
 	loupeFrame.origin = CGPointMake(round(loupeFrame.origin.x), round(loupeFrame.origin.y));
 	_loupeLayer.frame = loupeFrame;
 	
 	[_loupeLayer setNeedsDisplay];
+    
+    _loupeLayer.actions = nil;
+    _selectionView.layer.actions = nil;
 }
 
-- (void)updateSelectionAtPoint:(CGPoint)point
-{
+- (void)updateSelectionAtPoint:(CGPoint)point {
 	CGPoint circlePoint = [self validPointForTouch:point];
 	_selection = circlePoint;
 
@@ -333,49 +292,48 @@
 #pragma mark - Touch events
 
 - (CGPoint)validPointForTouch:(CGPoint)touchPoint {
-	CGPoint returnedPoint;
 	if ([_activeAreaShape containsPoint:touchPoint]) {
-		returnedPoint = touchPoint;
-	} else {
-		//we compute the right point on the gradient border
-		
-		// TouchCircle is the circle which pass by the point 'touchPoint', of radius 'r'
-		//'X' is the x coordinate of the touch in TouchCircle
-		CGFloat X = touchPoint.x - CGRectGetMidX(_gradientContainer.frame);
-		//'Y' is the y coordinate of the touch in TouchCircle
-		CGFloat Y = touchPoint.y - CGRectGetMidY(_gradientContainer.frame);
-		CGFloat r = sqrt(pow(X, 2) + pow(Y, 2));
-		
-		//alpha is the angle in radian of the touch on the unit circle
-		CGFloat alpha = acos( X / r );
-		if (touchPoint.y > CGRectGetMidX(_gradientContainer.frame)) alpha = 2 * M_PI - alpha;
-		
-		//'actual radius' is the distance between the center and the border of the gradient
-        CGFloat actualRadius;
-        if (_cropToCircle) {
-            actualRadius = _gradientShape.bounds.size.width / 2.0 - _selectionView.bounds.size.width / 2.0;
-        } else {
-			//square shape - using the intercept theorem we have "actualRadius / r == 0.5*gradientContainer.height / Y"
-            if ( (alpha >= M_PI_4 && alpha < 3 * M_PI_4) || (alpha >= 5 * M_PI_4 && alpha < 7 * M_PI_4) ) {
-                actualRadius = r * (_gradientContainer.bounds.size.height / 2.0 - _selectionView.bounds.size.height / 2.0 ) / Y;
-            } else {
-                actualRadius = r * (_gradientContainer.bounds.size.width / 2.0 - _selectionView.bounds.size.width / 2.0) / X;
-            }
-		}
-        
-		returnedPoint.x = fabs(actualRadius) * cos(alpha);
-		returnedPoint.y = fabs(actualRadius) * sin(alpha);
-		
-		//we offset the center of the circle, to get the coordinate from the right top left origin
-		returnedPoint.x = returnedPoint.x + CGRectGetMidX(_gradientContainer.frame);
-		returnedPoint.y = CGRectGetMidY(_gradientContainer.frame) - returnedPoint.y;
+		return touchPoint;
 	}
+    // We compute the right point on the gradient border
+	CGPoint returnedPoint;
+    
+    // TouchCircle is the circle which pass by the point 'touchPoint', of radius 'r'
+    // 'X' is the x coordinate of the touch in TouchCircle
+    CGFloat X = touchPoint.x - CGRectGetMidX(_gradientContainer.frame);
+    // 'Y' is the y coordinate of the touch in TouchCircle
+    CGFloat Y = touchPoint.y - CGRectGetMidY(_gradientContainer.frame);
+    CGFloat r = sqrt(pow(X, 2) + pow(Y, 2));
+    
+    // alpha is the angle in radian of the touch on the unit circle
+    CGFloat alpha = acos( X / r );
+    if (touchPoint.y > CGRectGetMidX(_gradientContainer.frame)) alpha = 2 * M_PI - alpha;
+    
+    // 'actual radius' is the distance between the center and the border of the gradient
+    CGFloat actualRadius;
+    if (_cropToCircle) {
+        actualRadius = _gradientShape.bounds.size.width / 2.0 - _selectionView.bounds.size.width / 2.0;
+    } else {
+        // square shape - using the intercept theorem we have "actualRadius / r == 0.5*gradientContainer.height / Y"
+        if ( (alpha >= M_PI_4 && alpha < 3 * M_PI_4) || (alpha >= 5 * M_PI_4 && alpha < 7 * M_PI_4) ) {
+            actualRadius = r * (_gradientContainer.bounds.size.height / 2.0 - _selectionView.bounds.size.height / 2.0 ) / Y;
+        } else {
+            actualRadius = r * (_gradientContainer.bounds.size.width / 2.0 - _selectionView.bounds.size.width / 2.0) / X;
+        }
+    }
+    
+    returnedPoint.x = fabs(actualRadius) * cos(alpha);
+    returnedPoint.y = fabs(actualRadius) * sin(alpha);
+    
+    // we offset the center of the circle, to get the coordinate from the right top left origin
+    returnedPoint.x = returnedPoint.x + CGRectGetMidX(_gradientContainer.frame);
+    returnedPoint.y = CGRectGetMidY(_gradientContainer.frame) - returnedPoint.y;
 	return returnedPoint;
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-	//Lazily load loupeLayer
-    if (!_loupeLayer){
+	// Lazily load loupeLayer
+    if (!_loupeLayer) {
         _loupeLayer = [BGRSLoupeLayer layer];
     }
     [_loupeLayer appearInColorPicker:self];
@@ -413,6 +371,123 @@
 - (CGPoint)convertViewPointToGradient:(CGPoint)point {
 	CGRect frame = _gradientContainer.frame;
 	return CGPointMake(point.x - CGRectGetMinX(frame), point.y - CGRectGetMinY(frame));
+}
+
+#pragma mark - Class methods
+
+static dispatch_queue_t generateQueue;
+static dispatch_queue_t cacheQueue;
+static NSMutableDictionary *generatedBitmaps;
+
++(void)initialize {
+    generateQueue = dispatch_queue_create("com.github.rsully.rscolorpicker.generate", DISPATCH_QUEUE_SERIAL);
+    cacheQueue = dispatch_queue_create("com.github.rsully.rscolorpicker.cache", DISPATCH_QUEUE_SERIAL);
+    generatedBitmaps = [NSMutableDictionary new];
+}
+
+// Background methods
++(void)prepareForDiameter:(CGFloat)diameter {
+    [self prepareForDiameter:diameter padding:kSelectionViewSize];
+}
++(void)prepareForDiameter:(CGFloat)diameter padding:(CGFloat)padding {
+    [self bitmapForDiameter:diameter withScale:1.0 withPadding:padding shouldCache:YES];
+}
+
++(ANImageBitmapRep*)bitmapForDiameter:(CGFloat)diameter withScale:(CGFloat)scale withPadding:(CGFloat)paddingDistance shouldCache:(BOOL)cache {
+    __block ANImageBitmapRep *rep = nil;
+    paddingDistance *= scale;
+    diameter *= scale;
+    
+    BMPoint repSize = BMPointMake(diameter, diameter);
+    if (repSize.x <= 0) return rep;
+    
+    // Unique key for this size combo
+    NSString *dictionaryCacheKey = [NSString stringWithFormat:@"%lu-%f", repSize.x, paddingDistance];
+    
+    // Check cache initially
+    dispatch_sync(cacheQueue, ^{
+        rep = [generatedBitmaps objectForKey:dictionaryCacheKey];
+    });
+    if (rep) return rep;
+    
+    // Then wait for the generate queue
+    dispatch_sync(generateQueue, ^{
+        // Now that this queue is free let's make sure we weren't just generating the one we need
+        dispatch_sync(cacheQueue, ^{
+            rep = [generatedBitmaps objectForKey:dictionaryCacheKey];
+        });
+        
+        if (!rep) {
+            // Finally we're sure we didn't cache a bitmap so let's create it
+            
+            // Create fresh
+            rep = [[ANImageBitmapRep alloc] initWithSize:repSize];
+                        
+            CGFloat radius = diameter / 2.0;
+            CGFloat relRadius = radius - paddingDistance;
+            CGFloat relX, relY;
+            
+            int i, x, y;
+            int arrSize = powf(diameter, 2);
+            size_t arrDataSize = sizeof(float) * arrSize;
+            
+            // data
+            float *preComputeX = (float *)malloc(arrDataSize);
+            float *preComputeY = (float *)malloc(arrDataSize);
+            // output
+            float *atan2Vals = (float *)malloc(arrDataSize);
+            float *distVals = (float *)malloc(arrDataSize);
+            
+            i = 0;
+            for (x = 0; x < diameter; x++) {
+                relX = x - radius;
+                for (y = 0; y < diameter; y++) {
+                    relY = radius - y;
+                    
+                    preComputeY[i] = relY;
+                    preComputeX[i] = relX;
+                    i++;
+                }
+            }
+            
+            // Use Accelerate.framework to compute
+            vvatan2f(atan2Vals, preComputeY, preComputeX, &arrSize);
+            vDSP_vdist(preComputeX, 1, preComputeY, 1, distVals, 1, arrSize);
+            
+            // Compution done, free these
+            free(preComputeX);
+            free(preComputeY);
+            
+            i = 0;
+            for (x = 0; x < diameter; x++) {
+                for (y = 0; y < diameter; y++) {
+                    CGFloat r_distance = fmin(distVals[i], relRadius);
+                    
+                    CGFloat angle = atan2Vals[i];
+                    if (angle < 0.0) angle = (2.0 * M_PI) + angle;
+                    
+                    CGFloat perc_angle = angle / (2.0 * M_PI);
+                    BMPixel thisPixel = RSPixelFromHSV(perc_angle, r_distance/relRadius, 1); // full brightness
+                    [rep setPixel:thisPixel atPoint:BMPointMake(x, y)];
+                    
+                    i++;
+                }
+            }
+            
+            // Bitmap generated, free these
+            free(atan2Vals);
+            free(distVals);
+            
+            
+            if (cache) {
+                // Add to cache
+                dispatch_async(cacheQueue, ^{
+                    [generatedBitmaps setObject:rep forKey:dictionaryCacheKey];
+                });
+            }
+        }
+    });
+    return rep;
 }
 
 @end
