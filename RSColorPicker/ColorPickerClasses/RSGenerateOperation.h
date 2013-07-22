@@ -17,6 +17,5 @@
 @property CGFloat padding;
 
 @property ANImageBitmapRep *bitmap;
-@property (assign) BOOL didFinish;
 
 @end

@@ -12,20 +12,7 @@
 
 @implementation RSGenerateOperation
 
--(id)init {
-    if ((self = [super init])) {
-        _didFinish = NO;
-    }
-    return self;
-}
-
 -(void)main {
-    // If we have a dependency then we don't actually have work to perform
-    if (self.dependencies.count == 1) {
-        _didFinish = [[self.dependencies objectAtIndex:0] isFinished];
-        return;
-    }
-    
     CGFloat diameter = self.diameter;
     CGFloat paddingDistance = self.padding;
     BMPoint repSize = BMPointMake(diameter, diameter);
@@ -89,7 +76,6 @@
     free(distVals);
     
     self.bitmap = rep;
-    _didFinish = YES;
 }
 
 -(BOOL)isConcurrent {
@@ -97,10 +83,10 @@
 }
 
 -(BOOL)isExecuting {
-    return !_didFinish;
+    return self.bitmap == nil;
 }
 -(BOOL)isFinished {
-    return _didFinish;
+    return !self.isExecuting;
 }
 
 @end

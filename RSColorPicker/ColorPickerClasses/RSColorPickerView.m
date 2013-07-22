@@ -396,6 +396,7 @@ static NSCache *generatedBitmaps;
 +(ANImageBitmapRep*)bitmapForDiameter:(CGFloat)diameter withScale:(CGFloat)scale withPadding:(CGFloat)paddingDistance shouldCache:(BOOL)cache {
     RSGenerateOperation *repOp = nil;
     
+    // Handle the scale here so the operation can just work with pixels directly
     paddingDistance *= scale;
     diameter *= scale;
     
@@ -403,7 +404,6 @@ static NSCache *generatedBitmaps;
     
     // Unique key for this size combo
     NSString *dictionaryCacheKey = [NSString stringWithFormat:@"%.1f-%.1f", diameter, paddingDistance];
-    NSLog(@"%@", dictionaryCacheKey);
     // Check cache
     repOp = [generatedBitmaps objectForKey:dictionaryCacheKey];
     
