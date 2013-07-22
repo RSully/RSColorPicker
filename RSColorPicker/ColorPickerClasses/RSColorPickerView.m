@@ -377,14 +377,12 @@
 #pragma mark - Class methods
 
 static NSOperationQueue *generateQueue;
-static NSMutableDictionary *generatedBitmaps;
-static dispatch_queue_t cacheQueue;
+static NSCache *generatedBitmaps;
 
 +(void)initialize {
-    generateQueue = [[NSOperationQueue alloc] init];
+    generateQueue = [NSOperationQueue new];
     generateQueue.maxConcurrentOperationCount = NSOperationQueueDefaultMaxConcurrentOperationCount;
-    generatedBitmaps = [[NSMutableDictionary alloc] init];
-    cacheQueue = dispatch_queue_create("com.github.rsully.rscolorpicker.cache", DISPATCH_QUEUE_SERIAL);
+    generatedBitmaps = [NSCache new];
 }
 
 // Background methods
@@ -396,7 +394,7 @@ static dispatch_queue_t cacheQueue;
 }
 
 +(ANImageBitmapRep*)bitmapForDiameter:(CGFloat)diameter withScale:(CGFloat)scale withPadding:(CGFloat)paddingDistance shouldCache:(BOOL)cache {
-    __block GenerateOperation *repOp = nil;
+    GenerateOperation *repOp = nil;
     
     paddingDistance *= scale;
     diameter *= scale;
@@ -408,9 +406,7 @@ static dispatch_queue_t cacheQueue;
     NSString *dictionaryCacheKey = [NSString stringWithFormat:@"%lu-%f", repSize.x, paddingDistance];
     
     // Check cache
-    dispatch_sync(cacheQueue, ^{
-        repOp = [generatedBitmaps objectForKey:dictionaryCacheKey];
-    });
+    repOp = [generatedBitmaps objectForKey:dictionaryCacheKey];
     
     if (repOp) {
         NSLog(@"got cached");
@@ -436,9 +432,7 @@ static dispatch_queue_t cacheQueue;
     NSLog(@"finished");
     
     if (cache) {
-        dispatch_async(cacheQueue, ^{
-            [generatedBitmaps setObject:repOp forKey:dictionaryCacheKey];
-        });
+        [generatedBitmaps setObject:repOp forKey:dictionaryCacheKey];
     }
     return repOp.bitmap;
 }
