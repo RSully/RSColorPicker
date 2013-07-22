@@ -376,16 +376,6 @@
 
 #pragma mark - Class methods
 
-//static dispatch_queue_t generateQueue;
-//static dispatch_queue_t cacheQueue;
-//static NSMutableDictionary *generatedBitmaps;
-//
-//+(void)initialize {
-//    generateQueue = dispatch_queue_create("com.github.rsully.rscolorpicker.generate", DISPATCH_QUEUE_SERIAL);
-//    cacheQueue = dispatch_queue_create("com.github.rsully.rscolorpicker.cache", DISPATCH_QUEUE_SERIAL);
-//    generatedBitmaps = [NSMutableDictionary new];
-//}
-
 static NSOperationQueue *generateQueue;
 static NSMutableDictionary *generatedBitmaps;
 static dispatch_queue_t cacheQueue;
