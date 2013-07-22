@@ -382,7 +382,7 @@ static dispatch_queue_t cacheQueue;
 
 +(void)initialize {
     generateQueue = [[NSOperationQueue alloc] init];
-    generateQueue.maxConcurrentOperationCount = 4;
+    generateQueue.maxConcurrentOperationCount = NSOperationQueueDefaultMaxConcurrentOperationCount;
     generatedBitmaps = [[NSMutableDictionary alloc] init];
     cacheQueue = dispatch_queue_create("com.github.rsully.rscolorpicker.cache", DISPATCH_QUEUE_SERIAL);
 }
