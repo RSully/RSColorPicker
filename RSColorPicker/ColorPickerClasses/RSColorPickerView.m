@@ -418,7 +418,8 @@ static NSCache *generatedBitmaps;
     [repOp setPadding:paddingDistance];
     [repOp setDiameter:diameter];
     
-    [generateQueue addOperations:@[repOp] waitUntilFinished:YES];
+    [generateQueue addOperation:repOp];
+    [repOp waitUntilFinished];
     
     if (cache) {
         [generatedBitmaps setObject:repOp forKey:dictionaryCacheKey];
