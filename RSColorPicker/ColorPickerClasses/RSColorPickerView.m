@@ -414,10 +414,7 @@ static NSCache *generatedBitmaps;
         return repOp.bitmap;
     }
     
-    repOp = [RSGenerateOperation new];
-    [repOp setPadding:paddingDistance];
-    [repOp setDiameter:diameter];
-    
+    repOp = [[RSGenerateOperation alloc] initWithDiameter:diameter andPadding:paddingDistance];
     [generateQueue addOperation:repOp];
     [repOp waitUntilFinished];
     
