@@ -152,7 +152,7 @@
 	if (!_colorPickerViewFlags.bitmapNeedsUpdate) return;
     
     CGFloat paddingDistance = _selectionView.bounds.size.width / 2.0;
-    _rep = [[self class] bitmapForDiameter:_gradientView.bounds.size.width withScale:_scale withPadding:paddingDistance shouldCache:YES];
+    _rep = [[self class] bitmapForDiameter:_gradientView.bounds.size.width scale:_scale padding:paddingDistance shouldCache:YES];
     
 	_colorPickerViewFlags.bitmapNeedsUpdate = NO;
     _gradientView.image = RSUIImageWithScale([_rep image], _scale);
