@@ -382,7 +382,6 @@ static dispatch_queue_t backgroundQueue;
 
 +(void)initialize {
     generatedBitmaps = [NSCache new];
-    [generatedBitmaps setDelegate:self];
     generateQueue = [NSOperationQueue new];
     generateQueue.maxConcurrentOperationCount = NSOperationQueueDefaultMaxConcurrentOperationCount;
     backgroundQueue = dispatch_queue_create("com.github.rsully.rscolorpicker.background", DISPATCH_QUEUE_SERIAL);
@@ -399,10 +398,6 @@ static dispatch_queue_t backgroundQueue;
     dispatch_async(backgroundQueue, ^{
         [self bitmapForDiameter:diameter scale:scale padding:padding shouldCache:YES];
     });
-}
-
-+(void)cache:(NSCache *)cache willEvictObject:(id)obj {
-    NSLog(@"*** cache:willEvictObject: %@ (%f, %f)", obj, [obj padding], [obj diameter]);
 }
 
 +(ANImageBitmapRep*)bitmapForDiameter:(CGFloat)diameter scale:(CGFloat)scale padding:(CGFloat)paddingDistance shouldCache:(BOOL)cache {

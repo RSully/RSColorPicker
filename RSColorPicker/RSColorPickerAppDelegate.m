@@ -14,18 +14,7 @@
 @synthesize window=_window;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
-    for (int i = 0; i < 10; i++) {
-        int random = 2 + arc4random_uniform(4000+1);
-        [RSColorPickerView prepareForDiameter:random];
-        [RSColorPickerView prepareForDiameter:random*2];
-        [RSColorPickerView prepareForDiameter:random];
-        [RSColorPickerView prepareForDiameter:280.0*3];
-        [RSColorPickerView prepareForDiameter:280.0*3];
-        [RSColorPickerView prepareForDiameter:280.0*3];
-        [RSColorPickerView prepareForDiameter:280.0*2];
-    }
-    
+{    
     // Setup root controller as color
     TestColorViewController *rootController = [[TestColorViewController alloc] initWithNibName:nil bundle:nil];
 
