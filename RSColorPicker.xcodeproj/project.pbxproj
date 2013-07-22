@@ -15,6 +15,7 @@
 		1FA35E7013F57B2800A6B347 /* RSColorPickerAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA35E6F13F57B2800A6B347 /* RSColorPickerAppDelegate.m */; };
 		1FA35E9913F5A17E00A6B347 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FA35E9813F5A17E00A6B347 /* QuartzCore.framework */; };
 		2B12A0DF1792FF46007F2A0A /* TestColorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B12A0DE1792FF46007F2A0A /* TestColorViewController.m */; };
+		2B7008BA179DDC5000DA6632 /* RSDependencyOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B7008B9179DDC5000DA6632 /* RSDependencyOperation.m */; };
 		2B85423116EFC8970047FFBE /* ANImageBitmapRep.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B85420D16EFC8970047FFBE /* ANImageBitmapRep.m */; };
 		2B85423216EFC8970047FFBE /* BitmapContextRep.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B85420F16EFC8970047FFBE /* BitmapContextRep.m */; };
 		2B85423316EFC8970047FFBE /* NSImage+ANImageBitmapRep.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B85421216EFC8970047FFBE /* NSImage+ANImageBitmapRep.m */; };
@@ -35,7 +36,7 @@
 		7FB5E81717455D820034FFB8 /* RSOpacitySlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FB5E81617455D820034FFB8 /* RSOpacitySlider.m */; };
 		930D5A8016DE4D36006C38D4 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 930D5A7F16DE4D36006C38D4 /* Default-568h@2x.png */; };
 		94A10AFB1799B6A900F0BD7E /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94A10AFA1799B6A900F0BD7E /* Accelerate.framework */; };
-		94A10AFF179DB67C00F0BD7E /* GenerateOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 94A10AFE179DB67C00F0BD7E /* GenerateOperation.m */; };
+		94A10AFF179DB67C00F0BD7E /* RSGenerateOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 94A10AFE179DB67C00F0BD7E /* RSGenerateOperation.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,6 +53,8 @@
 		1FA35E9813F5A17E00A6B347 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		2B12A0DD1792FF46007F2A0A /* TestColorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestColorViewController.h; sourceTree = "<group>"; };
 		2B12A0DE1792FF46007F2A0A /* TestColorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestColorViewController.m; sourceTree = "<group>"; };
+		2B7008B8179DDC5000DA6632 /* RSDependencyOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSDependencyOperation.h; sourceTree = "<group>"; };
+		2B7008B9179DDC5000DA6632 /* RSDependencyOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSDependencyOperation.m; sourceTree = "<group>"; };
 		2B85420C16EFC8970047FFBE /* ANImageBitmapRep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ANImageBitmapRep.h; sourceTree = "<group>"; };
 		2B85420D16EFC8970047FFBE /* ANImageBitmapRep.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ANImageBitmapRep.m; sourceTree = "<group>"; };
 		2B85420E16EFC8970047FFBE /* BitmapContextRep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BitmapContextRep.h; sourceTree = "<group>"; };
@@ -90,8 +93,8 @@
 		7FB5E81617455D820034FFB8 /* RSOpacitySlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSOpacitySlider.m; sourceTree = "<group>"; };
 		930D5A7F16DE4D36006C38D4 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		94A10AFA1799B6A900F0BD7E /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
-		94A10AFD179DB67C00F0BD7E /* GenerateOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GenerateOperation.h; sourceTree = "<group>"; };
-		94A10AFE179DB67C00F0BD7E /* GenerateOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GenerateOperation.m; sourceTree = "<group>"; };
+		94A10AFD179DB67C00F0BD7E /* RSGenerateOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSGenerateOperation.h; sourceTree = "<group>"; };
+		94A10AFE179DB67C00F0BD7E /* RSGenerateOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSGenerateOperation.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -243,8 +246,10 @@
 		94A10AFC179DB66400F0BD7E /* Generation */ = {
 			isa = PBXGroup;
 			children = (
-				94A10AFD179DB67C00F0BD7E /* GenerateOperation.h */,
-				94A10AFE179DB67C00F0BD7E /* GenerateOperation.m */,
+				94A10AFD179DB67C00F0BD7E /* RSGenerateOperation.h */,
+				94A10AFE179DB67C00F0BD7E /* RSGenerateOperation.m */,
+				2B7008B8179DDC5000DA6632 /* RSDependencyOperation.h */,
+				2B7008B9179DDC5000DA6632 /* RSDependencyOperation.m */,
 			);
 			name = Generation;
 			sourceTree = "<group>";
@@ -333,7 +338,8 @@
 				2B85424116EFC8970047FFBE /* RSSelectionView.m in Sources */,
 				2B12A0DF1792FF46007F2A0A /* TestColorViewController.m in Sources */,
 				7FB5E81717455D820034FFB8 /* RSOpacitySlider.m in Sources */,
-				94A10AFF179DB67C00F0BD7E /* GenerateOperation.m in Sources */,
+				94A10AFF179DB67C00F0BD7E /* RSGenerateOperation.m in Sources */,
+				2B7008BA179DDC5000DA6632 /* RSDependencyOperation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

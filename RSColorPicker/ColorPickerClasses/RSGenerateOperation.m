@@ -6,11 +6,11 @@
 //  Copyright (c) 2013 Freelance Web Developer. All rights reserved.
 //
 
-#import "GenerateOperation.h"
+#import "RSGenerateOperation.h"
 #import "ANImageBitmapRep.h"
 #import "RSColorFunctions.h"
 
-@implementation GenerateOperation
+@implementation RSGenerateOperation
 
 -(id)init {
     if ((self = [super init])) {
@@ -20,9 +20,9 @@
 }
 
 -(void)main {
-    // We were likely a dependency, but either way can't compute
-    if (!self.diameter) {
-        _didFinish = YES;
+    // If we have a dependency then we don't actually have work to perform
+    if (self.dependencies.count == 1) {
+        _didFinish = [[self.dependencies objectAtIndex:0] isFinished];
         return;
     }
     

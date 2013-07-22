@@ -12,7 +12,8 @@
 #import "RSColorFunctions.h"
 #import "ANImageBitmapRep.h"
 #import "RSOpacitySlider.h"
-#import "GenerateOperation.h"
+#import "RSGenerateOperation.h"
+#import "RSDependencyOperation.h"
 
 #define kSelectionViewSize 22.0
 
@@ -394,8 +395,6 @@ static NSCache *generatedBitmaps;
 }
 
 +(ANImageBitmapRep*)bitmapForDiameter:(CGFloat)diameter withScale:(CGFloat)scale withPadding:(CGFloat)paddingDistance shouldCache:(BOOL)cache {
-    GenerateOperation *repOp = nil;
-    
     paddingDistance *= scale;
     diameter *= scale;
     
@@ -404,32 +403,32 @@ static NSCache *generatedBitmaps;
     
     // Unique key for this size combo
     NSString *dictionaryCacheKey = [NSString stringWithFormat:@"%lu-%f", repSize.x, paddingDistance];
-    
     // Check cache
-    repOp = [generatedBitmaps objectForKey:dictionaryCacheKey];
+    RSGenerateOperation *repOp = [generatedBitmaps objectForKey:dictionaryCacheKey];
+    
+    NSLog(@"need color picker: %@", dictionaryCacheKey);
     
     if (repOp) {
         NSLog(@"got cached");
-    }
-    if (repOp.isFinished) {
-        NSLog(@"returned cached");
+        if (repOp.isFinished) {
+            return repOp.bitmap;
+        }
+        
+        NSLog(@"creating dependency operation");
+        RSDependencyOperation *depOp = [RSDependencyOperation new];
+        [depOp addDependency:repOp];
+        [generateQueue addOperations:@[depOp] waitUntilFinished:YES];
+        NSLog(@"dependency operation finished");
         return repOp.bitmap;
     }
     
-    NSLog(@"new op");
-    GenerateOperation *operation = [[GenerateOperation alloc] init];
-    if (repOp.isExecuting) {
-        NSLog(@"is executing (add dep)");
-        [operation addDependency:repOp];
-    } else if (!repOp) {
-        repOp = operation;
-        NSLog(@"assigning vals");
-        operation.diameter = diameter;
-        operation.padding = paddingDistance;
-    }
+    repOp = [RSGenerateOperation new];
+    [repOp setPadding:paddingDistance];
+    [repOp setDiameter:diameter];
+    
     NSLog(@"enqueueing");
-    [generateQueue addOperations:@[operation] waitUntilFinished:YES];
-    NSLog(@"finished");
+    [generateQueue addOperations:@[repOp] waitUntilFinished:YES];
+    NSLog(@"finished generate");
     
     if (cache) {
         [generatedBitmaps setObject:repOp forKey:dictionaryCacheKey];
