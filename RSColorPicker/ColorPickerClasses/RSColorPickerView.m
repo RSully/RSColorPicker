@@ -13,7 +13,6 @@
 #import "ANImageBitmapRep.h"
 #import "RSOpacitySlider.h"
 #import "RSGenerateOperation.h"
-#import "RSDependencyOperation.h"
 
 #define kSelectionViewSize 22.0
 
@@ -395,30 +394,23 @@ static NSCache *generatedBitmaps;
 }
 
 +(ANImageBitmapRep*)bitmapForDiameter:(CGFloat)diameter withScale:(CGFloat)scale withPadding:(CGFloat)paddingDistance shouldCache:(BOOL)cache {
+    RSGenerateOperation *repOp = nil;
+    
     paddingDistance *= scale;
     diameter *= scale;
     
-    BMPoint repSize = BMPointMake(diameter, diameter);
-    if (repSize.x <= 0) return nil;
+    if (diameter <= 0) return nil;
     
     // Unique key for this size combo
-    NSString *dictionaryCacheKey = [NSString stringWithFormat:@"%lu-%f", repSize.x, paddingDistance];
+    NSString *dictionaryCacheKey = [NSString stringWithFormat:@"%.1f-%.1f", diameter, paddingDistance];
+    NSLog(@"%@", dictionaryCacheKey);
     // Check cache
-    RSGenerateOperation *repOp = [generatedBitmaps objectForKey:dictionaryCacheKey];
-    
-    NSLog(@"need color picker: %@", dictionaryCacheKey);
+    repOp = [generatedBitmaps objectForKey:dictionaryCacheKey];
     
     if (repOp) {
-        NSLog(@"got cached");
-        if (repOp.isFinished) {
-            return repOp.bitmap;
+        if (!repOp.isFinished) {
+            [repOp waitUntilFinished];
         }
-        
-        NSLog(@"creating dependency operation");
-        RSDependencyOperation *depOp = [RSDependencyOperation new];
-        [depOp addDependency:repOp];
-        [generateQueue addOperations:@[depOp] waitUntilFinished:YES];
-        NSLog(@"dependency operation finished");
         return repOp.bitmap;
     }
     
@@ -426,9 +418,7 @@ static NSCache *generatedBitmaps;
     [repOp setPadding:paddingDistance];
     [repOp setDiameter:diameter];
     
-    NSLog(@"enqueueing");
     [generateQueue addOperations:@[repOp] waitUntilFinished:YES];
-    NSLog(@"finished generate");
     
     if (cache) {
         [generatedBitmaps setObject:repOp forKey:dictionaryCacheKey];
