@@ -376,13 +376,15 @@
 
 #pragma mark - Class methods
 
-static NSOperationQueue *generateQueue;
 static NSCache *generatedBitmaps;
+static NSOperationQueue *generateQueue;
+static dispatch_queue_t backgroundQueue;
 
 +(void)initialize {
+    generatedBitmaps = [NSCache new];
     generateQueue = [NSOperationQueue new];
     generateQueue.maxConcurrentOperationCount = NSOperationQueueDefaultMaxConcurrentOperationCount;
-    generatedBitmaps = [NSCache new];
+    backgroundQueue = dispatch_queue_create("com.github.rsully.rscolorpicker.background", DISPATCH_QUEUE_SERIAL);
 }
 
 // Background methods
@@ -390,10 +392,15 @@ static NSCache *generatedBitmaps;
     [self prepareForDiameter:diameter padding:kSelectionViewSize];
 }
 +(void)prepareForDiameter:(CGFloat)diameter padding:(CGFloat)padding {
-    [self bitmapForDiameter:diameter withScale:1.0 withPadding:padding shouldCache:YES];
+    [self prepareForDiameter:diameter scale:1.0 padding:padding];
+}
++(void)prepareForDiameter:(CGFloat)diameter scale:(CGFloat)scale padding:(CGFloat)padding {
+    dispatch_async(backgroundQueue, ^{
+        [self bitmapForDiameter:diameter scale:scale padding:padding shouldCache:YES];
+    });
 }
 
-+(ANImageBitmapRep*)bitmapForDiameter:(CGFloat)diameter withScale:(CGFloat)scale withPadding:(CGFloat)paddingDistance shouldCache:(BOOL)cache {
++(ANImageBitmapRep*)bitmapForDiameter:(CGFloat)diameter scale:(CGFloat)scale padding:(CGFloat)paddingDistance shouldCache:(BOOL)cache {
     RSGenerateOperation *repOp = nil;
     
     // Handle the scale here so the operation can just work with pixels directly
