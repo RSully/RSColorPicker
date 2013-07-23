@@ -11,12 +11,13 @@
 
 @class ANImageBitmapRep;
 
-@interface GenerateOperation : NSOperation
+@interface RSGenerateOperation : NSOperation
 
-@property CGFloat diameter;
-@property CGFloat padding;
+-(id)initWithDiameter:(CGFloat)diameter andPadding:(CGFloat)padding;
+
+@property (readonly) CGFloat diameter;
+@property (readonly) CGFloat padding;
 
 @property ANImageBitmapRep *bitmap;
-@property BOOL didFinish;
 
 @end

@@ -6,39 +6,37 @@
 //  Copyright (c) 2013 Freelance Web Developer. All rights reserved.
 //
 
-#import "GenerateOperation.h"
+#import "RSGenerateOperation.h"
 #import "ANImageBitmapRep.h"
 #import "RSColorFunctions.h"
 
-@implementation GenerateOperation
+@implementation RSGenerateOperation
 
 -(id)init {
-    if ((self = [super init])) {
-        _didFinish = NO;
+    if ((self = [super init])) {}
+    return self;
+}
+
+-(id)initWithDiameter:(CGFloat)diameter andPadding:(CGFloat)padding {
+    if ((self = [self init])) {
+        _diameter = diameter;
+        _padding = padding;
     }
     return self;
 }
 
 -(void)main {
-    // We were likely a dependency, but either way can't compute
-    if (!self.diameter) {
-        _didFinish = YES;
-        return;
-    }
-    
-    CGFloat diameter = self.diameter;
-    CGFloat paddingDistance = self.padding;
-    BMPoint repSize = BMPointMake(diameter, diameter);
+    BMPoint repSize = BMPointMake(_diameter, _diameter);
     
     // Create fresh
     ANImageBitmapRep *rep = [[ANImageBitmapRep alloc] initWithSize:repSize];
     
-    CGFloat radius = diameter / 2.0;
-    CGFloat relRadius = radius - paddingDistance;
+    CGFloat radius = _diameter / 2.0;
+    CGFloat relRadius = radius - _padding;
     CGFloat relX, relY;
 
     int i, x, y;
-    int arrSize = powf(diameter, 2);
+    int arrSize = powf(_diameter, 2);
     size_t arrDataSize = sizeof(float) * arrSize;
 
     // data
@@ -49,9 +47,9 @@
     float *distVals = (float *)malloc(arrDataSize);
 
     i = 0;
-    for (x = 0; x < diameter; x++) {
+    for (x = 0; x < _diameter; x++) {
         relX = x - radius;
-        for (y = 0; y < diameter; y++) {
+        for (y = 0; y < _diameter; y++) {
             relY = radius - y;
 
             preComputeY[i] = relY;
@@ -69,8 +67,8 @@
     free(preComputeY);
 
     i = 0;
-    for (x = 0; x < diameter; x++) {
-        for (y = 0; y < diameter; y++) {
+    for (x = 0; x < _diameter; x++) {
+        for (y = 0; y < _diameter; y++) {
             CGFloat r_distance = fmin(distVals[i], relRadius);
 
             CGFloat angle = atan2Vals[i];
@@ -89,7 +87,6 @@
     free(distVals);
     
     self.bitmap = rep;
-    _didFinish = YES;
 }
 
 -(BOOL)isConcurrent {
@@ -97,10 +94,10 @@
 }
 
 -(BOOL)isExecuting {
-    return !_didFinish;
+    return self.bitmap == nil;
 }
 -(BOOL)isFinished {
-    return _didFinish;
+    return !self.isExecuting;
 }
 
 @end
