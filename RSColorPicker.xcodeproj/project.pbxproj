@@ -15,6 +15,7 @@
 		1FA35E7013F57B2800A6B347 /* RSColorPickerAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA35E6F13F57B2800A6B347 /* RSColorPickerAppDelegate.m */; };
 		1FA35E9913F5A17E00A6B347 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FA35E9813F5A17E00A6B347 /* QuartzCore.framework */; };
 		2B12A0DF1792FF46007F2A0A /* TestColorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B12A0DE1792FF46007F2A0A /* TestColorViewController.m */; };
+		2B3D0C1317A4254500D7FA54 /* test.png in Resources */ = {isa = PBXBuildFile; fileRef = 2B3D0C1217A4254500D7FA54 /* test.png */; };
 		2B85423116EFC8970047FFBE /* ANImageBitmapRep.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B85420D16EFC8970047FFBE /* ANImageBitmapRep.m */; };
 		2B85423216EFC8970047FFBE /* BitmapContextRep.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B85420F16EFC8970047FFBE /* BitmapContextRep.m */; };
 		2B85423316EFC8970047FFBE /* NSImage+ANImageBitmapRep.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B85421216EFC8970047FFBE /* NSImage+ANImageBitmapRep.m */; };
@@ -52,6 +53,7 @@
 		1FA35E9813F5A17E00A6B347 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		2B12A0DD1792FF46007F2A0A /* TestColorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestColorViewController.h; sourceTree = "<group>"; };
 		2B12A0DE1792FF46007F2A0A /* TestColorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestColorViewController.m; sourceTree = "<group>"; };
+		2B3D0C1217A4254500D7FA54 /* test.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = test.png; sourceTree = "<group>"; };
 		2B85420C16EFC8970047FFBE /* ANImageBitmapRep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ANImageBitmapRep.h; sourceTree = "<group>"; };
 		2B85420D16EFC8970047FFBE /* ANImageBitmapRep.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ANImageBitmapRep.m; sourceTree = "<group>"; };
 		2B85420E16EFC8970047FFBE /* BitmapContextRep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BitmapContextRep.h; sourceTree = "<group>"; };
@@ -114,6 +116,7 @@
 			isa = PBXGroup;
 			children = (
 				930D5A7F16DE4D36006C38D4 /* Default-568h@2x.png */,
+				2B3D0C1217A4254500D7FA54 /* test.png */,
 				1FA35E6513F57B2700A6B347 /* RSColorPicker */,
 				1FA35E5E13F57B2700A6B347 /* Frameworks */,
 				1FA35E5C13F57B2700A6B347 /* Products */,
@@ -302,6 +305,7 @@
 			files = (
 				1FA35E6A13F57B2800A6B347 /* InfoPlist.strings in Resources */,
 				930D5A8016DE4D36006C38D4 /* Default-568h@2x.png in Resources */,
+				2B3D0C1317A4254500D7FA54 /* test.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
