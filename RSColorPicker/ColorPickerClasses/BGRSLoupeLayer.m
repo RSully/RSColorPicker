@@ -47,7 +47,7 @@
 @synthesize loupeCenter, colorPicker;
 
 const CGFloat LOUPE_SIZE = 85, SHADOW_SIZE = 6, RIM_THICKNESS = 3.0;
-const int NUM_PIXELS = 5, NUM_SKIP = 15;
+const int NUM_PIXELS = 5, NUM_SKIP = 1;
 
 - (id)init
 {
