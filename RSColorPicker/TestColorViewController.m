@@ -35,7 +35,8 @@
     
     // View that displays color picker (needs to be square)
     _colorPicker = [[RSColorPickerView alloc] initWithFrame:CGRectMake(20.0, 10.0, 280.0, 280.0)];
-    [_colorPicker setCropToCircle:YES]; // Defaults to YES (and you can set BG color)
+    [_colorPicker setCropToCircle:NO]; // Defaults to YES (and you can set BG color)
+    [_colorPicker setCustomImage:[UIImage imageNamed:@"test.png"]];
     [_colorPicker setDelegate:self];
     [self.view addSubview:_colorPicker];
     
