@@ -182,7 +182,7 @@
 	if (convertedPoint.y >= _gradientContainer.bounds.size.height) convertedPoint.y = _gradientContainer.bounds.size.height - 1;
 	
 	BMPixel pixel = [_rep getPixelAtPoint:BMPointFromPoint(RSCGPointWithScale(convertedPoint, _scale))];
-	return [UIColor colorWithRed:pixel.red green:pixel.green blue:pixel.blue alpha:_opacity];
+	return [UIColor colorWithRed:pixel.red*_brightness green:pixel.green*_brightness blue:pixel.blue*_brightness alpha:_opacity];
 }
 
 #pragma mark - Setters
