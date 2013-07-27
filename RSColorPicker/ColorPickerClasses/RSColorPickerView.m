@@ -151,8 +151,17 @@
 - (void)genBitmap {
 	if (!_colorPickerViewFlags.bitmapNeedsUpdate) return;
     
-    CGFloat paddingDistance = _selectionView.bounds.size.width / 2.0;
-    _rep = [[self class] bitmapForDiameter:_gradientView.bounds.size.width scale:_scale padding:paddingDistance shouldCache:YES];
+    BMPoint newSize = BMPointFromSize(RSCGSizeWithScale(_gradientView.bounds.size, _scale));
+    
+    if (_scale <= 0) {
+        _rep = [[ANImageBitmapRep alloc] initWithSize:newSize];
+    } else if (_customImage) {
+        _rep = [[ANImageBitmapRep alloc] initWithImage:_customImage];
+        [_rep setSizeFillingFrame:newSize];
+    } else {
+        CGFloat paddingDistance = _selectionView.bounds.size.width / 2.0;
+        _rep = [[self class] bitmapForDiameter:_gradientView.bounds.size.width scale:_scale padding:paddingDistance shouldCache:YES];
+    }
     
 	_colorPickerViewFlags.bitmapNeedsUpdate = NO;
     _gradientView.image = RSUIImageWithScale([_rep image], _scale);
@@ -173,13 +182,18 @@
 	if (convertedPoint.y >= _gradientContainer.bounds.size.height) convertedPoint.y = _gradientContainer.bounds.size.height - 1;
 	
 	BMPixel pixel = [_rep getPixelAtPoint:BMPointFromPoint(RSCGPointWithScale(convertedPoint, _scale))];
-	UIColor *rgbColor = [UIColor colorWithRed:pixel.red green:pixel.green blue:pixel.blue alpha:1];
-	CGFloat h, s, v;
-	[rgbColor getHue:&h saturation:&s brightness:&v alpha:NULL];
-	return [UIColor colorWithHue:h saturation:s brightness:_brightness alpha:_opacity];
+	return [UIColor colorWithRed:pixel.red green:pixel.green blue:pixel.blue alpha:_opacity];
 }
 
 #pragma mark - Setters
+
+-(void)setCustomImage:(UIImage *)customImage {
+    if (customImage == _customImage) return;
+    _customImage = customImage;
+    
+    _colorPickerViewFlags.bitmapNeedsUpdate = YES;
+    [self genBitmap];
+}
 
 - (void)setBrightness:(CGFloat)bright {
 	_brightness = bright;
