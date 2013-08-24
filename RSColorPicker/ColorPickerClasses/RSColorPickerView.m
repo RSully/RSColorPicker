@@ -415,7 +415,6 @@ static dispatch_queue_t backgroundQueue;
 
 +(ANImageBitmapRep*)bitmapForDiameter:(CGFloat)diameter scale:(CGFloat)scale padding:(CGFloat)paddingDistance shouldCache:(BOOL)cache {
     RSGenerateOperation *repOp = nil;
-    int ident = abs(arc4random());
     
     // Handle the scale here so the operation can just work with pixels directly
     paddingDistance *= scale;
