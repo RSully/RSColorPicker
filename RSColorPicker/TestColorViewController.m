@@ -36,9 +36,8 @@
     // View that displays color picker (needs to be square)
     _colorPicker = [[RSColorPickerView alloc] initWithFrame:CGRectMake(20.0, 10.0, 280.0, 280.0)];
     [_colorPicker setCropToCircle:YES]; // Defaults to YES (and you can set BG color)
-	[_colorPicker setDelegate:self];
-	[self.view addSubview:_colorPicker];
-	
+    [_colorPicker setDelegate:self];
+    [self.view addSubview:_colorPicker];
     
     // On/off circle or square
     UISwitch *circleSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(10, 340, 0, 0)];
@@ -108,8 +107,7 @@
 
 #pragma mark - RSColorPickerView delegate methods
 
-- (void)colorPickerDidChangeSelection:(RSColorPickerView *)cp
-{
+- (void)colorPickerDidChangeSelection:(RSColorPickerView *)cp {
 	_colorPatch.backgroundColor = [cp selectionColor];
     _brightnessSlider.value = [cp brightness];
     _opacitySlider.value = [cp opacity];
@@ -139,8 +137,7 @@
     [_colorPicker setSelectionColor:[UIColor cyanColor]];
 }
 
-- (void)circleSwitchAction:(UISwitch *)s
-{
+- (void)circleSwitchAction:(UISwitch *)s {
 	_colorPicker.cropToCircle = s.isOn;
 }
 
@@ -153,8 +150,7 @@
 
 #pragma mark - Generated methods
 
-- (void)didReceiveMemoryWarning
-{
+- (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }

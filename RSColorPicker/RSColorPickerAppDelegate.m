@@ -7,7 +7,7 @@
 //
 
 #import "RSColorPickerAppDelegate.h"
-
+#import "RSColorPickerView.h"
 
 @implementation RSColorPickerAppDelegate
 

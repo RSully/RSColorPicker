@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
+#import <Accelerate/Accelerate.h>
+#import "ANImageBitmapRep.h"
 
 @class RSColorPickerView, BGRSLoupeLayer;
 
@@ -24,6 +26,11 @@
 @property (nonatomic, weak) id <RSColorPickerViewDelegate> delegate;
 @property (nonatomic, readonly) CGPoint selection;
 
--(UIColor*)colorAtPoint:(CGPoint)point; //Returns UIColor at a point in the RSColorPickerView
+-(UIColor*)colorAtPoint:(CGPoint)point; // Returns UIColor at a point in the RSColorPickerView
 
++(void)prepareForDiameter:(CGFloat)diameter;
++(void)prepareForDiameter:(CGFloat)diameter padding:(CGFloat)padding;
++(void)prepareForDiameter:(CGFloat)diameter scale:(CGFloat)scale;
++(void)prepareForDiameter:(CGFloat)diameter scale:(CGFloat)scale padding:(CGFloat)padding;
++(void)prepareForDiameter:(CGFloat)diameter scale:(CGFloat)scale padding:(CGFloat)padding inBackground:(BOOL)bg;
 @end
