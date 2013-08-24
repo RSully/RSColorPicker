@@ -22,6 +22,7 @@ See included example project (`TestColorViewController`).
 
 ## Requirements:
 
+* Accelerate.framework
 * QuartzCore.framework
 * CoreGraphics.framework
 * UIKit.framework
