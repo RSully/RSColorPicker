@@ -427,30 +427,22 @@ static dispatch_queue_t backgroundQueue;
     NSString *dictionaryCacheKey = [NSString stringWithFormat:@"%.1f-%.1f", diameter, paddingDistance];
     // Check cache
     repOp = [generatedBitmaps objectForKey:dictionaryCacheKey];
-    NSLog(@"%d - size: %@", ident, dictionaryCacheKey);
     
     if (repOp) {
-        NSLog(@"%d - got from cache", ident);
         if (!repOp.isFinished) {
-            NSLog(@"%d - waiting", ident);
             [repOp waitUntilFinished];
         }
-        NSLog(@"%d - finished", ident);
         return repOp.bitmap;
     }
     
-    NSLog(@"%d - creating generate operation", ident);
     repOp = [[RSGenerateOperation alloc] initWithDiameter:diameter andPadding:paddingDistance];
     
     if (cache) {
-        NSLog(@"%d - caching (didn't start yet)", ident);
         [generatedBitmaps setObject:repOp forKey:dictionaryCacheKey cost:diameter];
     }
     
-    NSLog(@"%d - adding and waiting", ident);
     [generateQueue addOperation:repOp];
     [repOp waitUntilFinished];
-    NSLog(@"%d - done", ident);
     
     return repOp.bitmap;
 }
