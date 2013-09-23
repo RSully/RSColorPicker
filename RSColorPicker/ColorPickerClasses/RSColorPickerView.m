@@ -118,9 +118,9 @@
 	
     [self updateSelectionLocationDisableActions:NO];
     [self addSubview:_selectionView];
-	    
-	_cropToCircle = YES;
-	_selectionColor = [UIColor whiteColor];
+    
+    [self setCropToCircle:NO];
+    _selectionColor = [UIColor whiteColor];
 }
 
 - (void)dealloc {
