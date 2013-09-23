@@ -29,14 +29,22 @@
 {
     [super viewDidLoad];
 
-    self.view.backgroundColor = [self randomColor];
+    self.view.backgroundColor = [self randomColorOpaque:YES];
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Push" style:UIBarButtonItemStyleBordered target:self action:@selector(pushNext:)];
     
     // View that displays color picker (needs to be square)
     _colorPicker = [[RSColorPickerView alloc] initWithFrame:CGRectMake(20.0, 10.0, 280.0, 280.0)];
-    [_colorPicker setCropToCircle:YES]; // Defaults to YES (and you can set BG color)
+    
+    // Optionally set and force the picker to only draw a circle
+//    [_colorPicker setCropToCircle:YES]; // Defaults to NO (you can set BG color)
+    
+    // Set the selection color - useful to present when the user had picked a color previously
+    [_colorPicker setSelectionColor:[self randomColorOpaque:NO]];
+    
+    // Set the delegate to receive events
     [_colorPicker setDelegate:self];
+    
     [self.view addSubview:_colorPicker];
     
     // On/off circle or square
@@ -157,7 +165,7 @@
 
 #pragma mark - Random color for testing
 
-- (UIColor*)randomColor {
+- (UIColor*)randomColorOpaque:(BOOL)isOpaque {
     /*
      From https://gist.github.com/kylefox/1689973
 
@@ -184,12 +192,20 @@
      LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
      OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
      WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+     
+     Alpha modifications for RSColorPicker test project
      */
     
     CGFloat hue = ( arc4random() % 256 / 256.0 );  //  0.0 to 1.0
     CGFloat saturation = ( arc4random() % 128 / 256.0 ) + 0.5;  //  0.5 to 1.0, away from white
     CGFloat brightness = ( arc4random() % 128 / 256.0 ) + 0.5;  //  0.5 to 1.0, away from black
-    return [UIColor colorWithHue:hue saturation:saturation brightness:brightness alpha:1];
+    CGFloat alpha = 1;
+    
+    if (!isOpaque) {
+        alpha = ( arc4random() % 128 / 256.0 ) + 0.5;
+    }
+    
+    return [UIColor colorWithHue:hue saturation:saturation brightness:brightness alpha:alpha];
 }
 
 @end
