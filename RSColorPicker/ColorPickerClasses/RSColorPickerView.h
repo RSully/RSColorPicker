@@ -42,10 +42,7 @@
 
 @property (nonatomic, weak) id <RSColorPickerViewDelegate> delegate;
 
-/**
- * Get the point on the color picker view that corresponds to the current selection.
- */
-@property (nonatomic, readonly) CGPoint selection;
+@property (readwrite) CGPoint selection;
 
 - (UIColor *)colorAtPoint:(CGPoint)point; // Returns UIColor at a point in the RSColorPickerView
 

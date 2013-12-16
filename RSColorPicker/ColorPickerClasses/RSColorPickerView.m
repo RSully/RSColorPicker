@@ -209,7 +209,15 @@
     return state.color;
 }
 
+- (CGPoint)selection {
+    return [state selectionLocationWithSize:[self paletteDiameter] padding:[self paddingDistance]];
+}
+
 #pragma mark - Setters
+
+- (void)setSelection:(CGPoint)selection {
+    [self updateStateForTouchPoint:selection];
+}
 
 - (void)setBrightness:(CGFloat)bright {
     state = [state stateBySettingBrightness:bright];
