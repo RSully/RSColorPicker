@@ -11,11 +11,11 @@
 /**
  * Returns image that looks like a checkered background.
  */
-UIImage* RSOpacityBackgroundImage(CGFloat length, UIColor *color) {
-    UIBezierPath* rectanglePath = [UIBezierPath bezierPathWithRect: CGRectMake(0, 0, length*0.5, length*0.5)];
-    UIBezierPath* rectangle2Path = [UIBezierPath bezierPathWithRect: CGRectMake(length*0.5, length*0.5, length*0.5, length*0.5)];
-    UIBezierPath* rectangle3Path = [UIBezierPath bezierPathWithRect: CGRectMake(0, length*0.5, length*0.5, length*0.5)];
-    UIBezierPath* rectangle4Path = [UIBezierPath bezierPathWithRect: CGRectMake(length*0.5, 0, length*0.5, length*0.5)];
+UIImage * RSOpacityBackgroundImage(CGFloat length, UIColor *color) {
+    UIBezierPath *rectanglePath = [UIBezierPath bezierPathWithRect: CGRectMake(0, 0, length*0.5, length*0.5)];
+    UIBezierPath *rectangle2Path = [UIBezierPath bezierPathWithRect: CGRectMake(length*0.5, length*0.5, length*0.5, length*0.5)];
+    UIBezierPath *rectangle3Path = [UIBezierPath bezierPathWithRect: CGRectMake(0, length*0.5, length*0.5, length*0.5)];
+    UIBezierPath *rectangle4Path = [UIBezierPath bezierPathWithRect: CGRectMake(length*0.5, 0, length*0.5, length*0.5)];
     
     UIGraphicsBeginImageContext(CGSizeMake(length, length));
     
@@ -80,7 +80,7 @@ UIImage* RSOpacityBackgroundImage(CGFloat length, UIColor *color) {
 {
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     CGColorSpaceRef space = CGColorSpaceCreateDeviceGray();
-    NSArray* colors = [[NSArray alloc] initWithObjects:
+    NSArray *colors = [[NSArray alloc] initWithObjects:
                                          (id)[UIColor colorWithWhite:0 alpha:0].CGColor,
                                          (id)[UIColor colorWithWhite:1 alpha:1].CGColor,nil];
     

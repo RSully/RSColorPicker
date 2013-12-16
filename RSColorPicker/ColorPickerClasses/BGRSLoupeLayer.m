@@ -201,7 +201,7 @@ const int NUM_PIXELS = 5, NUM_SKIP = 15;
         for (i=0; i<NUM_PIXELS; i++){
             
             CGRect pixelRect = CGRectMake(w*i-LOUPE_SIZE/2, w*j-LOUPE_SIZE/2, w, w);
-            UIColor* pixelColor = [self.colorPicker colorAtPoint:currentPoint];
+            UIColor *pixelColor = [self.colorPicker colorAtPoint:currentPoint];
             CGContextSetFillColorWithColor(ctx, pixelColor.CGColor);
             CGContextFillRect(ctx, pixelRect);
             
@@ -240,7 +240,7 @@ const int NUM_PIXELS = 5, NUM_SKIP = 15;
     CGContextClip(ctx);
     
     CGColorSpaceRef space = CGColorSpaceCreateDeviceGray();
-    NSArray* colors = @[(id)[UIColor colorWithWhite:1.0 alpha:0.65].CGColor,
+    NSArray *colors = @[(id)[UIColor colorWithWhite:1.0 alpha:0.65].CGColor,
                         (id)[UIColor colorWithWhite:1.0 alpha:0.15].CGColor];
     
     CGGradientRef myGradient = CGGradientCreateWithColors(space, (__bridge CFArrayRef)colors, NULL);
@@ -274,7 +274,7 @@ const int NUM_PIXELS = 5, NUM_SKIP = 15;
 
 #pragma mark - Animation
 
-static NSString* const kAppearKey = @"cp_l_appear";
+static NSString *const kAppearKey = @"cp_l_appear";
 
 - (void)appearInColorPicker:(RSColorPickerView*)aColorPicker{
     if (self.colorPicker != aColorPicker) {
@@ -305,7 +305,7 @@ static NSString* const kAppearKey = @"cp_l_appear";
 /**
  * Disapear removes the loupe view from the color picker by shrinking it down to zero
  */
-static NSString* const kDisappearKey = @"cp_l_disappear";
+static NSString *const kDisappearKey = @"cp_l_disappear";
 
 - (void)disappear
 {
@@ -324,7 +324,7 @@ static NSString* const kDisappearKey = @"cp_l_disappear";
     
     self.transform = CATransform3DMakeScale(0.01, 0.01, 1);
     
-    CABasicAnimation* disapear = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
+    CABasicAnimation *disapear = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
     disapear.fromValue = @(1);
     disapear.duration  = 0.1f;
     disapear.delegate  = self;

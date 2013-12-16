@@ -21,7 +21,7 @@
  *    /    \
  *  1 ------ 2
  */
-UIImage* RSHourGlassThumbImage(CGSize size, CGFloat cWidth){
+UIImage * RSHourGlassThumbImage(CGSize size, CGFloat cWidth){
     
     //Set Size
     CGFloat width = size.width;
@@ -59,7 +59,7 @@ UIImage* RSHourGlassThumbImage(CGSize size, CGFloat cWidth){
     CGImageRef cgImage = CGBitmapContextCreateImage(ctx);
     CGContextRelease(ctx);
    
-   UIImage* image = [UIImage imageWithCGImage:cgImage]; 
+   UIImage *image = [UIImage imageWithCGImage:cgImage];
    CGImageRelease(cgImage);
     
     return image;
@@ -76,7 +76,7 @@ UIImage* RSHourGlassThumbImage(CGSize size, CGFloat cWidth){
  * | +-+ | ------------------------
  * +-----+
  */
-UIImage* RSArrowLoopThumbImage(CGSize size, CGSize loopSize){
+UIImage * RSArrowLoopThumbImage(CGSize size, CGSize loopSize){
    
    //Setup Rects
    CGRect outsideRect = CGRectMake(0, 0, size.width, size.height);
@@ -111,7 +111,7 @@ UIImage* RSArrowLoopThumbImage(CGSize size, CGSize loopSize){
    CGPathRelease(loopPath);
    CGContextRelease(ctx);
    
-   UIImage* image = [UIImage imageWithCGImage:cgImage]; 
+   UIImage *image = [UIImage imageWithCGImage:cgImage];
    CGImageRelease(cgImage);
     
     return image;
@@ -164,7 +164,7 @@ UIImage* RSArrowLoopThumbImage(CGSize size, CGSize loopSize){
 {
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     CGColorSpaceRef space = CGColorSpaceCreateDeviceGray();
-    NSArray* colors = @[(id)[UIColor colorWithWhite:0 alpha:1].CGColor,
+    NSArray *colors = @[(id)[UIColor colorWithWhite:0 alpha:1].CGColor,
                         (id)[UIColor colorWithWhite:1 alpha:1].CGColor];
     
     CGGradientRef myGradient = CGGradientCreateWithColors(space, (__bridge CFArrayRef)colors, NULL);

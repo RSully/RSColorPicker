@@ -277,7 +277,7 @@
     CGPoint circlePoint = [self validPointForTouch:point];
     _selection = circlePoint;
 
-    UIColor * newColor = [self colorAtPoint:circlePoint];
+    UIColor *newColor = [self colorAtPoint:circlePoint];
     if (newColor) {
         _selectionColor = newColor;
         _selectionView.selectedColor = _selectionColor;

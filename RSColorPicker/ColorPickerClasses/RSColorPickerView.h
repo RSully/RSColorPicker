@@ -14,10 +14,10 @@
 @class RSColorPickerView, BGRSLoupeLayer;
 
 @protocol RSColorPickerViewDelegate <NSObject>
--(void)colorPickerDidChangeSelection:(RSColorPickerView*)cp;
+-(void)colorPickerDidChangeSelection:(RSColorPickerView *)cp;
 @optional
-- (void)colorPicker:(RSColorPickerView*)colorPicker touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event;
-- (void)colorPicker:(RSColorPickerView*)colorPicker touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event;
+- (void)colorPicker:(RSColorPickerView *)colorPicker touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event;
+- (void)colorPicker:(RSColorPickerView *)colorPicker touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event;
 @end
 
 @interface RSColorPickerView : UIView
@@ -29,7 +29,7 @@
 @property (nonatomic, weak) id <RSColorPickerViewDelegate> delegate;
 @property (nonatomic, readonly) CGPoint selection;
 
--(UIColor*)colorAtPoint:(CGPoint)point; // Returns UIColor at a point in the RSColorPickerView
+-(UIColor *)colorAtPoint:(CGPoint)point; // Returns UIColor at a point in the RSColorPickerView
 
 +(void)prepareForDiameter:(CGFloat)diameter;
 +(void)prepareForDiameter:(CGFloat)diameter padding:(CGFloat)padding;
