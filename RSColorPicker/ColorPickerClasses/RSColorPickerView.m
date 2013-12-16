@@ -79,7 +79,7 @@
     self.backgroundColor = [UIColor whiteColor];
     _colorPickerViewFlags.bitmapNeedsUpdate = NO;
 
-    //the view used to select the colour
+    // the view used to select the colour
     _selectionView = [[RSSelectionView alloc] initWithFrame:CGRectMake(0.0, 0.0, kSelectionViewSize, kSelectionViewSize)];
 
     _selection = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));

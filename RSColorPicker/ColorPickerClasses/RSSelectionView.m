@@ -17,8 +17,7 @@
 
 @implementation RSSelectionView
 
-- (id)initWithFrame:(CGRect)frame
-{
+- (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
         self.opaque = NO;
@@ -29,14 +28,12 @@
     return self;
 }
 
-- (void)setSelectedColor:(UIColor *)selectedColor
-{
+- (void)setSelectedColor:(UIColor *)selectedColor {
     _selectedColor = selectedColor;
     [self setNeedsDisplay];
 }
 
-- (void)drawRect:(CGRect)rect
-{
+- (void)drawRect:(CGRect)rect {
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     
     CGContextSetFillColorWithColor(ctx, _selectedColor.CGColor);
