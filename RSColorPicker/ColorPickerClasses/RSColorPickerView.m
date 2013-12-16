@@ -254,9 +254,9 @@
         CGPoint point = [self validPointForTouch:[state selectionLocationWithSize:[self paletteDiameter]
                                                                           padding:[self paddingDistance]]];
         [self updateStateForTouchPoint:point];
+    } else {
+        [self handleStateChanged];
     }
-    
-    [self handleStateChanged];
 }
 
 - (void)setSelectionColor:(UIColor *)selectionColor {
