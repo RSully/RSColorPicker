@@ -78,19 +78,16 @@
 
 - (void)initRoutine;
 
-/**
- * Called to generate the _rep ivar and set it.
- */
+// Called to generate the _rep ivar and set it.
 - (void)genBitmap;
 
-/**
- * Called to update the UI for the current state.
- */
+// Called to generate the bezier paths
+- (void)generateBezierPaths;
+
+// Called to update the UI for the current state.
 - (void)handleStateChanged;
 
-/**
- * Called to handle a state change (optionally disabling CA Actions for loupe).
- */
+// Called to handle a state change (optionally disabling CA Actions for loupe).
 - (void)handleStateChangedDisableActions:(BOOL)disable;
 
 // touch handling
@@ -165,7 +162,9 @@
     _loupeLayer = nil;
 }
 
-- (void)didMoveToWindow {
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    
     if (!self.window) {
         _scale = 0;
         [_loupeLayer disappearAnimated:NO];
@@ -177,7 +176,13 @@
     _gradientContainer.layer.contentsScale = _scale;
 
     _colorPickerViewFlags.bitmapNeedsUpdate = YES;
+    _gradientContainer.frame = self.bounds;
+    _brightnessView.frame = self.bounds;
+    _opacityView.frame = self.bounds;
+    
     [self genBitmap];
+    [self generateBezierPaths];
+    [self handleStateChanged];
 }
 
 #pragma mark - Business
@@ -189,6 +194,19 @@
 
     _colorPickerViewFlags.bitmapNeedsUpdate = NO;
     _gradientView.image = RSUIImageWithScale([_rep image], _scale);
+}
+
+- (void)generateBezierPaths {
+    CGRect activeAreaFrame = CGRectInset(_gradientContainer.frame, [self paddingDistance], [self paddingDistance]);
+    if (_cropToCircle) {
+        _gradientContainer.layer.cornerRadius = [self paletteDiameter] / 2.0;
+        _gradientShape = [UIBezierPath bezierPathWithOvalInRect:_gradientContainer.frame];
+        _activeAreaShape = [UIBezierPath bezierPathWithOvalInRect:activeAreaFrame];
+    } else {
+        _gradientContainer.layer.cornerRadius = 0.0;
+        _gradientShape = [UIBezierPath bezierPathWithRect:_gradientContainer.frame];
+        _activeAreaShape = [UIBezierPath bezierPathWithRect:activeAreaFrame];
+    }
 }
 
 #pragma mark - Getters
@@ -232,22 +250,14 @@
 - (void)setCropToCircle:(BOOL)circle {
     _cropToCircle = circle;
 
-    CGRect activeAreaFrame = CGRectInset(_gradientContainer.frame, [self paddingDistance], [self paddingDistance]);
     if (circle) {
-        _gradientContainer.layer.cornerRadius = [self paletteDiameter] / 2.0;
-        _gradientShape = [UIBezierPath bezierPathWithOvalInRect:_gradientContainer.frame];
-        _activeAreaShape = [UIBezierPath bezierPathWithOvalInRect:activeAreaFrame];
-        
         // there's a chance the selection was outside the bounds
         CGPoint point = [self validPointForTouch:[state selectionLocationWithSize:[self paletteDiameter]
                                                                           padding:[self paddingDistance]]];
         [self updateStateForTouchPoint:point];
-    } else {
-        _gradientContainer.layer.cornerRadius = 0.0;
-        _gradientShape = [UIBezierPath bezierPathWithRect:_gradientContainer.frame];
-        _activeAreaShape = [UIBezierPath bezierPathWithRect:activeAreaFrame];
     }
     
+    [self generateBezierPaths];
     [self handleStateChanged];
 }
 
