@@ -39,13 +39,13 @@
 }
 
 @property (nonatomic) CGPoint loupeCenter;
-@property (nonatomic, weak) RSColorPickerView* colorPicker;
+@property (nonatomic, weak) RSColorPickerView *colorPicker;
 
 #pragma mark - Drawing
 - (void)drawGridInContext:(CGContextRef)ctx;
 
 #pragma mark - Animation
-- (void)appearInColorPicker:(RSColorPickerView*)aColorPicker;
+- (void)appearInColorPicker:(RSColorPickerView *)aColorPicker;
 - (void)disappear;
 - (void)disappearAnimated:(BOOL)anim;
 

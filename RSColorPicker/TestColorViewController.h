@@ -12,7 +12,9 @@
 @class RSBrightnessSlider;
 @class RSOpacitySlider;
 
-@interface TestColorViewController : UIViewController <RSColorPickerViewDelegate>
+@interface TestColorViewController : UIViewController <RSColorPickerViewDelegate> {
+    BOOL isSmallSize;
+}
 
 @property (nonatomic) RSColorPickerView *colorPicker;
 @property (nonatomic) RSBrightnessSlider *brightnessSlider;

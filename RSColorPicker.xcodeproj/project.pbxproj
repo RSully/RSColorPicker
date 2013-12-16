@@ -36,6 +36,7 @@
 		94A10AFF179DB67C00F0BD7E /* RSGenerateOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 94A10AFE179DB67C00F0BD7E /* RSGenerateOperation.m */; };
 		FA5AA0EA185F6477000355FE /* RSBrightnessSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = FA5AA0E7185F6477000355FE /* RSBrightnessSlider.m */; };
 		FA5AA0EB185F6477000355FE /* RSOpacitySlider.m in Sources */ = {isa = PBXBuildFile; fileRef = FA5AA0E9185F6477000355FE /* RSOpacitySlider.m */; };
+		FAFF6E4C185F84BD00412D58 /* RSColorPickerState.m in Sources */ = {isa = PBXBuildFile; fileRef = FAFF6E4B185F84BD00412D58 /* RSColorPickerState.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -92,6 +93,8 @@
 		FA5AA0E7185F6477000355FE /* RSBrightnessSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSBrightnessSlider.m; sourceTree = "<group>"; };
 		FA5AA0E8185F6477000355FE /* RSOpacitySlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSOpacitySlider.h; sourceTree = "<group>"; };
 		FA5AA0E9185F6477000355FE /* RSOpacitySlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSOpacitySlider.m; sourceTree = "<group>"; };
+		FAFF6E4A185F84BD00412D58 /* RSColorPickerState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSColorPickerState.h; sourceTree = "<group>"; };
+		FAFF6E4B185F84BD00412D58 /* RSColorPickerState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSColorPickerState.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -174,13 +177,15 @@
 				2B85420B16EFC8970047FFBE /* ANImageBitmapRep */,
 				2B85422716EFC8970047FFBE /* BGRSLoupeLayer.h */,
 				2B85422816EFC8970047FFBE /* BGRSLoupeLayer.m */,
-				2B85422B16EFC8970047FFBE /* RSColorFunctions.h */,
-				2B85422C16EFC8970047FFBE /* RSColorFunctions.m */,
 				2B85422D16EFC8970047FFBE /* RSColorPickerView.h */,
 				2B85422E16EFC8970047FFBE /* RSColorPickerView.m */,
 				94A10AFC179DB66400F0BD7E /* Generation */,
 				2B85422F16EFC8970047FFBE /* RSSelectionView.h */,
 				2B85423016EFC8970047FFBE /* RSSelectionView.m */,
+				2B85422B16EFC8970047FFBE /* RSColorFunctions.h */,
+				2B85422C16EFC8970047FFBE /* RSColorFunctions.m */,
+				FAFF6E4A185F84BD00412D58 /* RSColorPickerState.h */,
+				FAFF6E4B185F84BD00412D58 /* RSColorPickerState.m */,
 			);
 			path = ColorPickerClasses;
 			sourceTree = "<group>";
@@ -327,6 +332,7 @@
 				2B85423916EFC8970047FFBE /* BitmapCropManipulator.m in Sources */,
 				2B85423A16EFC8970047FFBE /* BitmapDrawManipulator.m in Sources */,
 				2B85423B16EFC8970047FFBE /* BitmapRotationManipulator.m in Sources */,
+				FAFF6E4C185F84BD00412D58 /* RSColorPickerState.m in Sources */,
 				2B85423C16EFC8970047FFBE /* BitmapScaleManipulator.m in Sources */,
 				2B85423D16EFC8970047FFBE /* BGRSLoupeLayer.m in Sources */,
 				2B85423F16EFC8970047FFBE /* RSColorFunctions.m in Sources */,
