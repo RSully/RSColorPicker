@@ -330,40 +330,43 @@
         return touchPoint;
     }
     
-    // We compute the right point on the gradient border
-    CGPoint returnedPoint;
-
-    // TouchCircle is the circle which pass by the point 'touchPoint', of radius 'r'
-    // 'X' is the x coordinate of the touch in TouchCircle
-    CGFloat X = touchPoint.x - CGRectGetMidX(_gradientContainer.frame);
-    // 'Y' is the y coordinate of the touch in TouchCircle
-    CGFloat Y = touchPoint.y - CGRectGetMidY(_gradientContainer.frame);
-    CGFloat r = sqrt(pow(X, 2) + pow(Y, 2));
-
-    // alpha is the angle in radian of the touch on the unit circle
-    CGFloat alpha = acos( X / r );
-    if (touchPoint.y > CGRectGetMidX(_gradientContainer.frame)) alpha = 2 * M_PI - alpha;
-
-    // 'actual radius' is the distance between the center and the border of the gradient
-    CGFloat actualRadius;
     if (_cropToCircle) {
-        actualRadius = [self paletteDiameter] / 2.0 - [self paddingDistance];
+        // We compute the right point on the gradient border
+        CGPoint returnedPoint;
+        
+        // TouchCircle is the circle which pass by the point 'touchPoint', of radius 'r'
+        // 'X' is the x coordinate of the touch in TouchCircle
+        CGFloat X = touchPoint.x - CGRectGetMidX(_gradientContainer.frame);
+        // 'Y' is the y coordinate of the touch in TouchCircle
+        CGFloat Y = touchPoint.y - CGRectGetMidY(_gradientContainer.frame);
+        CGFloat r = sqrt(pow(X, 2) + pow(Y, 2));
+        
+        // alpha is the angle in radian of the touch on the unit circle
+        CGFloat alpha = acos( X / r );
+        if (touchPoint.y > CGRectGetMidX(_gradientContainer.frame)) alpha = 2 * M_PI - alpha;
+        
+        // 'actual radius' is the distance between the center and the border of the gradient
+        CGFloat actualRadius = [self paletteDiameter] / 2.0 - [self paddingDistance];
+        
+        returnedPoint.x = fabs(actualRadius) * cos(alpha);
+        returnedPoint.y = fabs(actualRadius) * sin(alpha);
+        
+        // we offset the center of the circle, to get the coordinate from the right top left origin
+        returnedPoint.x = returnedPoint.x + CGRectGetMidX(_gradientContainer.frame);
+        returnedPoint.y = CGRectGetMidY(_gradientContainer.frame) - returnedPoint.y;
+        return returnedPoint;
     } else {
-        // square shape - using the intercept theorem we have "actualRadius / r == 0.5*gradientContainer.height / Y"
-        if ( (alpha >= M_PI_4 && alpha < 3 * M_PI_4) || (alpha >= 5 * M_PI_4 && alpha < 7 * M_PI_4) ) {
-            actualRadius = r * ([self paletteDiameter] / 2.0 - [self paddingDistance]) / Y;
-        } else {
-            actualRadius = r * ([self paletteDiameter] / 2.0 - [self paddingDistance]) / X;
+        CGPoint point = touchPoint;
+        if (point.x < [self paddingDistance]) point.x = self.paddingDistance;
+        if (point.x > [self paletteDiameter] - [self paddingDistance]) {
+            point.x = [self paletteDiameter] - [self paddingDistance];
         }
+        if (point.y < [self paddingDistance]) point.y = self.paddingDistance;
+        if (point.y > [self paletteDiameter] - [self paddingDistance]) {
+            point.y = [self paletteDiameter] - [self paddingDistance];
+        }
+        return point;
     }
-
-    returnedPoint.x = fabs(actualRadius) * cos(alpha);
-    returnedPoint.y = fabs(actualRadius) * sin(alpha);
-
-    // we offset the center of the circle, to get the coordinate from the right top left origin
-    returnedPoint.x = returnedPoint.x + CGRectGetMidX(_gradientContainer.frame);
-    returnedPoint.y = CGRectGetMidY(_gradientContainer.frame) - returnedPoint.y;
-    return returnedPoint;
 }
 
 - (RSColorPickerState *)stateForPoint:(CGPoint)point {
