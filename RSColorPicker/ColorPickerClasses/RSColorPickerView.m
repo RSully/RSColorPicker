@@ -131,7 +131,7 @@
 
 - (void)initRoutine {
     self.opaque = YES;
-    self.backgroundColor = [UIColor whiteColor];
+    self.backgroundColor = [UIColor clearColor];
     _colorPickerViewFlags.bitmapNeedsUpdate = NO;
 
     // the view used to select the colour
@@ -225,11 +225,15 @@
 - (void)setCropToCircle:(BOOL)circle {
     _cropToCircle = circle;
 
-    CGRect activeAreaFrame = CGRectInset(_gradientContainer.frame, kSelectionViewSize / 2.0, kSelectionViewSize / 2.0);
+    CGRect activeAreaFrame = CGRectInset(_gradientContainer.frame, [self paddingDistance], [self paddingDistance]);
     if (circle) {
         _gradientContainer.layer.cornerRadius = _gradientContainer.bounds.size.width / 2.0;
         _gradientShape = [UIBezierPath bezierPathWithOvalInRect:_gradientContainer.frame];
         _activeAreaShape = [UIBezierPath bezierPathWithOvalInRect:activeAreaFrame];
+        
+        // there's a chance the selection was outside the bounds
+        CGPoint point = [self validPointForTouch:[state selectionLocationWithSize:_gradientContainer.frame.size.width padding:[self paddingDistance]]];
+        [self updateStateForTouchPoint:point];
     } else {
         _gradientContainer.layer.cornerRadius = 0.0;
         _gradientShape = [UIBezierPath bezierPathWithRect:_gradientContainer.frame];
