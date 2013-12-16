@@ -154,7 +154,7 @@
 }
 
 - (void)resizeOrRescale {
-    if (!self.window) {
+    if (!self.window || self.frame.size.width == 0 || self.frame.size.height == 0) {
         _scale = 0;
         [_loupeLayer disappearAnimated:NO];
         return;
@@ -180,6 +180,7 @@
 }
 
 - (void)setFrame:(CGRect)frame {
+    NSAssert(frame.size.width == frame.size.height, @"RSColorPickerView must be square.");
     [super setFrame:frame];
     [self resizeOrRescale];
 }
