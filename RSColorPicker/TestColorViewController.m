@@ -7,8 +7,8 @@
 //
 
 #import "TestColorViewController.h"
-#import "ColorPickerClasses/RSBrightnessSlider.h"
-#import "ColorPickerClasses/RSOpacitySlider.h"
+#import "RSBrightnessSlider.h"
+#import "RSOpacitySlider.h"
 
 @interface TestColorViewController ()
 

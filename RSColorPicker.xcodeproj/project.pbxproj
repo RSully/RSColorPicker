@@ -28,14 +28,14 @@
 		2B85423B16EFC8970047FFBE /* BitmapRotationManipulator.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B85422416EFC8970047FFBE /* BitmapRotationManipulator.m */; };
 		2B85423C16EFC8970047FFBE /* BitmapScaleManipulator.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B85422616EFC8970047FFBE /* BitmapScaleManipulator.m */; };
 		2B85423D16EFC8970047FFBE /* BGRSLoupeLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B85422816EFC8970047FFBE /* BGRSLoupeLayer.m */; };
-		2B85423E16EFC8970047FFBE /* RSBrightnessSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B85422A16EFC8970047FFBE /* RSBrightnessSlider.m */; };
 		2B85423F16EFC8970047FFBE /* RSColorFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B85422C16EFC8970047FFBE /* RSColorFunctions.m */; };
 		2B85424016EFC8970047FFBE /* RSColorPickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B85422E16EFC8970047FFBE /* RSColorPickerView.m */; };
 		2B85424116EFC8970047FFBE /* RSSelectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B85423016EFC8970047FFBE /* RSSelectionView.m */; };
-		7FB5E81717455D820034FFB8 /* RSOpacitySlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FB5E81617455D820034FFB8 /* RSOpacitySlider.m */; };
 		930D5A8016DE4D36006C38D4 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 930D5A7F16DE4D36006C38D4 /* Default-568h@2x.png */; };
 		94A10AFB1799B6A900F0BD7E /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94A10AFA1799B6A900F0BD7E /* Accelerate.framework */; };
 		94A10AFF179DB67C00F0BD7E /* RSGenerateOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 94A10AFE179DB67C00F0BD7E /* RSGenerateOperation.m */; };
+		FA5AA0EA185F6477000355FE /* RSBrightnessSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = FA5AA0E7185F6477000355FE /* RSBrightnessSlider.m */; };
+		FA5AA0EB185F6477000355FE /* RSOpacitySlider.m in Sources */ = {isa = PBXBuildFile; fileRef = FA5AA0E9185F6477000355FE /* RSOpacitySlider.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -78,20 +78,20 @@
 		2B85422616EFC8970047FFBE /* BitmapScaleManipulator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BitmapScaleManipulator.m; sourceTree = "<group>"; };
 		2B85422716EFC8970047FFBE /* BGRSLoupeLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BGRSLoupeLayer.h; sourceTree = "<group>"; };
 		2B85422816EFC8970047FFBE /* BGRSLoupeLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BGRSLoupeLayer.m; sourceTree = "<group>"; };
-		2B85422916EFC8970047FFBE /* RSBrightnessSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSBrightnessSlider.h; sourceTree = "<group>"; };
-		2B85422A16EFC8970047FFBE /* RSBrightnessSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSBrightnessSlider.m; sourceTree = "<group>"; };
 		2B85422B16EFC8970047FFBE /* RSColorFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSColorFunctions.h; sourceTree = "<group>"; };
 		2B85422C16EFC8970047FFBE /* RSColorFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSColorFunctions.m; sourceTree = "<group>"; };
 		2B85422D16EFC8970047FFBE /* RSColorPickerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSColorPickerView.h; sourceTree = "<group>"; };
 		2B85422E16EFC8970047FFBE /* RSColorPickerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSColorPickerView.m; sourceTree = "<group>"; };
 		2B85422F16EFC8970047FFBE /* RSSelectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSSelectionView.h; sourceTree = "<group>"; };
 		2B85423016EFC8970047FFBE /* RSSelectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSSelectionView.m; sourceTree = "<group>"; };
-		7FB5E81517455D820034FFB8 /* RSOpacitySlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSOpacitySlider.h; sourceTree = "<group>"; };
-		7FB5E81617455D820034FFB8 /* RSOpacitySlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSOpacitySlider.m; sourceTree = "<group>"; };
 		930D5A7F16DE4D36006C38D4 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		94A10AFA1799B6A900F0BD7E /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		94A10AFD179DB67C00F0BD7E /* RSGenerateOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSGenerateOperation.h; sourceTree = "<group>"; };
 		94A10AFE179DB67C00F0BD7E /* RSGenerateOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSGenerateOperation.m; sourceTree = "<group>"; };
+		FA5AA0E6185F6477000355FE /* RSBrightnessSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSBrightnessSlider.h; sourceTree = "<group>"; };
+		FA5AA0E7185F6477000355FE /* RSBrightnessSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSBrightnessSlider.m; sourceTree = "<group>"; };
+		FA5AA0E8185F6477000355FE /* RSOpacitySlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSOpacitySlider.h; sourceTree = "<group>"; };
+		FA5AA0E9185F6477000355FE /* RSOpacitySlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSOpacitySlider.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -147,6 +147,10 @@
 				1FA35E6F13F57B2800A6B347 /* RSColorPickerAppDelegate.m */,
 				2B12A0DD1792FF46007F2A0A /* TestColorViewController.h */,
 				2B12A0DE1792FF46007F2A0A /* TestColorViewController.m */,
+				FA5AA0E6185F6477000355FE /* RSBrightnessSlider.h */,
+				FA5AA0E7185F6477000355FE /* RSBrightnessSlider.m */,
+				FA5AA0E8185F6477000355FE /* RSOpacitySlider.h */,
+				FA5AA0E9185F6477000355FE /* RSOpacitySlider.m */,
 				2B85420A16EFC8970047FFBE /* ColorPickerClasses */,
 				1FA35E6613F57B2700A6B347 /* Supporting Files */,
 			);
@@ -170,10 +174,6 @@
 				2B85420B16EFC8970047FFBE /* ANImageBitmapRep */,
 				2B85422716EFC8970047FFBE /* BGRSLoupeLayer.h */,
 				2B85422816EFC8970047FFBE /* BGRSLoupeLayer.m */,
-				2B85422916EFC8970047FFBE /* RSBrightnessSlider.h */,
-				2B85422A16EFC8970047FFBE /* RSBrightnessSlider.m */,
-				7FB5E81517455D820034FFB8 /* RSOpacitySlider.h */,
-				7FB5E81617455D820034FFB8 /* RSOpacitySlider.m */,
 				2B85422B16EFC8970047FFBE /* RSColorFunctions.h */,
 				2B85422C16EFC8970047FFBE /* RSColorFunctions.m */,
 				2B85422D16EFC8970047FFBE /* RSColorPickerView.h */,
@@ -317,22 +317,22 @@
 				2B85423116EFC8970047FFBE /* ANImageBitmapRep.m in Sources */,
 				2B85423216EFC8970047FFBE /* BitmapContextRep.m in Sources */,
 				2B85423316EFC8970047FFBE /* NSImage+ANImageBitmapRep.m in Sources */,
+				FA5AA0EA185F6477000355FE /* RSBrightnessSlider.m in Sources */,
 				2B85423416EFC8970047FFBE /* OSCommonImage.m in Sources */,
 				2B85423516EFC8970047FFBE /* UIImage+ANImageBitmapRep.m in Sources */,
 				2B85423616EFC8970047FFBE /* CGContextCreator.m in Sources */,
 				2B85423716EFC8970047FFBE /* CGImageContainer.m in Sources */,
 				2B85423816EFC8970047FFBE /* BitmapContextManipulator.m in Sources */,
+				FA5AA0EB185F6477000355FE /* RSOpacitySlider.m in Sources */,
 				2B85423916EFC8970047FFBE /* BitmapCropManipulator.m in Sources */,
 				2B85423A16EFC8970047FFBE /* BitmapDrawManipulator.m in Sources */,
 				2B85423B16EFC8970047FFBE /* BitmapRotationManipulator.m in Sources */,
 				2B85423C16EFC8970047FFBE /* BitmapScaleManipulator.m in Sources */,
 				2B85423D16EFC8970047FFBE /* BGRSLoupeLayer.m in Sources */,
-				2B85423E16EFC8970047FFBE /* RSBrightnessSlider.m in Sources */,
 				2B85423F16EFC8970047FFBE /* RSColorFunctions.m in Sources */,
 				2B85424016EFC8970047FFBE /* RSColorPickerView.m in Sources */,
 				2B85424116EFC8970047FFBE /* RSSelectionView.m in Sources */,
 				2B12A0DF1792FF46007F2A0A /* TestColorViewController.m in Sources */,
-				7FB5E81717455D820034FFB8 /* RSOpacitySlider.m in Sources */,
 				94A10AFF179DB67C00F0BD7E /* RSGenerateOperation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

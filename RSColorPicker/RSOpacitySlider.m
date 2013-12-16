@@ -64,11 +64,13 @@ UIImage* RSOpacityBackgroundImage(CGFloat length, UIColor *color) {
 	[self addTarget:self action:@selector(myValueChanged:) forControlEvents:UIControlEventValueChanged];
 }
 
+/*
 - (CGRect)trackRectForBounds:(CGRect)bounds
 {
 	//to hide the track view
 	return CGRectMake(0, ceilf(bounds.size.height / 2), bounds.size.width, 0);
 }
+*/
 
 -(void)myValueChanged:(id)notif {
 	_colorPicker.opacity = self.value;
