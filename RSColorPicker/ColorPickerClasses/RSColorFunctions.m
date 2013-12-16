@@ -65,16 +65,6 @@ void RSGetComponentsForColor(float *components, UIColor *color)
     }
 }
 
-CGSize RSCGSizeWithScale(CGSize size, CGFloat scale)
-{
-    return CGSizeMake(size.width * scale, size.height * scale);
-}
-
-CGPoint RSCGPointWithScale(CGPoint point, CGFloat scale)
-{
-    return CGPointMake(point.x * scale, point.y * scale);
-}
-
 UIImage * RSUIImageWithScale(UIImage *img, CGFloat scale)
 {
     return [UIImage imageWithCGImage:img.CGImage scale:scale orientation:UIImageOrientationUp];

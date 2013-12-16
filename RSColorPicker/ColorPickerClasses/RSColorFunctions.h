@@ -15,6 +15,4 @@ void RSHSVFromPixel(BMPixel pixel, CGFloat *h, CGFloat *s, CGFloat *v);
 // four floats will be placed into `components`
 void RSGetComponentsForColor(float *components, UIColor *color);
 
-CGSize RSCGSizeWithScale(CGSize size, CGFloat scale);
-CGPoint RSCGPointWithScale(CGPoint point, CGFloat scale);
 UIImage * RSUIImageWithScale(UIImage *img, CGFloat scale);
