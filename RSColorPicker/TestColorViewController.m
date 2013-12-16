@@ -29,6 +29,7 @@
 
     self.view.backgroundColor = [self randomColorOpaque:YES];
     
+    self.navigationController.navigationBar.translucent = NO;
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Push" style:UIBarButtonItemStyleBordered target:self action:@selector(pushNext:)];
     
     // View that displays color picker (needs to be square)
