@@ -10,29 +10,6 @@
 #import "RSColorPickerView.h"
 
 /**
- * Creates Default Bitmap Context for drawing into.
- */
-CGContextRef RSBitmapContextCreateDefault(CGSize size){
-	
-	size_t width = size.width;
-	size_t height = size.height;
-	
-	size_t bytesPerRow = width * 4;        // bytes per row - one byte each for argb
-	bytesPerRow += (16 - bytesPerRow%16)%16; // ensure it is a multiple of 16
-	
-	CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-	CGContextRef ctx = CGBitmapContextCreate(NULL,         //Automatic Alocation
-														  width,        //size_t width
-														  height,       //size_t Height
-														  8,            //size_t bitsPerComponent
-														  bytesPerRow,  //size_t bytesPerRow
-														  colorSpace,   //CGColorSpaceRef space
-														  kCGImageAlphaPremultipliedFirst );//CGBitmapInfo bitmapInfo
-	CGColorSpaceRelease(colorSpace);
-	return ctx;
-}
-
-/**
  * Returns Image with hourglass looking slider that looks something like:
  *
  *  6 ______ 5
@@ -51,7 +28,7 @@ UIImage* RSHourGlassThumbImage(CGSize size, CGFloat cWidth){
 	CGFloat height = size.height;
 	
 	//Setup Context
-	CGContextRef ctx = RSBitmapContextCreateDefault(size);
+	CGContextRef ctx = [CGContextCreator newARGBBitmapContextWithSize:size];
 	
 	//Set Colors
 	CGContextSetFillColorWithColor(ctx, [UIColor blackColor].CGColor);
@@ -109,7 +86,7 @@ UIImage* RSArrowLoopThumbImage(CGSize size, CGSize loopSize){
    insideRect.origin.y = (size.height - loopSize.height)/2;
    
    //Setup Context
-	CGContextRef ctx = RSBitmapContextCreateDefault(size);
+	CGContextRef ctx = [CGContextCreator newARGBBitmapContextWithSize:size];
    
    //Set Colors
 	CGContextSetFillColorWithColor(ctx, [UIColor blackColor].CGColor);

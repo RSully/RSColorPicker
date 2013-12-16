@@ -7,8 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
-extern CGContextRef RSBitmapContextCreateDefault(CGSize size);
+#import "CGContextCreator.h"
 
 @class RSColorPickerView;
 
