@@ -53,7 +53,8 @@
         }
     }
 
-    // Use Accelerate.framework to compute
+    // Use Accelerate.framework to compute the distance and angle of every
+    // pixel from the center of the bitmap.
     vvatan2f(atan2Vals, preComputeY, preComputeX, &arrSize);
     vDSP_vdist(preComputeX, 1, preComputeY, 1, distVals, 1, arrSize);
 

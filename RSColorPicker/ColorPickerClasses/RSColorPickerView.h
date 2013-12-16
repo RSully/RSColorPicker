@@ -23,10 +23,28 @@
 @interface RSColorPickerView : UIView
 
 @property (nonatomic) BOOL cropToCircle;
+
+/**
+ * Changes the brightness of the current selection
+ */
 @property (nonatomic) CGFloat brightness;
+
+/**
+ * Changes the opacity of the current selection.
+ */
 @property (nonatomic) CGFloat opacity;
-@property (nonatomic) UIColor *selectionColor;
+
+/**
+ * Changes the selection color. This may modify `brightness` and
+ * `opacity` as necessary.
+ */
+@property (nonatomic) UIColor * selectionColor;
+
 @property (nonatomic, weak) id <RSColorPickerViewDelegate> delegate;
+
+/**
+ * Get the point on the color picker view that corresponds to the current selection.
+ */
 @property (nonatomic, readonly) CGPoint selection;
 
 - (UIColor *)colorAtPoint:(CGPoint)point; // Returns UIColor at a point in the RSColorPickerView

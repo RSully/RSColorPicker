@@ -13,8 +13,9 @@
 #import "ANImageBitmapRep.h"
 #import "RSOpacitySlider.h"
 #import "RSGenerateOperation.h"
+#import "RSColorPickerState.h"
 
-#define kSelectionViewSize 22.0
+#define kSelectionViewSize 22
 
 @interface RSColorPickerView () {
     struct {
@@ -22,29 +23,83 @@
         unsigned int badTouch:1;
         unsigned int delegateDidChangeSelection:1;
     } _colorPickerViewFlags;
+    RSColorPickerState * state;
 }
 
 @property (nonatomic) ANImageBitmapRep *rep;
+
+/**
+ * A path which represents the shape of the color picker palette.
+ */
 @property (nonatomic) UIBezierPath *gradientShape;
+
+/**
+ * A path which represents the shape of the color picker palette,
+ * padded by 1/2 the selectionViews's size.
+ */
 @property (nonatomic) UIBezierPath *activeAreaShape;
 
 @property (nonatomic) RSSelectionView *selectionView;
+
+/**
+ * The image view which will ultimately contain the generated
+ * palette image.
+ */
 @property (nonatomic) UIImageView *gradientView;
+
+/**
+ * The view which contains there levels:
+ * - brightnessView: a black UIView
+ * - gradientView: the palette image
+ * - opacityView: a checkerboard pattern
+ */
 @property (nonatomic) UIView *gradientContainer;
+
+/**
+ * A black UIView. As the brightness is lowered, the opacity
+ * of gradientView is lowered and thus this view becomes more
+ * visible.
+ */
 @property (nonatomic) UIView *brightnessView;
+
+/**
+ * A checkerboard pattern indicating opacity.
+ * As opacity is lowered, the alpha of this view becomes
+ * closer to 1.
+ */
 @property (nonatomic) UIView *opacityView;
 
 @property (nonatomic) BGRSLoupeLayer *loupeLayer;
-@property (nonatomic) CGPoint selection;
 
+/**
+ * Gets updated to the scale of the current UIWindow.
+ */
 @property (nonatomic) CGFloat scale;
 
 - (void)initRoutine;
 
+/**
+ * Called to generate the _rep ivar and set it.
+ */
 - (void)genBitmap;
-- (void)updateSelectionLocation;
 
+/**
+ * Called to update the UI for the current state.
+ */
+- (void)handleStateChanged;
+
+/**
+ * Called to handle a state change (optionally disabling CA Actions for loupe).
+ */
+- (void)handleStateChangedDisableActions:(BOOL)disable;
+
+// touch handling
 - (CGPoint)validPointForTouch:(CGPoint)touchPoint;
+- (RSColorPickerState *)stateForPoint:(CGPoint)point;
+- (void)updateStateForTouchPoint:(CGPoint)point;
+
+// metrics
+- (CGFloat)paddingDistance;
 - (CGPoint)convertGradientPointToView:(CGPoint)point;
 - (CGPoint)convertViewPointToGradient:(CGPoint)point;
 
@@ -82,8 +137,6 @@
     // the view used to select the colour
     _selectionView = [[RSSelectionView alloc] initWithFrame:CGRectMake(0.0, 0.0, kSelectionViewSize, kSelectionViewSize)];
 
-    _selection = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
-
     _gradientContainer = [[UIView alloc] initWithFrame:self.bounds];
     _gradientContainer.backgroundColor = [UIColor blackColor];
     _gradientContainer.clipsToBounds = YES;
@@ -103,11 +156,10 @@
     _opacityView.backgroundColor = [UIColor colorWithPatternImage:opacityBackground];
     [_gradientContainer addSubview:_opacityView];
 
-    [self updateSelectionLocationDisableActions:NO];
+    [self handleStateChangedDisableActions:NO];
     [self addSubview:_selectionView];
 
     [self setCropToCircle:NO];
-    _selectionColor = [UIColor whiteColor];
 }
 
 - (void)dealloc {
@@ -123,14 +175,10 @@
 
     // Anything that depends on _scale to init needs to be here
     _scale = self.window.screen.scale;
-
     _gradientContainer.layer.contentsScale = _scale;
 
     _colorPickerViewFlags.bitmapNeedsUpdate = YES;
     [self genBitmap];
-
-    self.selectionColor = _selectionColor;
-    self.cropToCircle = _cropToCircle;
 }
 
 #pragma mark - Business
@@ -138,8 +186,7 @@
 - (void)genBitmap {
     if (!_colorPickerViewFlags.bitmapNeedsUpdate) return;
 
-    CGFloat paddingDistance = _selectionView.bounds.size.width / 2.0;
-    _rep = [[self class] bitmapForDiameter:_gradientView.bounds.size.width scale:_scale padding:paddingDistance shouldCache:YES];
+    _rep = [[self class] bitmapForDiameter:_gradientView.bounds.size.width scale:_scale padding:[self paddingDistance] shouldCache:YES];
 
     _colorPickerViewFlags.bitmapNeedsUpdate = NO;
     _gradientView.image = RSUIImageWithScale([_rep image], _scale);
@@ -148,44 +195,37 @@
 #pragma mark - Getters
 
 - (UIColor *)colorAtPoint:(CGPoint)point {
-    if (!_rep) return nil;
+    return [self stateForPoint:point].color;
+}
 
-    CGPoint convertedPoint = [self convertViewPointToGradient:point];
-    convertedPoint.x = round(convertedPoint.x);
-    convertedPoint.y = round(convertedPoint.y);
+- (CGFloat)brightness {
+    return state.brightness;
+}
 
-    if (convertedPoint.x < 0) convertedPoint.x = 0;
-    if (convertedPoint.x >= _gradientContainer.frame.size.width) convertedPoint.x = _gradientContainer.bounds.size.width - 1;
-    if (convertedPoint.y < 0) convertedPoint.y = 0;
-    if (convertedPoint.y >= _gradientContainer.bounds.size.height) convertedPoint.y = _gradientContainer.bounds.size.height - 1;
+- (CGFloat)opacity {
+    return state.alpha;
+}
 
-    BMPixel pixel = [_rep getPixelAtPoint:BMPointFromPoint(RSCGPointWithScale(convertedPoint, _scale))];
-    UIColor *rgbColor = [UIColor colorWithRed:pixel.red green:pixel.green blue:pixel.blue alpha:1];
-    CGFloat h, s, v;
-    [rgbColor getHue:&h saturation:&s brightness:&v alpha:NULL];
-    return [UIColor colorWithHue:h saturation:s brightness:_brightness alpha:_opacity];
+- (UIColor *)selectionColor {
+    return state.color;
 }
 
 #pragma mark - Setters
 
 - (void)setBrightness:(CGFloat)bright {
-    _brightness = bright;
-
-    _gradientView.alpha = _brightness;
-    [self updateSelectionAtPoint:_selection];
+    state = [state stateBySettingBrightness:bright];
+    [self handleStateChanged];
 }
 
 - (void)setOpacity:(CGFloat)opacity {
-    _opacity = opacity;
-
-    _opacityView.alpha = 1 - _opacity;
-    [self updateSelectionAtPoint:_selection];
+    state = [state stateBySettingAlpha:opacity];
+    [self handleStateChanged];
 }
 
 - (void)setCropToCircle:(BOOL)circle {
     _cropToCircle = circle;
 
-    CGRect activeAreaFrame = CGRectInset(_gradientContainer.frame, _selectionView.bounds.size.width / 2.0, _selectionView.bounds.size.height / 2.0);
+    CGRect activeAreaFrame = CGRectInset(_gradientContainer.frame, kSelectionViewSize / 2.0, kSelectionViewSize / 2.0);
     if (circle) {
         _gradientContainer.layer.cornerRadius = _gradientContainer.bounds.size.width / 2.0;
         _gradientShape = [UIBezierPath bezierPathWithOvalInRect:_gradientContainer.frame];
@@ -195,38 +235,13 @@
         _gradientShape = [UIBezierPath bezierPathWithRect:_gradientContainer.frame];
         _activeAreaShape = [UIBezierPath bezierPathWithRect:activeAreaFrame];
     }
-    _selection = [self validPointForTouch:_selection];
-    [self updateSelectionLocation];
+    
+    [self handleStateChanged];
 }
 
 - (void)setSelectionColor:(UIColor *)selectionColor {
-    // Force color into correct colorspace to get HSV from
-    float components[4];
-    RSGetComponentsForColor(components, selectionColor);
-    selectionColor = [UIColor colorWithRed:components[0] green:components[1] blue:components[2] alpha:components[3]];
-
-    // convert to HSV
-    CGFloat h, s, v, o;
-    BOOL gotHSV = [selectionColor getHue:&h saturation:&s brightness:&v alpha:&o];
-    if (!gotHSV) {
-        return;
-    }
-    CGFloat paddingDistance = (_selectionView.bounds.size.width / 2.0) * _scale;
-
-    CGFloat radius = (_rep.bitmapSize.x / 2.0);
-    CGFloat angle = h * (2.0 * M_PI);
-    CGFloat r_distance = s * radius;
-    r_distance = fmax(fmin(r_distance, r_distance - paddingDistance), 0);
-
-    CGFloat pointX = (cos(angle) * r_distance) + radius;
-    CGFloat pointY = radius - (sin(angle) * r_distance);
-
-    _selection = [self convertGradientPointToView:RSCGPointWithScale(CGPointMake(pointX, pointY), _scale == 0 ? 1 : 1/_scale)];
-    _selectionColor = selectionColor;
-
-    [self updateSelectionLocation];
-    [self setBrightness:v];
-    [self setOpacity:o];
+    state = [[RSColorPickerState alloc] initWithColor:selectionColor];
+    [self handleStateChanged];
 }
 
 - (void)setDelegate:(id<RSColorPickerViewDelegate>)delegate {
@@ -234,47 +249,55 @@
     _colorPickerViewFlags.delegateDidChangeSelection = [_delegate respondsToSelector:@selector(colorPickerDidChangeSelection:)];
 }
 
-#pragma mark - Selection updates
+#pragma mark - Selection updates -
 
-- (void)updateSelectionLocation {
-    [self updateSelectionLocationDisableActions:YES];
+- (void)handleStateChanged {
+    [self handleStateChangedDisableActions:YES];
 }
 
-- (void)updateSelectionLocationDisableActions:(BOOL)disable {
+- (void)handleStateChangedDisableActions:(BOOL)disable {
     if (disable) {
         NSDictionary *disabledActions = @{@"position" : [NSNull null], @"frame" : [NSNull null], @"center" : [NSNull null]};
         _loupeLayer.actions = disabledActions;
         _selectionView.layer.actions = disabledActions;
     }
-
-    _selectionView.center = _selection;
-    _loupeLayer.position = _selection;
+    
+    // update positions
+    CGPoint selectionLocation = [state selectionLocationWithSize:_gradientContainer.frame.size.width padding:[self paddingDistance]];
+    _selectionView.center = selectionLocation;
+    _loupeLayer.position = selectionLocation;
+    
     // Make loupeLayer sharp on screen
     CGRect loupeFrame = _loupeLayer.frame;
     loupeFrame.origin = CGPointMake(round(loupeFrame.origin.x), round(loupeFrame.origin.y));
     _loupeLayer.frame = loupeFrame;
-
     [_loupeLayer setNeedsDisplay];
-
+    
+    // re-enable actions
     _loupeLayer.actions = nil;
     _selectionView.layer.actions = nil;
-}
-
-- (void)updateSelectionAtPoint:(CGPoint)point {
-    CGPoint circlePoint = [self validPointForTouch:point];
-    _selection = circlePoint;
-
-    UIColor *newColor = [self colorAtPoint:circlePoint];
-    if (newColor) {
-        _selectionColor = newColor;
-        _selectionView.selectedColor = _selectionColor;
-    }
-
+    
+    // set colors and opacities
+    _selectionView.selectedColor = [self selectionColor];
+    _gradientView.alpha = self.brightness;
+    _opacityView.alpha = 1 - self.opacity;
+    
+    // notify delegate
     if (_colorPickerViewFlags.delegateDidChangeSelection) {
         [_delegate colorPickerDidChangeSelection:self];
     }
+}
 
-    [self updateSelectionLocation];
+- (void)updateStateForTouchPoint:(CGPoint)point {
+    point = [self validPointForTouch:point];
+    state = [self stateForPoint:point];
+    [self handleStateChanged];
+}
+
+#pragma mark - Metrics -
+
+- (CGFloat)paddingDistance {
+    return kSelectionViewSize / 2.0;
 }
 
 #pragma mark - Touch events
@@ -283,6 +306,7 @@
     if ([_activeAreaShape containsPoint:touchPoint]) {
         return touchPoint;
     }
+    
     // We compute the right point on the gradient border
     CGPoint returnedPoint;
 
@@ -300,13 +324,13 @@
     // 'actual radius' is the distance between the center and the border of the gradient
     CGFloat actualRadius;
     if (_cropToCircle) {
-        actualRadius = _gradientShape.bounds.size.width / 2.0 - _selectionView.bounds.size.width / 2.0;
+        actualRadius = _gradientShape.bounds.size.width / 2.0 - kSelectionViewSize / 2.0;
     } else {
         // square shape - using the intercept theorem we have "actualRadius / r == 0.5*gradientContainer.height / Y"
         if ( (alpha >= M_PI_4 && alpha < 3 * M_PI_4) || (alpha >= 5 * M_PI_4 && alpha < 7 * M_PI_4) ) {
-            actualRadius = r * (_gradientContainer.bounds.size.height / 2.0 - _selectionView.bounds.size.height / 2.0 ) / Y;
+            actualRadius = r * (_gradientContainer.bounds.size.height / 2.0 - kSelectionViewSize / 2.0 ) / Y;
         } else {
-            actualRadius = r * (_gradientContainer.bounds.size.width / 2.0 - _selectionView.bounds.size.width / 2.0) / X;
+            actualRadius = r * (_gradientContainer.bounds.size.width / 2.0 - kSelectionViewSize / 2.0) / X;
         }
     }
 
@@ -319,6 +343,14 @@
     return returnedPoint;
 }
 
+- (RSColorPickerState *)stateForPoint:(CGPoint)point {
+    RSColorPickerState * newState = [RSColorPickerState stateForPoint:point
+                                                                 size:_gradientContainer.frame.size.width
+                                                              padding:[self paddingDistance]];
+    newState = [[newState stateBySettingAlpha:self.opacity] stateBySettingBrightness:self.brightness];
+    return newState;
+}
+
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     // Lazily load loupeLayer
     if (!_loupeLayer) {
@@ -327,7 +359,7 @@
     [_loupeLayer appearInColorPicker:self];
 
     CGPoint point = [[touches anyObject] locationInView:self];
-    [self updateSelectionAtPoint:point];
+    [self updateStateForTouchPoint:point];
 
     if ([_delegate respondsToSelector:@selector(colorPicker:touchesBegan:withEvent:)]) {
         [_delegate colorPicker:self touchesBegan:touches withEvent:event];
@@ -338,14 +370,16 @@
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
     if (_colorPickerViewFlags.badTouch) return;
     CGPoint point = [[touches anyObject] locationInView:self];
-    [self updateSelectionAtPoint:point];
+    [self updateStateForTouchPoint:point];
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
     if (!_colorPickerViewFlags.badTouch) {
         CGPoint point = [[touches anyObject] locationInView:self];
-        [self updateSelectionAtPoint:point];
+        [self updateStateForTouchPoint:point];
     }
+    
+    // TODO: remove everything about badTouch
     _colorPickerViewFlags.badTouch = NO;
     [_loupeLayer disappear];
 
@@ -355,7 +389,7 @@
 
 }
 
--(void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
+- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
     [_loupeLayer disappear];
 }
 
