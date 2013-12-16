@@ -70,22 +70,9 @@
     self = [super initWithCoder:aDecoder];
     if (self) {
         [self initRoutine];
-
-//        if ([aDecoder containsValueForKey:@"selectionColor"]) {
-//            _selectionColor = [aDecoder decodeObjectForKey:@"selectionColor"];
-//        }
-//        if ([aDecoder containsValueForKey:@"cropToCircle"]) {
-//            _cropToCircle = [aDecoder decodeBoolForKey:@"cropToCircle"];
-//        }
     }
     return self;
 }
-
-//- (void)encodeWithCoder:(NSCoder *)aCoder {
-//    [super encodeWithCoder:aCoder];
-//    [aCoder encodeObject:self.selectionColor forKey:@"selectionColor"];
-//    [aCoder encodeBool:self.cropToCircle forKey:@"cropToCircle"];
-//}
 
 - (void)initRoutine {
     self.opaque = YES;
@@ -127,7 +114,7 @@
     _loupeLayer = nil;
 }
 
--(void)didMoveToWindow {
+- (void)didMoveToWindow {
     if (!self.window) {
         _scale = 0;
         [_loupeLayer disappearAnimated:NO];
@@ -160,7 +147,7 @@
 
 #pragma mark - Getters
 
-- (UIColor*)colorAtPoint:(CGPoint)point {
+- (UIColor *)colorAtPoint:(CGPoint)point {
     if (!_rep) return nil;
 
     CGPoint convertedPoint = [self convertViewPointToGradient:point];
@@ -390,7 +377,7 @@ static NSCache *generatedBitmaps;
 static NSOperationQueue *generateQueue;
 static dispatch_queue_t backgroundQueue;
 
-+(void)initialize {
++ (void)initialize {
     generatedBitmaps = [NSCache new];
     generateQueue = [NSOperationQueue new];
     generateQueue.maxConcurrentOperationCount = NSOperationQueueDefaultMaxConcurrentOperationCount;
@@ -399,22 +386,25 @@ static dispatch_queue_t backgroundQueue;
 
 #pragma mark Background methods
 
-+(void)prepareForDiameter:(CGFloat)diameter {
++ (void)prepareForDiameter:(CGFloat)diameter {
     [self prepareForDiameter:diameter padding:kSelectionViewSize/2.0];
 }
-+(void)prepareForDiameter:(CGFloat)diameter padding:(CGFloat)padding {
+
++ (void)prepareForDiameter:(CGFloat)diameter padding:(CGFloat)padding {
     [self prepareForDiameter:diameter scale:1.0 padding:padding];
 }
-+(void)prepareForDiameter:(CGFloat)diameter scale:(CGFloat)scale {
+
++ (void)prepareForDiameter:(CGFloat)diameter scale:(CGFloat)scale {
     [self prepareForDiameter:diameter scale:scale padding:kSelectionViewSize/2.0];
 }
-+(void)prepareForDiameter:(CGFloat)diameter scale:(CGFloat)scale padding:(CGFloat)padding {
+
++ (void)prepareForDiameter:(CGFloat)diameter scale:(CGFloat)scale padding:(CGFloat)padding {
     [self prepareForDiameter:diameter scale:scale padding:padding inBackground:YES];
 }
 
 #pragma mark Prep method
 
-+(void)prepareForDiameter:(CGFloat)diameter scale:(CGFloat)scale padding:(CGFloat)padding inBackground:(BOOL)bg {
++ (void)prepareForDiameter:(CGFloat)diameter scale:(CGFloat)scale padding:(CGFloat)padding inBackground:(BOOL)bg {
     void (*function)(dispatch_queue_t, dispatch_block_t) = bg ? dispatch_async : dispatch_sync;
     function(backgroundQueue, ^{
         [self bitmapForDiameter:diameter scale:scale padding:padding shouldCache:YES];
@@ -423,7 +413,7 @@ static dispatch_queue_t backgroundQueue;
 
 #pragma mark Generate helper method
 
-+(ANImageBitmapRep*)bitmapForDiameter:(CGFloat)diameter scale:(CGFloat)scale padding:(CGFloat)paddingDistance shouldCache:(BOOL)cache {
++ (ANImageBitmapRep *)bitmapForDiameter:(CGFloat)diameter scale:(CGFloat)scale padding:(CGFloat)paddingDistance shouldCache:(BOOL)cache {
     RSGenerateOperation *repOp = nil;
 
     // Handle the scale here so the operation can just work with pixels directly

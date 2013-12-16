@@ -14,7 +14,7 @@
 @class RSColorPickerView, BGRSLoupeLayer;
 
 @protocol RSColorPickerViewDelegate <NSObject>
--(void)colorPickerDidChangeSelection:(RSColorPickerView *)cp;
+- (void)colorPickerDidChangeSelection:(RSColorPickerView *)cp;
 @optional
 - (void)colorPicker:(RSColorPickerView *)colorPicker touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event;
 - (void)colorPicker:(RSColorPickerView *)colorPicker touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event;
@@ -29,11 +29,11 @@
 @property (nonatomic, weak) id <RSColorPickerViewDelegate> delegate;
 @property (nonatomic, readonly) CGPoint selection;
 
--(UIColor *)colorAtPoint:(CGPoint)point; // Returns UIColor at a point in the RSColorPickerView
+- (UIColor *)colorAtPoint:(CGPoint)point; // Returns UIColor at a point in the RSColorPickerView
 
-+(void)prepareForDiameter:(CGFloat)diameter;
-+(void)prepareForDiameter:(CGFloat)diameter padding:(CGFloat)padding;
-+(void)prepareForDiameter:(CGFloat)diameter scale:(CGFloat)scale;
-+(void)prepareForDiameter:(CGFloat)diameter scale:(CGFloat)scale padding:(CGFloat)padding;
-+(void)prepareForDiameter:(CGFloat)diameter scale:(CGFloat)scale padding:(CGFloat)padding inBackground:(BOOL)bg;
++ (void)prepareForDiameter:(CGFloat)diameter;
++ (void)prepareForDiameter:(CGFloat)diameter padding:(CGFloat)padding;
++ (void)prepareForDiameter:(CGFloat)diameter scale:(CGFloat)scale;
++ (void)prepareForDiameter:(CGFloat)diameter scale:(CGFloat)scale padding:(CGFloat)padding;
++ (void)prepareForDiameter:(CGFloat)diameter scale:(CGFloat)scale padding:(CGFloat)padding inBackground:(BOOL)bg;
 @end

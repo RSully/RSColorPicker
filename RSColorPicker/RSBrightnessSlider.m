@@ -120,7 +120,7 @@ UIImage * RSArrowLoopThumbImage(CGSize size, CGSize loopSize){
  
 @implementation RSBrightnessSlider
 
--(id)initWithFrame:(CGRect)frame {
+- (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
         [self initRoutine];
@@ -136,7 +136,7 @@ UIImage * RSArrowLoopThumbImage(CGSize size, CGSize loopSize){
     return self;
 }
 
--(void)initRoutine {
+- (void)initRoutine {
     self.minimumValue = 0.0;
     self.maximumValue = 1.0;
     self.continuous = YES;
@@ -156,12 +156,11 @@ UIImage * RSArrowLoopThumbImage(CGSize size, CGSize loopSize){
 }
 */
 
--(void)myValueChanged:(id)notif {
+- (void)myValueChanged:(id)notif {
     [_colorPicker setBrightness:self.value];
 }
 
-- (void)drawRect:(CGRect)rect
-{
+- (void)drawRect:(CGRect)rect {
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     CGColorSpaceRef space = CGColorSpaceCreateDeviceGray();
     NSArray *colors = @[(id)[UIColor colorWithWhite:0 alpha:1].CGColor,
@@ -174,7 +173,7 @@ UIImage * RSArrowLoopThumbImage(CGSize size, CGSize loopSize){
     CGColorSpaceRelease(space);
 }
 
--(void)setColorPicker:(RSColorPickerView*)cp {
+- (void)setColorPicker:(RSColorPickerView*)cp {
     _colorPicker = cp;
     if (!_colorPicker) { return; }
     self.value = [_colorPicker brightness];

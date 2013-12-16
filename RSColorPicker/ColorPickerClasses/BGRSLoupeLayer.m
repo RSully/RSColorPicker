@@ -49,8 +49,7 @@
 const CGFloat LOUPE_SIZE = 85, SHADOW_SIZE = 6, RIM_THICKNESS = 3.0;
 const int NUM_PIXELS = 5, NUM_SKIP = 15;
 
-- (id)init
-{
+- (id)init {
     self = [super init];
     if (self) {
         CGFloat size = LOUPE_SIZE+2*SHADOW_SIZE;
@@ -69,14 +68,12 @@ const int NUM_PIXELS = 5, NUM_SKIP = 15;
     return self;
 }
 
-- (void)dealloc
-{
+- (void)dealloc {
     self.colorPicker = nil;
     if (_gridCirclePath) CGPathRelease(_gridCirclePath);
 }
 
-- (struct CGPath *)gridCirclePath
-{
+- (struct CGPath *)gridCirclePath {
     if (_gridCirclePath == NULL) {
         CGMutablePathRef circlePath = CGPathCreateMutable();
         const CGFloat radius = LOUPE_SIZE/2;
@@ -86,8 +83,7 @@ const int NUM_PIXELS = 5, NUM_SKIP = 15;
     return _gridCirclePath;
 }
 
-- (UIImage *)loupeImage
-{
+- (UIImage *)loupeImage {
     UIGraphicsBeginImageContextWithOptions(self.bounds.size, NO, 0);
     
     CGContextRef ctx = UIGraphicsGetCurrentContext();
@@ -152,8 +148,7 @@ const int NUM_PIXELS = 5, NUM_SKIP = 15;
     return image;
 }
 
-- (void)drawInContext:(CGContextRef)ctx
-{
+- (void)drawInContext:(CGContextRef)ctx {
     CGContextAddPath(ctx, self.gridCirclePath);  // Clip gird drawing to inside of loupe
     CGContextClip(ctx);
     
@@ -187,8 +182,7 @@ const int NUM_PIXELS = 5, NUM_SKIP = 15;
     [self drawGridInContext:ctx];
 }
 
-- (void)drawGridInContext:(CGContextRef)ctx
-{
+- (void)drawGridInContext:(CGContextRef)ctx {
     const CGFloat w = ceilf(LOUPE_SIZE/NUM_PIXELS);
     
     CGPoint currentPoint = [colorPicker selection];
@@ -307,13 +301,11 @@ static NSString *const kAppearKey = @"cp_l_appear";
  */
 static NSString *const kDisappearKey = @"cp_l_disappear";
 
-- (void)disappear
-{
+- (void)disappear {
     [self disappearAnimated:YES];
 }
 
-- (void)disappearAnimated:(BOOL)anim
-{
+- (void)disappearAnimated:(BOOL)anim {
     isReadyToDismiss = YES;
     if (isRunningInitialAnimation) return;
 

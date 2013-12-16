@@ -35,7 +35,7 @@ UIImage * RSOpacityBackgroundImage(CGFloat length, UIColor *color) {
 
 @implementation RSOpacitySlider
 
--(id)initWithFrame:(CGRect)frame {
+- (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
         [self initRoutine];
@@ -51,7 +51,7 @@ UIImage * RSOpacityBackgroundImage(CGFloat length, UIColor *color) {
     return self;
 }
 
--(void)initRoutine {
+- (void)initRoutine {
     self.minimumValue = 0.0;
     self.maximumValue = 1.0;
     self.continuous = YES;
@@ -72,12 +72,11 @@ UIImage * RSOpacityBackgroundImage(CGFloat length, UIColor *color) {
 }
 */
 
--(void)myValueChanged:(id)notif {
+- (void)myValueChanged:(id)notif {
     _colorPicker.opacity = self.value;
 }
 
-- (void)drawRect:(CGRect)rect
-{
+- (void)drawRect:(CGRect)rect {
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     CGColorSpaceRef space = CGColorSpaceCreateDeviceGray();
     NSArray *colors = [[NSArray alloc] initWithObjects:
@@ -91,7 +90,7 @@ UIImage * RSOpacityBackgroundImage(CGFloat length, UIColor *color) {
     CGColorSpaceRelease(space);
 }
 
--(void)setColorPicker:(RSColorPickerView*)cp {
+- (void)setColorPicker:(RSColorPickerView *)cp {
     _colorPicker = cp;
     if (!_colorPicker) { return; }
     self.value = [_colorPicker brightness];

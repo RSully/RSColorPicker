@@ -13,8 +13,7 @@
 
 @synthesize window=_window;
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Setup root controller as color
     TestColorViewController *rootController = [[TestColorViewController alloc] initWithNibName:nil bundle:nil];
 

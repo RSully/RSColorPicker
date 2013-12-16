@@ -17,4 +17,4 @@ void RSGetComponentsForColor(float *components, UIColor *color);
 
 CGSize RSCGSizeWithScale(CGSize size, CGFloat scale);
 CGPoint RSCGPointWithScale(CGPoint point, CGFloat scale);
-UIImage* RSUIImageWithScale(UIImage *img, CGFloat scale);
+UIImage * RSUIImageWithScale(UIImage *img, CGFloat scale);

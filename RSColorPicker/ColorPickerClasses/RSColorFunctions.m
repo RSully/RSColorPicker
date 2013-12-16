@@ -8,7 +8,8 @@
 
 #import "RSColorFunctions.h"
 
-BMPixel RSPixelFromHSV(CGFloat H, CGFloat S, CGFloat V) {
+BMPixel RSPixelFromHSV(CGFloat H, CGFloat S, CGFloat V)
+{
     if (S == 0) {
         return BMPixelMake(V, V, V, 1.0);
     }
@@ -42,12 +43,14 @@ BMPixel RSPixelFromHSV(CGFloat H, CGFloat S, CGFloat V) {
 }
 
 
-void RSHSVFromPixel(BMPixel pixel, CGFloat *h, CGFloat *s, CGFloat *v) {
+void RSHSVFromPixel(BMPixel pixel, CGFloat *h, CGFloat *s, CGFloat *v)
+{
     UIColor *color = [UIColor colorWithRed:pixel.red green:pixel.green blue:pixel.blue alpha:1];
     [color getHue:h saturation:s brightness:v alpha:NULL];
 }
 
-void RSGetComponentsForColor(float *components, UIColor *color) {
+void RSGetComponentsForColor(float *components, UIColor *color)
+{
     CGColorSpaceRef rgbColorSpace = CGColorSpaceCreateDeviceRGB();
     unsigned char resultingPixel[4];
     // this is pretty clever; I'll allow it to stay.
@@ -62,13 +65,17 @@ void RSGetComponentsForColor(float *components, UIColor *color) {
     }
 }
 
-CGSize RSCGSizeWithScale(CGSize size, CGFloat scale) {
+CGSize RSCGSizeWithScale(CGSize size, CGFloat scale)
+{
     return CGSizeMake(size.width * scale, size.height * scale);
 }
-CGPoint RSCGPointWithScale(CGPoint point, CGFloat scale) {
+
+CGPoint RSCGPointWithScale(CGPoint point, CGFloat scale)
+{
     return CGPointMake(point.x * scale, point.y * scale);
 }
 
-UIImage *RSUIImageWithScale(UIImage *img, CGFloat scale) {
+UIImage * RSUIImageWithScale(UIImage *img, CGFloat scale)
+{
     return [UIImage imageWithCGImage:img.CGImage scale:scale orientation:UIImageOrientationUp];
 }
