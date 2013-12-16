@@ -100,8 +100,7 @@
 
 // metrics
 - (CGFloat)paddingDistance;
-- (CGPoint)convertGradientPointToView:(CGPoint)point;
-- (CGPoint)convertViewPointToGradient:(CGPoint)point;
+- (CGFloat)paletteDiameter;
 
 @end
 
@@ -227,12 +226,13 @@
 
     CGRect activeAreaFrame = CGRectInset(_gradientContainer.frame, [self paddingDistance], [self paddingDistance]);
     if (circle) {
-        _gradientContainer.layer.cornerRadius = _gradientContainer.bounds.size.width / 2.0;
+        _gradientContainer.layer.cornerRadius = [self paletteDiameter] / 2.0;
         _gradientShape = [UIBezierPath bezierPathWithOvalInRect:_gradientContainer.frame];
         _activeAreaShape = [UIBezierPath bezierPathWithOvalInRect:activeAreaFrame];
         
         // there's a chance the selection was outside the bounds
-        CGPoint point = [self validPointForTouch:[state selectionLocationWithSize:_gradientContainer.frame.size.width padding:[self paddingDistance]]];
+        CGPoint point = [self validPointForTouch:[state selectionLocationWithSize:[self paletteDiameter]
+                                                                          padding:[self paddingDistance]]];
         [self updateStateForTouchPoint:point];
     } else {
         _gradientContainer.layer.cornerRadius = 0.0;
@@ -267,7 +267,7 @@
     }
     
     // update positions
-    CGPoint selectionLocation = [state selectionLocationWithSize:_gradientContainer.frame.size.width padding:[self paddingDistance]];
+    CGPoint selectionLocation = [state selectionLocationWithSize:[self paletteDiameter] padding:[self paddingDistance]];
     _selectionView.center = selectionLocation;
     _loupeLayer.position = selectionLocation;
     
@@ -304,6 +304,10 @@
     return kSelectionViewSize / 2.0;
 }
 
+- (CGFloat)paletteDiameter {
+    return _gradientContainer.frame.size.width;
+}
+
 #pragma mark - Touch events
 
 - (CGPoint)validPointForTouch:(CGPoint)touchPoint {
@@ -328,13 +332,13 @@
     // 'actual radius' is the distance between the center and the border of the gradient
     CGFloat actualRadius;
     if (_cropToCircle) {
-        actualRadius = _gradientShape.bounds.size.width / 2.0 - kSelectionViewSize / 2.0;
+        actualRadius = _gradientShape.bounds.size.width / 2.0 - [self paddingDistance];
     } else {
         // square shape - using the intercept theorem we have "actualRadius / r == 0.5*gradientContainer.height / Y"
         if ( (alpha >= M_PI_4 && alpha < 3 * M_PI_4) || (alpha >= 5 * M_PI_4 && alpha < 7 * M_PI_4) ) {
-            actualRadius = r * (_gradientContainer.bounds.size.height / 2.0 - kSelectionViewSize / 2.0 ) / Y;
+            actualRadius = r * ([self paletteDiameter] / 2.0 - [self paddingDistance]) / Y;
         } else {
-            actualRadius = r * (_gradientContainer.bounds.size.width / 2.0 - kSelectionViewSize / 2.0) / X;
+            actualRadius = r * ([self paletteDiameter] / 2.0 - [self paddingDistance]) / X;
         }
     }
 
@@ -349,7 +353,7 @@
 
 - (RSColorPickerState *)stateForPoint:(CGPoint)point {
     RSColorPickerState * newState = [RSColorPickerState stateForPoint:point
-                                                                 size:_gradientContainer.frame.size.width
+                                                                 size:[self paletteDiameter]
                                                               padding:[self paddingDistance]];
     newState = [[newState stateBySettingAlpha:self.opacity] stateBySettingBrightness:self.brightness];
     return newState;
@@ -395,18 +399,6 @@
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
     [_loupeLayer disappear];
-}
-
-#pragma mark - Helpers
-
-- (CGPoint)convertGradientPointToView:(CGPoint)point {
-    CGRect frame = _gradientContainer.frame;
-    return CGPointMake(point.x + CGRectGetMinX(frame), point.y + CGRectGetMinY(frame));
-}
-
-- (CGPoint)convertViewPointToGradient:(CGPoint)point {
-    CGRect frame = _gradientContainer.frame;
-    return CGPointMake(point.x - CGRectGetMinX(frame), point.y - CGRectGetMinY(frame));
 }
 
 #pragma mark - Class methods
