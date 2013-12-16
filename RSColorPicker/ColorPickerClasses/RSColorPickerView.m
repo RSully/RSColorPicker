@@ -105,7 +105,7 @@
 
 @implementation RSColorPickerView
 
-#pragma mark - Object lifecycle
+#pragma mark - Object lifecycle -
 
 - (id)initWithFrame:(CGRect)frame {
     CGFloat square = fmin(frame.size.height, frame.size.width);
@@ -159,10 +159,6 @@
     [self setCropToCircle:NO];
 }
 
-- (void)dealloc {
-    _loupeLayer = nil;
-}
-
 - (void)resizeOrRescale {
     if (!self.window) {
         _scale = 0;
@@ -194,7 +190,7 @@
     [self resizeOrRescale];
 }
 
-#pragma mark - Business
+#pragma mark - Business -
 
 - (void)genBitmap {
     if (!_colorPickerViewFlags.bitmapNeedsUpdate) return;
