@@ -12,12 +12,7 @@
 
 @implementation RSGenerateOperation
 
--(id)init {
-    if ((self = [super init])) {}
-    return self;
-}
-
--(id)initWithDiameter:(CGFloat)diameter andPadding:(CGFloat)padding {
+- (id)initWithDiameter:(CGFloat)diameter andPadding:(CGFloat)padding {
     if ((self = [self init])) {
         _diameter = diameter;
         _padding = padding;
@@ -25,7 +20,7 @@
     return self;
 }
 
--(void)main {
+- (void)main {
     BMPoint repSize = BMPointMake(_diameter, _diameter);
     
     // Create fresh
@@ -89,14 +84,15 @@
     self.bitmap = rep;
 }
 
--(BOOL)isConcurrent {
+- (BOOL)isConcurrent {
     return YES;
 }
 
--(BOOL)isExecuting {
+- (BOOL)isExecuting {
     return self.bitmap == nil;
 }
--(BOOL)isFinished {
+
+- (BOOL)isFinished {
     return !self.isExecuting;
 }
 
