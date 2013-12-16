@@ -47,9 +47,10 @@ void RSHSVFromPixel(BMPixel pixel, CGFloat *h, CGFloat *s, CGFloat *v) {
 	[color getHue:h saturation:s brightness:v alpha:NULL];
 }
 
-void RSGetComponentsForColor(float components[4], UIColor *color) {
+void RSGetComponentsForColor(float * components, UIColor *color) {
     CGColorSpaceRef rgbColorSpace = CGColorSpaceCreateDeviceRGB();
     unsigned char resultingPixel[4];
+    // this is pretty clever; I'll allow it to stay.
     CGContextRef context = CGBitmapContextCreate(&resultingPixel, 1, 1, 8, 4, rgbColorSpace, kCGImageAlphaPremultipliedLast);
     CGContextSetFillColorWithColor(context, [color CGColor]);
     CGContextFillRect(context, CGRectMake(0, 0, 1, 1));
