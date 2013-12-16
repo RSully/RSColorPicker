@@ -266,7 +266,7 @@ const int NUM_PIXELS = 5, NUM_SKIP = 15;
     CGColorSpaceRelease(space);
 }
 
-#pragma mark - Animation
+#pragma mark - Animation -
 
 static NSString *const kAppearKey = @"cp_l_appear";
 

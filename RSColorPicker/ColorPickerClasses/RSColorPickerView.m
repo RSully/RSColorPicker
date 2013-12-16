@@ -20,18 +20,12 @@
 @interface RSColorPickerView () {
     struct {
         unsigned int bitmapNeedsUpdate:1;
-        unsigned int badTouch:1;
         unsigned int delegateDidChangeSelection:1;
     } _colorPickerViewFlags;
     RSColorPickerState * state;
 }
 
 @property (nonatomic) ANImageBitmapRep *rep;
-
-/**
- * A path which represents the shape of the color picker palette.
- */
-@property (nonatomic) UIBezierPath *gradientShape;
 
 /**
  * A path which represents the shape of the color picker palette,
@@ -105,7 +99,7 @@
 
 @implementation RSColorPickerView
 
-#pragma mark - Object lifecycle -
+#pragma mark - Object Lifecycle -
 
 - (id)initWithFrame:(CGRect)frame {
     CGFloat square = fmin(frame.size.height, frame.size.width);
@@ -205,16 +199,14 @@
     CGRect activeAreaFrame = CGRectInset(_gradientContainer.frame, [self paddingDistance], [self paddingDistance]);
     if (_cropToCircle) {
         _gradientContainer.layer.cornerRadius = [self paletteDiameter] / 2.0;
-        _gradientShape = [UIBezierPath bezierPathWithOvalInRect:_gradientContainer.frame];
         _activeAreaShape = [UIBezierPath bezierPathWithOvalInRect:activeAreaFrame];
     } else {
         _gradientContainer.layer.cornerRadius = 0.0;
-        _gradientShape = [UIBezierPath bezierPathWithRect:_gradientContainer.frame];
         _activeAreaShape = [UIBezierPath bezierPathWithRect:activeAreaFrame];
     }
 }
 
-#pragma mark - Getters
+#pragma mark - Getters -
 
 - (UIColor *)colorAtPoint:(CGPoint)point {
     return [self stateForPoint:point].color;
@@ -236,7 +228,7 @@
     return [state selectionLocationWithSize:[self paletteDiameter] padding:[self paddingDistance]];
 }
 
-#pragma mark - Setters
+#pragma mark - Setters -
 
 - (void)setSelection:(CGPoint)selection {
     [self updateStateForTouchPoint:selection];
@@ -276,7 +268,7 @@
     _colorPickerViewFlags.delegateDidChangeSelection = [_delegate respondsToSelector:@selector(colorPickerDidChangeSelection:)];
 }
 
-#pragma mark - Selection updates -
+#pragma mark - Selection Updates -
 
 - (void)handleStateChanged {
     [self handleStateChangedDisableActions:YES];
@@ -331,7 +323,7 @@
     return _gradientContainer.frame.size.width;
 }
 
-#pragma mark - Touch events
+#pragma mark - Touch Events -
 
 - (CGPoint)validPointForTouch:(CGPoint)touchPoint {
     if ([_activeAreaShape containsPoint:touchPoint]) {
@@ -355,7 +347,7 @@
     // 'actual radius' is the distance between the center and the border of the gradient
     CGFloat actualRadius;
     if (_cropToCircle) {
-        actualRadius = _gradientShape.bounds.size.width / 2.0 - [self paddingDistance];
+        actualRadius = [self paletteDiameter] / 2.0 - [self paddingDistance];
     } else {
         // square shape - using the intercept theorem we have "actualRadius / r == 0.5*gradientContainer.height / Y"
         if ( (alpha >= M_PI_4 && alpha < 3 * M_PI_4) || (alpha >= 5 * M_PI_4 && alpha < 7 * M_PI_4) ) {
@@ -399,32 +391,26 @@
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-    if (_colorPickerViewFlags.badTouch) return;
     CGPoint point = [[touches anyObject] locationInView:self];
     [self updateStateForTouchPoint:point];
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    if (!_colorPickerViewFlags.badTouch) {
-        CGPoint point = [[touches anyObject] locationInView:self];
-        [self updateStateForTouchPoint:point];
-    }
+    CGPoint point = [[touches anyObject] locationInView:self];
+    [self updateStateForTouchPoint:point];
     
-    // TODO: remove everything about badTouch
-    _colorPickerViewFlags.badTouch = NO;
     [_loupeLayer disappear];
 
     if ([_delegate respondsToSelector:@selector(colorPicker:touchesEnded:withEvent:)]) {
         [_delegate colorPicker:self touchesEnded:touches withEvent:event];
     }
-
 }
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
     [_loupeLayer disappear];
 }
 
-#pragma mark - Class methods
+#pragma mark - Class Methods -
 
 static NSCache *generatedBitmaps;
 static NSOperationQueue *generateQueue;
@@ -437,7 +423,7 @@ static dispatch_queue_t backgroundQueue;
     backgroundQueue = dispatch_queue_create("com.github.rsully.rscolorpicker.background", DISPATCH_QUEUE_SERIAL);
 }
 
-#pragma mark Background methods
+#pragma mark Background Methods
 
 + (void)prepareForDiameter:(CGFloat)diameter {
     [self prepareForDiameter:diameter padding:kSelectionViewSize/2.0];
@@ -455,7 +441,7 @@ static dispatch_queue_t backgroundQueue;
     [self prepareForDiameter:diameter scale:scale padding:padding inBackground:YES];
 }
 
-#pragma mark Prep method
+#pragma mark Prep Method
 
 + (void)prepareForDiameter:(CGFloat)diameter scale:(CGFloat)scale padding:(CGFloat)padding inBackground:(BOOL)bg {
     void (*function)(dispatch_queue_t, dispatch_block_t) = bg ? dispatch_async : dispatch_sync;
@@ -464,7 +450,7 @@ static dispatch_queue_t backgroundQueue;
     });
 }
 
-#pragma mark Generate helper method
+#pragma mark Generate Helper Method
 
 + (ANImageBitmapRep *)bitmapForDiameter:(CGFloat)diameter scale:(CGFloat)scale padding:(CGFloat)paddingDistance shouldCache:(BOOL)cache {
     RSGenerateOperation *repOp = nil;
