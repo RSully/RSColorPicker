@@ -50,13 +50,13 @@
     // On/off circle or square
     UISwitch *circleSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(10, 340, 0, 0)];
     [circleSwitch setOn:_colorPicker.cropToCircle];
-	[circleSwitch addTarget:self action:@selector(circleSwitchAction:) forControlEvents:UIControlEventValueChanged];
-	[self.view addSubview:circleSwitch];
+    [circleSwitch addTarget:self action:@selector(circleSwitchAction:) forControlEvents:UIControlEventValueChanged];
+    [self.view addSubview:circleSwitch];
     
     // View that controls brightness
-	_brightnessSlider = [[RSBrightnessSlider alloc] initWithFrame:CGRectMake(CGRectGetMaxX(circleSwitch.frame) + 4, 300.0, 320 - (20 + CGRectGetWidth(circleSwitch.frame)), 30.0)];
-	[_brightnessSlider setColorPicker:_colorPicker];
-	[self.view addSubview:_brightnessSlider];
+    _brightnessSlider = [[RSBrightnessSlider alloc] initWithFrame:CGRectMake(CGRectGetMaxX(circleSwitch.frame) + 4, 300.0, 320 - (20 + CGRectGetWidth(circleSwitch.frame)), 30.0)];
+    [_brightnessSlider setColorPicker:_colorPicker];
+    [self.view addSubview:_brightnessSlider];
     
     // View that controls opacity
     _opacitySlider = [[RSOpacitySlider alloc] initWithFrame:CGRectMake(CGRectGetMaxX(circleSwitch.frame) + 4, 340.0, 320 - (20 + CGRectGetWidth(circleSwitch.frame)), 30.0)];
@@ -65,8 +65,8 @@
 
 
     // View that shows selected color
-	_colorPatch = [[UIView alloc] initWithFrame:CGRectMake(160, 380.0, 150, 30.0)];
-	[self.view addSubview:_colorPatch];
+    _colorPatch = [[UIView alloc] initWithFrame:CGRectMake(160, 380.0, 150, 30.0)];
+    [self.view addSubview:_colorPatch];
     
     
     // Buttons for testing
@@ -116,7 +116,7 @@
 #pragma mark - RSColorPickerView delegate methods
 
 - (void)colorPickerDidChangeSelection:(RSColorPickerView *)cp {
-	_colorPatch.backgroundColor = [cp selectionColor];
+    _colorPatch.backgroundColor = [cp selectionColor];
     _brightnessSlider.value = [cp brightness];
     _opacitySlider.value = [cp opacity];
 }
@@ -146,7 +146,7 @@
 }
 
 - (void)circleSwitchAction:(UISwitch *)s {
-	_colorPicker.cropToCircle = s.isOn;
+    _colorPicker.cropToCircle = s.isOn;
 }
 
 #pragma mark - Push the stack

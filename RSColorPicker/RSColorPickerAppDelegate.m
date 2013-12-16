@@ -22,12 +22,12 @@
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:rootController];
     
     // Add navigation to our window
-	self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-	self.window.rootViewController = navController;
+    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    self.window.rootViewController = navController;
     
     // Show the window
-	[self.window makeKeyAndVisible];
-	return YES;
+    [self.window makeKeyAndVisible];
+    return YES;
 }
 
 @end

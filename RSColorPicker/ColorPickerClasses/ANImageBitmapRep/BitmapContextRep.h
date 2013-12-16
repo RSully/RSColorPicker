@@ -16,8 +16,8 @@
  * does not use floating points, making it more accurate.
  */
 typedef struct {
-	long x;
-	long y;
+    long x;
+    long y;
 } BMPoint;
 
 BMPoint BMPointMake (long x, long y);
@@ -31,9 +31,9 @@ BMPoint BMPointFromPoint (CGPoint point);
  */
 @interface BitmapContextRep : NSObject {
     CGContextRef context;
-	CGImageRef lastImage;
-	unsigned char * bitmapData;
-	BOOL needsUpdate;
+    CGImageRef lastImage;
+    unsigned char * bitmapData;
+    BOOL needsUpdate;
 }
 
 /**
