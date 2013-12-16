@@ -77,6 +77,7 @@
 @property (nonatomic) CGFloat scale;
 
 - (void)initRoutine;
+- (void)resizeOrRescale;
 
 // Called to generate the _rep ivar and set it.
 - (void)genBitmap;
@@ -162,27 +163,35 @@
     _loupeLayer = nil;
 }
 
-- (void)layoutSubviews {
-    [super layoutSubviews];
-    
+- (void)resizeOrRescale {
     if (!self.window) {
         _scale = 0;
         [_loupeLayer disappearAnimated:NO];
         return;
     }
-
+    
     // Anything that depends on _scale to init needs to be here
     _scale = self.window.screen.scale;
     _gradientContainer.layer.contentsScale = _scale;
-
+    
     _colorPickerViewFlags.bitmapNeedsUpdate = YES;
     _gradientContainer.frame = self.bounds;
+    _gradientView.frame = self.bounds;
     _brightnessView.frame = self.bounds;
     _opacityView.frame = self.bounds;
     
     [self genBitmap];
     [self generateBezierPaths];
     [self handleStateChanged];
+}
+
+- (void)didMoveToWindow {
+    [self resizeOrRescale];
+}
+
+- (void)setFrame:(CGRect)frame {
+    [super setFrame:frame];
+    [self resizeOrRescale];
 }
 
 #pragma mark - Business

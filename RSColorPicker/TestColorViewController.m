@@ -111,6 +111,12 @@
     [selectCyan setTitle:@"Cyan" forState:UIControlStateNormal];
     [selectCyan addTarget:self action:@selector(selectCyan:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:selectCyan];
+    
+    UIButton *resizeButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    resizeButton.frame = CGRectMake(10, CGRectGetMaxY(selectCyan.frame) + 5, 50, 30);
+    [resizeButton setTitle:@"Resize" forState:UIControlStateNormal];
+    [resizeButton addTarget:self action:@selector(testResize:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:resizeButton];
 }
 
 #pragma mark - RSColorPickerView delegate methods
@@ -122,6 +128,16 @@
 }
 
 #pragma mark - User action
+
+- (void)testResize:(id)sender {
+    if (isSmallSize) {
+        _colorPicker.frame = CGRectMake(20.0, 10.0, 280.0, 280.0);
+        isSmallSize = NO;
+    } else {
+        _colorPicker.frame = CGRectMake(40.0, 10.0, 240.0, 240.0);
+        isSmallSize = YES;
+    }
+}
 
 - (void)selectRed:(id)sender {
     [_colorPicker setSelectionColor:[UIColor redColor]];
