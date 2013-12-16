@@ -250,6 +250,7 @@
 - (void)setCropToCircle:(BOOL)circle {
     _cropToCircle = circle;
 
+    [self generateBezierPaths];
     if (circle) {
         // there's a chance the selection was outside the bounds
         CGPoint point = [self validPointForTouch:[state selectionLocationWithSize:[self paletteDiameter]
@@ -257,7 +258,6 @@
         [self updateStateForTouchPoint:point];
     }
     
-    [self generateBezierPaths];
     [self handleStateChanged];
 }
 
