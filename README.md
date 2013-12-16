@@ -40,4 +40,4 @@ This is licensed under the BSD license (see License.md). You know the drill, use
 
 # Contributing
 
-Pull requests are welcome for bug fixes or feature additions. If you contribute code, make sure you stick to the guidelines outlined in `CONTRIBUTING.md`.
+Pull requests are welcome for bug fixes or feature additions. If you contribute code, make sure you stick to the [contibution guidelines](CONTRIBUTING.md).
