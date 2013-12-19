@@ -21,4 +21,6 @@
 @property (nonatomic) RSOpacitySlider *opacitySlider;
 @property (nonatomic) UIView *colorPatch;
 
+@property UILabel *rgbLabel;
+
 @end

@@ -10,10 +10,6 @@
 #import "RSBrightnessSlider.h"
 #import "RSOpacitySlider.h"
 
-@interface TestColorViewController ()
-
-@end
-
 @implementation TestColorViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
@@ -40,12 +36,16 @@
 //    [_colorPicker setCropToCircle:YES]; // Defaults to NO (you can set BG color)
     
     // Set the selection color - useful to present when the user had picked a color previously
-    [_colorPicker setSelectionColor:[self randomColorOpaque:NO]];
+    [_colorPicker setSelectionColor:[self randomColorOpaque:YES]];
+    
+//    [_colorPicker setSelectionColor:[UIColor colorWithRed:1 green:0 blue:0.752941 alpha:1.000000]];
+//    [_colorPicker setSelection:CGPointMake(269, 269)];
     
     // Set the delegate to receive events
     [_colorPicker setDelegate:self];
     
     [self.view addSubview:_colorPicker];
+    
     
     // On/off circle or square
     UISwitch *circleSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(10, 340, 0, 0)];
@@ -117,14 +117,40 @@
     [resizeButton setTitle:@"Resize" forState:UIControlStateNormal];
     [resizeButton addTarget:self action:@selector(testResize:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:resizeButton];
+    
+    _rgbLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(resizeButton.frame) + 10, CGRectGetMinY(resizeButton.frame), 240, 30)];
+    _rgbLabel.text = @"RGB";
+    [self.view addSubview:_rgbLabel];
 }
 
 #pragma mark - RSColorPickerView delegate methods
 
 - (void)colorPickerDidChangeSelection:(RSColorPickerView *)cp {
-    _colorPatch.backgroundColor = [cp selectionColor];
+    
+    // Get color data
+    UIColor *color = [cp selectionColor];
+
+    CGFloat r, g, b, a;
+    [[cp selectionColor] getRed:&r green:&g blue:&b alpha:&a];
+
+    // Update important UI
+    _colorPatch.backgroundColor = color;
     _brightnessSlider.value = [cp brightness];
     _opacitySlider.value = [cp opacity];
+    
+    
+    // Debug
+    NSString *colorDesc = [NSString stringWithFormat:@"rgba: %f, %f, %f, %f", r, g, b, a];
+    NSLog(@"%@", colorDesc);
+    int ir = r * 255;
+    int ig = g * 255;
+    int ib = b * 255;
+    int ia = a * 255;
+    colorDesc = [NSString stringWithFormat:@"rgba: %d, %d, %d, %d", ir, ig, ib, ia];
+    NSLog(@"%@", colorDesc);
+    _rgbLabel.text = colorDesc;
+    
+    NSLog(@"%@", NSStringFromCGPoint(cp.selection));
 }
 
 #pragma mark - User action
