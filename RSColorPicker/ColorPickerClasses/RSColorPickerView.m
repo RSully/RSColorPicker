@@ -151,6 +151,7 @@
     [self addSubview:_selectionView];
 
     [self setCropToCircle:NO];
+    self.selectionColor = [UIColor whiteColor];
 }
 
 - (void)resizeOrRescale {
