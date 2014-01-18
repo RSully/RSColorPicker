@@ -12,11 +12,11 @@
 
 - (void)drawImage:(CGImageRef)image inRect:(CGRect)rect {
     BMPoint size = [bitmapContext bitmapSize];
-	// It's kind of rude to prevent them from doing something kind of cool, so let's not.
-	// NSAssert(frame.origin.x >= 0 && frame.origin.x + frame.size.width <= size.x, @"Cropping frame must be within the bitmap.");
-	// NSAssert(frame.origin.y >= 0 && frame.origin.y + frame.size.height <= size.y, @"Cropping frame must be within the bitmap.");
-	
-	CGPoint offset = CGPointMake(rect.origin.x, (size.y - (rect.origin.y + rect.size.height)));
+    // It's kind of rude to prevent them from doing something kind of cool, so let's not.
+    // NSAssert(frame.origin.x >= 0 && frame.origin.x + frame.size.width <= size.x, @"Cropping frame must be within the bitmap.");
+    // NSAssert(frame.origin.y >= 0 && frame.origin.y + frame.size.height <= size.y, @"Cropping frame must be within the bitmap.");
+    
+    CGPoint offset = CGPointMake(rect.origin.x, (size.y - (rect.origin.y + rect.size.height)));
     
     CGContextRef context = [[self bitmapContext] context];
     CGContextSaveGState(context);

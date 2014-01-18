@@ -11,9 +11,9 @@
 
 @interface BitmapContextManipulator : NSObject <BitmapContextRep> {
 #if __has_feature(objc_arc) == 1
-	__unsafe_unretained BitmapContextRep * bitmapContext;
+    __unsafe_unretained BitmapContextRep * bitmapContext;
 #else
-	BitmapContextRep * bitmapContext;
+    BitmapContextRep * bitmapContext;
 #endif
 }
 

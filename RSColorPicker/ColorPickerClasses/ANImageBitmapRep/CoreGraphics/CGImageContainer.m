@@ -15,20 +15,20 @@
 @synthesize image;
 
 - (id)initWithImage:(CGImageRef)anImage {
-	if ((self = [super init])) {
-		image = CGImageRetain(anImage);
-	}
-	return self;
+    if ((self = [super init])) {
+        image = CGImageRetain(anImage);
+    }
+    return self;
 }
 
 + (CGImageContainer *)imageContainerWithImage:(CGImageRef)anImage {
-	CGImageContainer * container = [(CGImageContainer *)[CGImageContainer alloc] initWithImage:anImage];
-	return [container autorelease];
+    CGImageContainer * container = [(CGImageContainer *)[CGImageContainer alloc] initWithImage:anImage];
+    return [container autorelease];
 }
 
 - (void)dealloc {
-	CGImageRelease(image);
-	[super dealloc];
+    CGImageRelease(image);
+    [super dealloc];
 }
 
 @end
@@ -37,8 +37,8 @@
 
 __attribute__((ns_returns_autoreleased))
 id CGImageReturnAutoreleased (CGImageRef original) {
-	// CGImageRetain(original);
-	return (__bridge id)original;
+    // CGImageRetain(original);
+    return (__bridge id)original;
 }
 
 #endif

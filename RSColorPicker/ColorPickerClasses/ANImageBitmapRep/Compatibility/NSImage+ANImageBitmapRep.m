@@ -15,45 +15,45 @@
 
 
 + (NSImage *)imageFromImageBitmapRep:(ANImageBitmapRep *)ibr {
-	return [ibr image];
+    return [ibr image];
 }
 
 - (ANImageBitmapRep *)imageBitmapRep {
 #if __has_feature(objc_arc) == 1
-	return [[ANImageBitmapRep alloc] initWithImage:self];
+    return [[ANImageBitmapRep alloc] initWithImage:self];
 #else
-	return [[[ANImageBitmapRep alloc] initWithImage:self] autorelease];
+    return [[[ANImageBitmapRep alloc] initWithImage:self] autorelease];
 #endif
 }
 
 - (NSImage *)imageByScalingToSize:(CGSize)sz {
-	ANImageBitmapRep * imageBitmap = [[ANImageBitmapRep alloc] initWithImage:self];
-	[imageBitmap setSize:BMPointMake(round(sz.width), round(sz.height))];
-	NSImage * scaled = [imageBitmap image];
+    ANImageBitmapRep * imageBitmap = [[ANImageBitmapRep alloc] initWithImage:self];
+    [imageBitmap setSize:BMPointMake(round(sz.width), round(sz.height))];
+    NSImage * scaled = [imageBitmap image];
 #if __has_feature(objc_arc) != 1
-	[imageBitmap release];
+    [imageBitmap release];
 #endif
-	return scaled;
+    return scaled;
 }
 
 - (NSImage *)imageFittingFrame:(CGSize)sz {
-	ANImageBitmapRep * imageBitmap = [[ANImageBitmapRep alloc] initWithImage:self];
-	[imageBitmap setSizeFittingFrame:BMPointMake(round(sz.width), round(sz.height))];
-	NSImage * scaled = [imageBitmap image];
+    ANImageBitmapRep * imageBitmap = [[ANImageBitmapRep alloc] initWithImage:self];
+    [imageBitmap setSizeFittingFrame:BMPointMake(round(sz.width), round(sz.height))];
+    NSImage * scaled = [imageBitmap image];
 #if __has_feature(objc_arc) != 1
-	[imageBitmap release];
+    [imageBitmap release];
 #endif
-	return scaled;
+    return scaled;
 }
 
 - (NSImage *)imageFillingFrame:(CGSize)sz {
-	ANImageBitmapRep * imageBitmap = [[ANImageBitmapRep alloc] initWithImage:self];
-	[imageBitmap setSizeFillingFrame:BMPointMake(round(sz.width), round(sz.height))];
-	NSImage * scaled = [imageBitmap image];
+    ANImageBitmapRep * imageBitmap = [[ANImageBitmapRep alloc] initWithImage:self];
+    [imageBitmap setSizeFillingFrame:BMPointMake(round(sz.width), round(sz.height))];
+    NSImage * scaled = [imageBitmap image];
 #if __has_feature(objc_arc) != 1
-	[imageBitmap release];
+    [imageBitmap release];
 #endif
-	return scaled;
+    return scaled;
 }
 
 @end

@@ -7,17 +7,12 @@
 //
 
 #import "TestColorViewController.h"
-#import "ColorPickerClasses/RSBrightnessSlider.h"
-#import "ColorPickerClasses/RSOpacitySlider.h"
-
-@interface TestColorViewController ()
-
-@end
+#import "RSBrightnessSlider.h"
+#import "RSOpacitySlider.h"
 
 @implementation TestColorViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
@@ -25,31 +20,44 @@
     return self;
 }
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
 
-    self.view.backgroundColor = [self randomColor];
+    self.view.backgroundColor = [self randomColorOpaque:YES];
     
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Push" style:UIBarButtonItemStyleBordered target:self action:@selector(pushNext:)];
+    self.navigationController.navigationBar.translucent = NO;
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Push" style:UIBarButtonItemStyleBordered
+                                                                             target:self action:@selector(pushNext:)];
     
     // View that displays color picker (needs to be square)
     _colorPicker = [[RSColorPickerView alloc] initWithFrame:CGRectMake(20.0, 10.0, 280.0, 280.0)];
-    [_colorPicker setCropToCircle:NO]; // Defaults to YES (and you can set BG color)
-//    [_colorPicker setCustomImage:[UIImage imageNamed:@"test.png"]];
+
+    // Specify custom image if needed:
+    [_colorPicker setCustomImage:[UIImage imageNamed:@"test.png"]];
+    
+    
+    // Set the selection color - useful to present when the user had picked a color previously
+    //[_colorPicker setSelectionColor:[self randomColorOpaque:YES]];
+    
+//    [_colorPicker setSelectionColor:[UIColor colorWithRed:1 green:0 blue:0.752941 alpha:1.000000]];
+//    [_colorPicker setSelection:CGPointMake(269, 269)];
+    
+    // Set the delegate to receive events
     [_colorPicker setDelegate:self];
+    
     [self.view addSubview:_colorPicker];
+    
     
     // On/off circle or square
     UISwitch *circleSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(10, 340, 0, 0)];
     [circleSwitch setOn:_colorPicker.cropToCircle];
-	[circleSwitch addTarget:self action:@selector(circleSwitchAction:) forControlEvents:UIControlEventValueChanged];
-	[self.view addSubview:circleSwitch];
+    [circleSwitch addTarget:self action:@selector(circleSwitchAction:) forControlEvents:UIControlEventValueChanged];
+    [self.view addSubview:circleSwitch];
     
     // View that controls brightness
-	_brightnessSlider = [[RSBrightnessSlider alloc] initWithFrame:CGRectMake(CGRectGetMaxX(circleSwitch.frame) + 4, 300.0, 320 - (20 + CGRectGetWidth(circleSwitch.frame)), 30.0)];
-	[_brightnessSlider setColorPicker:_colorPicker];
-	[self.view addSubview:_brightnessSlider];
+    _brightnessSlider = [[RSBrightnessSlider alloc] initWithFrame:CGRectMake(CGRectGetMaxX(circleSwitch.frame) + 4, 300.0, 320 - (20 + CGRectGetWidth(circleSwitch.frame)), 30.0)];
+    [_brightnessSlider setColorPicker:_colorPicker];
+    [self.view addSubview:_brightnessSlider];
     
     // View that controls opacity
     _opacitySlider = [[RSOpacitySlider alloc] initWithFrame:CGRectMake(CGRectGetMaxX(circleSwitch.frame) + 4, 340.0, 320 - (20 + CGRectGetWidth(circleSwitch.frame)), 30.0)];
@@ -58,8 +66,8 @@
 
 
     // View that shows selected color
-	_colorPatch = [[UIView alloc] initWithFrame:CGRectMake(160, 380.0, 150, 30.0)];
-	[self.view addSubview:_colorPatch];
+    _colorPatch = [[UIView alloc] initWithFrame:CGRectMake(160, 380.0, 150, 30.0)];
+    [self.view addSubview:_colorPatch];
     
     
     // Buttons for testing
@@ -104,17 +112,59 @@
     [selectCyan setTitle:@"Cyan" forState:UIControlStateNormal];
     [selectCyan addTarget:self action:@selector(selectCyan:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:selectCyan];
+    
+    UIButton *resizeButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    resizeButton.frame = CGRectMake(10, CGRectGetMaxY(selectCyan.frame) + 5, 50, 30);
+    [resizeButton setTitle:@"Resize" forState:UIControlStateNormal];
+    [resizeButton addTarget:self action:@selector(testResize:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:resizeButton];
+    
+    _rgbLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(resizeButton.frame) + 10, CGRectGetMinY(resizeButton.frame), 240, 30)];
+    _rgbLabel.text = @"RGB";
+    [self.view addSubview:_rgbLabel];
 }
 
 #pragma mark - RSColorPickerView delegate methods
 
 - (void)colorPickerDidChangeSelection:(RSColorPickerView *)cp {
-	_colorPatch.backgroundColor = [cp selectionColor];
+    
+    // Get color data
+    UIColor *color = [cp selectionColor];
+
+    CGFloat r, g, b, a;
+    [[cp selectionColor] getRed:&r green:&g blue:&b alpha:&a];
+
+    // Update important UI
+    _colorPatch.backgroundColor = color;
     _brightnessSlider.value = [cp brightness];
     _opacitySlider.value = [cp opacity];
+    
+    
+    // Debug
+    NSString *colorDesc = [NSString stringWithFormat:@"rgba: %f, %f, %f, %f", r, g, b, a];
+    NSLog(@"%@", colorDesc);
+    int ir = r * 255;
+    int ig = g * 255;
+    int ib = b * 255;
+    int ia = a * 255;
+    colorDesc = [NSString stringWithFormat:@"rgba: %d, %d, %d, %d", ir, ig, ib, ia];
+    NSLog(@"%@", colorDesc);
+    _rgbLabel.text = colorDesc;
+    
+    NSLog(@"%@", NSStringFromCGPoint(cp.selection));
 }
 
 #pragma mark - User action
+
+- (void)testResize:(id)sender {
+    if (isSmallSize) {
+        _colorPicker.frame = CGRectMake(20.0, 10.0, 280.0, 280.0);
+        isSmallSize = NO;
+    } else {
+        _colorPicker.frame = CGRectMake(40.0, 10.0, 240.0, 240.0);
+        isSmallSize = YES;
+    }
+}
 
 - (void)selectRed:(id)sender {
     [_colorPicker setSelectionColor:[UIColor redColor]];
@@ -139,7 +189,7 @@
 }
 
 - (void)circleSwitchAction:(UISwitch *)s {
-	_colorPicker.cropToCircle = s.isOn;
+    _colorPicker.cropToCircle = s.isOn;
 }
 
 #pragma mark - Push the stack
@@ -158,7 +208,7 @@
 
 #pragma mark - Random color for testing
 
-- (UIColor*)randomColor {
+- (UIColor*)randomColorOpaque:(BOOL)isOpaque {
     /*
      From https://gist.github.com/kylefox/1689973
 
@@ -185,12 +235,20 @@
      LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
      OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
      WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+     
+     Alpha modifications for RSColorPicker test project
      */
     
     CGFloat hue = ( arc4random() % 256 / 256.0 );  //  0.0 to 1.0
     CGFloat saturation = ( arc4random() % 128 / 256.0 ) + 0.5;  //  0.5 to 1.0, away from white
     CGFloat brightness = ( arc4random() % 128 / 256.0 ) + 0.5;  //  0.5 to 1.0, away from black
-    return [UIColor colorWithHue:hue saturation:saturation brightness:brightness alpha:1];
+    CGFloat alpha = 1;
+    
+    if (!isOpaque) {
+        alpha = ( arc4random() % 128 / 256.0 ) + 0.5;
+    }
+    
+    return [UIColor colorWithHue:hue saturation:saturation brightness:brightness alpha:alpha];
 }
 
 @end

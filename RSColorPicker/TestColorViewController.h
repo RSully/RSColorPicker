@@ -12,11 +12,15 @@
 @class RSBrightnessSlider;
 @class RSOpacitySlider;
 
-@interface TestColorViewController : UIViewController <RSColorPickerViewDelegate>
+@interface TestColorViewController : UIViewController <RSColorPickerViewDelegate> {
+    BOOL isSmallSize;
+}
 
 @property (nonatomic) RSColorPickerView *colorPicker;
 @property (nonatomic) RSBrightnessSlider *brightnessSlider;
 @property (nonatomic) RSOpacitySlider *opacitySlider;
 @property (nonatomic) UIView *colorPatch;
+
+@property UILabel *rgbLabel;
 
 @end

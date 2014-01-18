@@ -4,10 +4,6 @@
 
 Square (circle) color-picker that handles touch events, allows for brightness control, and allows for opacity control. Uses delegation to report color selection as-changed
 
-## RSBrightnessSlider, RSOpacitySlider
-
-Basic UISlider subclass that can be used easily with RSColorPickerView. 
-
 # Project:
 
 Inspired by [ANColorPicker](https://github.com/unixpickle/ANColorPicker). 
@@ -41,3 +37,7 @@ This is licensed under the BSD license (see License.md). You know the drill, use
 <img alt="Color Picker - Opacity" src="https://github.com/RSully/RSColorPicker/raw/master/Example04.png" width="320">
 <img alt="Color Picker - Square" src="https://github.com/RSully/RSColorPicker/raw/master/Example05.png" width="320">
 <img alt="Color Picker - External selection" src="https://github.com/RSully/RSColorPicker/raw/master/Example05.png" width="320">
+
+# Contributing
+
+Pull requests are welcome for bug fixes or feature additions. If you contribute code, make sure you stick to the [contibution guidelines](CONTRIBUTING.md).
