@@ -30,7 +30,6 @@
 
 #import "BGRSLoupeLayer.h"
 #import "RSColorPickerView.h"
-#import "RSOpacitySlider.h"
 
 @interface BGRSLoupeLayer ()
 
