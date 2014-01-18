@@ -8,31 +8,6 @@
 
 #import "RSOpacitySlider.h"
 
-/**
- * Returns image that looks like a checkered background.
- */
-UIImage * RSOpacityBackgroundImage(CGFloat length, UIColor *color) {
-    UIBezierPath *rectanglePath = [UIBezierPath bezierPathWithRect: CGRectMake(0, 0, length*0.5, length*0.5)];
-    UIBezierPath *rectangle2Path = [UIBezierPath bezierPathWithRect: CGRectMake(length*0.5, length*0.5, length*0.5, length*0.5)];
-    UIBezierPath *rectangle3Path = [UIBezierPath bezierPathWithRect: CGRectMake(0, length*0.5, length*0.5, length*0.5)];
-    UIBezierPath *rectangle4Path = [UIBezierPath bezierPathWithRect: CGRectMake(length*0.5, 0, length*0.5, length*0.5)];
-    
-    UIGraphicsBeginImageContext(CGSizeMake(length, length));
-    
-    [color setFill];
-    [rectanglePath fill];
-    [rectangle2Path fill];
-    
-    [[UIColor whiteColor] setFill];
-    [rectangle3Path fill];
-    [rectangle4Path fill];
-    
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    return image;
-}
-
 @implementation RSOpacitySlider
 
 - (id)initWithFrame:(CGRect)frame {

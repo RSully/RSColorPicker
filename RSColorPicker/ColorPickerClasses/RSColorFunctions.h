@@ -16,3 +16,5 @@ void RSHSVFromPixel(BMPixel pixel, CGFloat *h, CGFloat *s, CGFloat *v);
 void RSGetComponentsForColor(float *components, UIColor *color);
 
 UIImage * RSUIImageWithScale(UIImage *img, CGFloat scale);
+
+UIImage * RSOpacityBackgroundImage(CGFloat length, UIColor *color);

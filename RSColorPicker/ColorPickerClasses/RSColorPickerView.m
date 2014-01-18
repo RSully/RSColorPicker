@@ -11,7 +11,6 @@
 #import "RSSelectionView.h"
 #import "RSColorFunctions.h"
 #import "ANImageBitmapRep.h"
-#import "RSOpacitySlider.h"
 #import "RSGenerateOperation.h"
 #import "RSColorPickerState.h"
 

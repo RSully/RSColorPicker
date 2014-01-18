@@ -7,8 +7,7 @@
 //
 
 #import "RSColorPickerView.h"
-
-extern UIImage * RSOpacityBackgroundImage(CGFloat length, UIColor *color);
+#import "RSColorFunctions.h"
 
 @interface RSOpacitySlider : UISlider
 
