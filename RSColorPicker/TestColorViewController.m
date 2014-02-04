@@ -22,7 +22,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+	
     self.view.backgroundColor = [self randomColorOpaque:YES];
     
     self.navigationController.navigationBar.translucent = NO;
@@ -33,13 +33,13 @@
     _colorPicker = [[RSColorPickerView alloc] initWithFrame:CGRectMake(20.0, 10.0, 280.0, 280.0)];
     
     // Optionally set and force the picker to only draw a circle
-//    [_colorPicker setCropToCircle:YES]; // Defaults to NO (you can set BG color)
+	//    [_colorPicker setCropToCircle:YES]; // Defaults to NO (you can set BG color)
     
     // Set the selection color - useful to present when the user had picked a color previously
     [_colorPicker setSelectionColor:[self randomColorOpaque:YES]];
     
-//    [_colorPicker setSelectionColor:[UIColor colorWithRed:1 green:0 blue:0.752941 alpha:1.000000]];
-//    [_colorPicker setSelection:CGPointMake(269, 269)];
+	//    [_colorPicker setSelectionColor:[UIColor colorWithRed:1 green:0 blue:0.752941 alpha:1.000000]];
+	//    [_colorPicker setSelection:CGPointMake(269, 269)];
     
     // Set the delegate to receive events
     [_colorPicker setDelegate:self];
@@ -62,8 +62,8 @@
     _opacitySlider = [[RSOpacitySlider alloc] initWithFrame:CGRectMake(CGRectGetMaxX(circleSwitch.frame) + 4, 340.0, 320 - (20 + CGRectGetWidth(circleSwitch.frame)), 30.0)];
     [_opacitySlider setColorPicker:_colorPicker];
     [self.view addSubview:_opacitySlider];
-
-
+	
+	
     // View that shows selected color
     _colorPatch = [[UIView alloc] initWithFrame:CGRectMake(160, 380.0, 150, 30.0)];
     [self.view addSubview:_colorPatch];
@@ -117,9 +117,16 @@
     [resizeButton setTitle:@"Resize" forState:UIControlStateNormal];
     [resizeButton addTarget:self action:@selector(testResize:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:resizeButton];
+	
+    UIButton *loupButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    loupButton.frame = CGRectMake(CGRectGetMaxX(resizeButton.frame) + 10, CGRectGetMinY(resizeButton.frame), 50, 30);
+    [loupButton setTitle:@"Loup" forState:UIControlStateNormal];
+    [loupButton addTarget:self action:@selector(testLoup:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:loupButton];
     
-    _rgbLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(resizeButton.frame) + 10, CGRectGetMinY(resizeButton.frame), 240, 30)];
+    _rgbLabel = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(loupButton.frame) + 10, CGRectGetMinY(loupButton.frame), 180, 30)];
     _rgbLabel.text = @"RGB";
+    _rgbLabel.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
     [self.view addSubview:_rgbLabel];
 }
 
@@ -129,10 +136,10 @@
     
     // Get color data
     UIColor *color = [cp selectionColor];
-
+	
     CGFloat r, g, b, a;
     [[cp selectionColor] getRed:&r green:&g blue:&b alpha:&a];
-
+	
     // Update important UI
     _colorPatch.backgroundColor = color;
     _brightnessSlider.value = [cp brightness];
@@ -162,6 +169,14 @@
     } else {
         _colorPicker.frame = CGRectMake(40.0, 10.0, 240.0, 240.0);
         isSmallSize = YES;
+    }
+}
+
+- (void)testLoup:(id)sender {
+    if (_colorPicker.showLoupe) {
+        _colorPicker.showLoupe = NO;
+    } else {
+        _colorPicker.showLoupe = YES;
     }
 }
 
@@ -210,7 +225,7 @@
 - (UIColor*)randomColorOpaque:(BOOL)isOpaque {
     /*
      From https://gist.github.com/kylefox/1689973
-
+	 
      ***
      
      Distributed under The MIT License:
