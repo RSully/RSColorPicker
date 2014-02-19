@@ -383,16 +383,16 @@
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    // Lazily load loupeLayer, if user wants to display it.
-	if (_showLoupe) {
+
+    if (_showLoupe) {
+        // Lazily load loupeLayer, if user wants to display it.
 		if (!_loupeLayer) {
 			_loupeLayer = [BGRSLoupeLayer layer];
 		}
 		[_loupeLayer appearInColorPicker:self];
-	}
-	// Otherwise, set it to nil.
-	else {
-		_loupeLayer = nil;
+	} else {
+        // Otherwise, set it to nil
+        _loupeLayer = nil;
 	}
 	
     CGPoint point = [[touches anyObject] locationInView:self];
