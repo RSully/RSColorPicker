@@ -47,6 +47,12 @@
  */
 @property (readwrite) CGPoint selection;
 
+/**
+ * Show or hide the loupe.
+ * Default: YES (show).
+ */
+@property (nonatomic) BOOL showLoupe;
+
 - (UIColor *)colorAtPoint:(CGPoint)point; // Returns UIColor at a point in the RSColorPickerView
 
 + (void)prepareForDiameter:(CGFloat)diameter;

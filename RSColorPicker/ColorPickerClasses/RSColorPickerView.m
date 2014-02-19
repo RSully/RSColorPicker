@@ -102,7 +102,7 @@
 - (id)initWithFrame:(CGRect)frame {
     CGFloat square = fmin(frame.size.height, frame.size.width);
     frame.size = CGSizeMake(square, square);
-
+	
     self = [super initWithFrame:frame];
     if (self) {
         [self initRoutine];
@@ -119,35 +119,39 @@
 }
 
 - (void)initRoutine {
+    
+    // Show or hide the loupe. Default: show.
+    _showLoupe = YES;
+    
     self.opaque = YES;
     self.backgroundColor = [UIColor clearColor];
     _colorPickerViewFlags.bitmapNeedsUpdate = NO;
-
+	
     // the view used to select the colour
     _selectionView = [[RSSelectionView alloc] initWithFrame:CGRectMake(0.0, 0.0, kSelectionViewSize, kSelectionViewSize)];
-
+	
     _gradientContainer = [[UIView alloc] initWithFrame:self.bounds];
     _gradientContainer.backgroundColor = [UIColor blackColor];
     _gradientContainer.clipsToBounds = YES;
     _gradientContainer.exclusiveTouch = YES;
     _gradientContainer.layer.shouldRasterize = YES;
     [self addSubview:_gradientContainer];
-
+	
     _brightnessView = [[UIView alloc] initWithFrame:self.bounds];
     _brightnessView.backgroundColor = [UIColor blackColor];
     [_gradientContainer addSubview:_brightnessView];
-
+	
     _gradientView = [[UIImageView alloc] initWithFrame:_gradientContainer.bounds];
     [_gradientContainer addSubview:_gradientView];
-
+	
     UIImage *opacityBackground = RSOpacityBackgroundImage(20, [UIColor colorWithWhite:0.5 alpha:1.0]);
     _opacityView = [[UIView alloc] initWithFrame:self.bounds];
     _opacityView.backgroundColor = [UIColor colorWithPatternImage:opacityBackground];
     [_gradientContainer addSubview:_opacityView];
-
+	
     [self handleStateChangedDisableActions:NO];
     [self addSubview:_selectionView];
-
+	
     [self setCropToCircle:NO];
     self.selectionColor = [UIColor whiteColor];
 }
@@ -188,9 +192,9 @@
 
 - (void)genBitmap {
     if (!_colorPickerViewFlags.bitmapNeedsUpdate) return;
-
+	
     _rep = [[self class] bitmapForDiameter:_gradientView.bounds.size.width scale:_scale padding:[self paddingDistance] shouldCache:YES];
-
+	
     _colorPickerViewFlags.bitmapNeedsUpdate = NO;
     _gradientView.image = RSUIImageWithScale([_rep image], _scale);
 }
@@ -246,7 +250,7 @@
 
 - (void)setCropToCircle:(BOOL)circle {
     _cropToCircle = circle;
-
+	
     [self generateBezierPaths];
     if (circle) {
         // there's a chance the selection was outside the bounds
@@ -378,19 +382,25 @@
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    // Lazily load loupeLayer
-    if (!_loupeLayer) {
-        _loupeLayer = [BGRSLoupeLayer layer];
-    }
-    [_loupeLayer appearInColorPicker:self];
 
+    if (_showLoupe) {
+        // Lazily load loupeLayer, if user wants to display it.
+		if (!_loupeLayer) {
+			_loupeLayer = [BGRSLoupeLayer layer];
+		}
+		[_loupeLayer appearInColorPicker:self];
+	} else {
+        // Otherwise, set it to nil
+        _loupeLayer = nil;
+	}
+	
     CGPoint point = [[touches anyObject] locationInView:self];
     [self updateStateForTouchPoint:point];
-
+	
     if ([_delegate respondsToSelector:@selector(colorPicker:touchesBegan:withEvent:)]) {
         [_delegate colorPicker:self touchesBegan:touches withEvent:event];
     }
-
+	
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -403,7 +413,7 @@
     [self updateStateForTouchPoint:point];
     
     [_loupeLayer disappear];
-
+	
     if ([_delegate respondsToSelector:@selector(colorPicker:touchesEnded:withEvent:)]) {
         [_delegate colorPicker:self touchesEnded:touches withEvent:event];
     }
@@ -457,34 +467,34 @@ static dispatch_queue_t backgroundQueue;
 
 + (ANImageBitmapRep *)bitmapForDiameter:(CGFloat)diameter scale:(CGFloat)scale padding:(CGFloat)paddingDistance shouldCache:(BOOL)cache {
     RSGenerateOperation *repOp = nil;
-
+	
     // Handle the scale here so the operation can just work with pixels directly
     paddingDistance *= scale;
     diameter *= scale;
-
+	
     if (diameter <= 0) return nil;
-
+	
     // Unique key for this size combo
     NSString *dictionaryCacheKey = [NSString stringWithFormat:@"%.1f-%.1f", diameter, paddingDistance];
     // Check cache
     repOp = [generatedBitmaps objectForKey:dictionaryCacheKey];
-
+	
     if (repOp) {
         if (!repOp.isFinished) {
             [repOp waitUntilFinished];
         }
         return repOp.bitmap;
     }
-
+	
     repOp = [[RSGenerateOperation alloc] initWithDiameter:diameter andPadding:paddingDistance];
-
+	
     if (cache) {
         [generatedBitmaps setObject:repOp forKey:dictionaryCacheKey cost:diameter];
     }
-
+	
     [generateQueue addOperation:repOp];
     [repOp waitUntilFinished];
-
+	
     return repOp.bitmap;
 }
 
