@@ -280,6 +280,7 @@
 		1FA35E5213F57B2700A6B347 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				CLASSPREFIX = RSCP;
 				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = "";
 			};
