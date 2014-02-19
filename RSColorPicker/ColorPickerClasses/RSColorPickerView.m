@@ -200,7 +200,7 @@
 
 - (void)generateBezierPaths {
     CGRect activeAreaFrame = CGRectInset(self.bounds, self.paddingDistance, self.paddingDistance);
-    if (_cropToCircle) {
+    if (self.cropToCircle) {
         self.layer.cornerRadius = self.paletteDiameter / 2.0;
         self.activeAreaShape = [UIBezierPath bezierPathWithOvalInRect:activeAreaFrame];
     } else {
@@ -318,7 +318,7 @@
 #pragma mark - Touch Events -
 
 - (CGPoint)validPointForTouch:(CGPoint)touchPoint {
-    if ([_activeAreaShape containsPoint:touchPoint]) {
+    if ([self.activeAreaShape containsPoint:touchPoint]) {
         return touchPoint;
     }
 
