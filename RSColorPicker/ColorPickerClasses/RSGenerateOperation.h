@@ -3,7 +3,6 @@
 //  RSColorPicker
 //
 //  Created by Ryan on 7/22/13.
-//  Copyright (c) 2013 Freelance Web Developer. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>

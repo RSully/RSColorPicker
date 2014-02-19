@@ -3,7 +3,6 @@
 //  RSColorPicker
 //
 //  Created by Ryan Sullivan on 3/12/13.
-//  Copyright (c) 2013 Freelance Web Developer. All rights reserved.
 //
 
 #import "RSSelectionView.h"
