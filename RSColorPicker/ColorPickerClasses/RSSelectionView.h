@@ -7,8 +7,5 @@
 
 #import <UIKit/UIKit.h>
 
-@interface RSSelectionView : UIView
-
-@property (nonatomic) UIColor *selectedColor;
-
+@interface RSSelectionLayer : CALayer
 @end

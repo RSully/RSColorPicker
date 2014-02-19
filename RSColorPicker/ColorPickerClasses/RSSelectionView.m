@@ -7,46 +7,29 @@
 
 #import "RSSelectionView.h"
 
-@interface RSSelectionView ()
 
-@property (nonatomic) UIColor *outerRingColor;
-@property (nonatomic) UIColor *innerRingColor;
+@interface RSSelectionLayer ()
+
+@property (nonatomic, strong) CGColorRef outerRingColor __attribute__((NSObject));
+@property (nonatomic, strong) CGColorRef innerRingColor __attribute__((NSObject));
 
 @end
 
-@implementation RSSelectionView
+@implementation RSSelectionLayer
 
-- (id)initWithFrame:(CGRect)frame {
-    self = [super initWithFrame:frame];
-    if (self) {
-        self.opaque = NO;
-        self.exclusiveTouch = YES;
-        _outerRingColor = [UIColor colorWithWhite:1 alpha:0.4];
-        _innerRingColor = [UIColor colorWithWhite:0 alpha:1];
+- (void)drawInContext:(CGContextRef)ctx {
+    if (!self.outerRingColor || !self.innerRingColor) {
+        self.outerRingColor = [[UIColor colorWithWhite:1 alpha:0.4] CGColor];
+        self.innerRingColor = [[UIColor colorWithWhite:0 alpha:1] CGColor];
     }
-    return self;
-}
-
-- (void)setSelectedColor:(UIColor *)selectedColor {
-    _selectedColor = selectedColor;
-    [self setNeedsDisplay];
-}
-
-- (void)drawRect:(CGRect)rect {
-    CGContextRef ctx = UIGraphicsGetCurrentContext();
-
-    CGContextSetFillColorWithColor(ctx, [UIColor whiteColor].CGColor);
-    CGContextFillEllipseInRect(ctx, CGRectInset(rect, 2, 2));
-
-    CGContextSetFillColorWithColor(ctx, _selectedColor.CGColor);
-    CGContextFillEllipseInRect(ctx, CGRectInset(rect, 2, 2));
-
+    CGRect rect = self.bounds;
+    
     CGContextSetLineWidth(ctx, 3);
-    CGContextSetStrokeColorWithColor(ctx, _outerRingColor.CGColor);
+    CGContextSetStrokeColorWithColor(ctx, self.outerRingColor);
     CGContextStrokeEllipseInRect(ctx, CGRectInset(rect, 1.5, 1.5));
-
+    
     CGContextSetLineWidth(ctx, 2);
-    CGContextSetStrokeColorWithColor(ctx, _innerRingColor.CGColor);
+    CGContextSetStrokeColorWithColor(ctx, self.innerRingColor);
     CGContextStrokeEllipseInRect(ctx, CGRectInset(rect, 3, 3));
 }
 
