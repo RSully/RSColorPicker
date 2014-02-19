@@ -102,7 +102,7 @@
 - (id)initWithFrame:(CGRect)frame {
     CGFloat square = fmin(frame.size.height, frame.size.width);
     frame.size = CGSizeMake(square, square);
-	
+
     self = [super initWithFrame:frame];
     if (self) {
         [self initRoutine];
@@ -119,39 +119,39 @@
 }
 
 - (void)initRoutine {
-    
+
     // Show or hide the loupe. Default: show.
     _showLoupe = YES;
-    
+
     self.opaque = YES;
     self.backgroundColor = [UIColor clearColor];
     _colorPickerViewFlags.bitmapNeedsUpdate = NO;
-	
+
     // the view used to select the colour
     _selectionView = [[RSSelectionView alloc] initWithFrame:CGRectMake(0.0, 0.0, kSelectionViewSize, kSelectionViewSize)];
-	
+
     _gradientContainer = [[UIView alloc] initWithFrame:self.bounds];
     _gradientContainer.backgroundColor = [UIColor blackColor];
     _gradientContainer.clipsToBounds = YES;
     _gradientContainer.exclusiveTouch = YES;
     _gradientContainer.layer.shouldRasterize = YES;
     [self addSubview:_gradientContainer];
-	
+
     _brightnessView = [[UIView alloc] initWithFrame:self.bounds];
     _brightnessView.backgroundColor = [UIColor blackColor];
     [_gradientContainer addSubview:_brightnessView];
-	
+
     _gradientView = [[UIImageView alloc] initWithFrame:_gradientContainer.bounds];
     [_gradientContainer addSubview:_gradientView];
-	
+
     UIImage *opacityBackground = RSOpacityBackgroundImage(20, [UIColor colorWithWhite:0.5 alpha:1.0]);
     _opacityView = [[UIView alloc] initWithFrame:self.bounds];
     _opacityView.backgroundColor = [UIColor colorWithPatternImage:opacityBackground];
     [_gradientContainer addSubview:_opacityView];
-	
+
     [self handleStateChangedDisableActions:NO];
     [self addSubview:_selectionView];
-	
+
     [self setCropToCircle:NO];
     self.selectionColor = [UIColor whiteColor];
 }
@@ -162,17 +162,17 @@
         [_loupeLayer disappearAnimated:NO];
         return;
     }
-    
+
     // Anything that depends on _scale to init needs to be here
     _scale = self.window.screen.scale;
     _gradientContainer.layer.contentsScale = _scale;
-    
+
     _colorPickerViewFlags.bitmapNeedsUpdate = YES;
     _gradientContainer.frame = self.bounds;
     _gradientView.frame = self.bounds;
     _brightnessView.frame = self.bounds;
     _opacityView.frame = self.bounds;
-    
+
     [self genBitmap];
     [self generateBezierPaths];
     [self handleStateChanged];
@@ -192,9 +192,9 @@
 
 - (void)genBitmap {
     if (!_colorPickerViewFlags.bitmapNeedsUpdate) return;
-	
+
     _rep = [[self class] bitmapForDiameter:_gradientView.bounds.size.width scale:_scale padding:[self paddingDistance] shouldCache:YES];
-	
+
     _colorPickerViewFlags.bitmapNeedsUpdate = NO;
     _gradientView.image = RSUIImageWithScale([_rep image], _scale);
 }
@@ -250,7 +250,7 @@
 
 - (void)setCropToCircle:(BOOL)circle {
     _cropToCircle = circle;
-	
+
     [self generateBezierPaths];
     if (circle) {
         // there's a chance the selection was outside the bounds
@@ -284,27 +284,27 @@
         _loupeLayer.actions = disabledActions;
         _selectionView.layer.actions = disabledActions;
     }
-    
+
     // update positions
     CGPoint selectionLocation = [state selectionLocationWithSize:[self paletteDiameter] padding:[self paddingDistance]];
     _selectionView.center = selectionLocation;
     _loupeLayer.position = selectionLocation;
-    
+
     // Make loupeLayer sharp on screen
     CGRect loupeFrame = _loupeLayer.frame;
     loupeFrame.origin = CGPointMake(round(loupeFrame.origin.x), round(loupeFrame.origin.y));
     _loupeLayer.frame = loupeFrame;
     [_loupeLayer setNeedsDisplay];
-    
+
     // re-enable actions
     _loupeLayer.actions = nil;
     _selectionView.layer.actions = nil;
-    
+
     // set colors and opacities
     _selectionView.selectedColor = [self selectionColor];
     _gradientView.alpha = self.brightness;
     _opacityView.alpha = 1 - self.opacity;
-    
+
     // notify delegate
     if (_colorPickerViewFlags.delegateDidChangeSelection) {
         [_delegate colorPickerDidChangeSelection:self];
@@ -333,28 +333,28 @@
     if ([_activeAreaShape containsPoint:touchPoint]) {
         return touchPoint;
     }
-    
+
     if (_cropToCircle) {
         // We compute the right point on the gradient border
         CGPoint returnedPoint;
-        
+
         // TouchCircle is the circle which pass by the point 'touchPoint', of radius 'r'
         // 'X' is the x coordinate of the touch in TouchCircle
         CGFloat X = touchPoint.x - CGRectGetMidX(_gradientContainer.frame);
         // 'Y' is the y coordinate of the touch in TouchCircle
         CGFloat Y = touchPoint.y - CGRectGetMidY(_gradientContainer.frame);
         CGFloat r = sqrt(pow(X, 2) + pow(Y, 2));
-        
+
         // alpha is the angle in radian of the touch on the unit circle
         CGFloat alpha = acos( X / r );
         if (touchPoint.y > CGRectGetMidX(_gradientContainer.frame)) alpha = 2 * M_PI - alpha;
-        
+
         // 'actual radius' is the distance between the center and the border of the gradient
         CGFloat actualRadius = [self paletteDiameter] / 2.0 - [self paddingDistance];
-        
+
         returnedPoint.x = fabs(actualRadius) * cos(alpha);
         returnedPoint.y = fabs(actualRadius) * sin(alpha);
-        
+
         // we offset the center of the circle, to get the coordinate from the right top left origin
         returnedPoint.x = returnedPoint.x + CGRectGetMidX(_gradientContainer.frame);
         returnedPoint.y = CGRectGetMidY(_gradientContainer.frame) - returnedPoint.y;
@@ -393,14 +393,14 @@
         // Otherwise, byebye
         [_loupeLayer disappear];
 	}
-	
+
     CGPoint point = [[touches anyObject] locationInView:self];
     [self updateStateForTouchPoint:point];
-	
+
     if ([_delegate respondsToSelector:@selector(colorPicker:touchesBegan:withEvent:)]) {
         [_delegate colorPicker:self touchesBegan:touches withEvent:event];
     }
-	
+
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -411,9 +411,9 @@
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
     CGPoint point = [[touches anyObject] locationInView:self];
     [self updateStateForTouchPoint:point];
-    
+
     [_loupeLayer disappear];
-	
+
     if ([_delegate respondsToSelector:@selector(colorPicker:touchesEnded:withEvent:)]) {
         [_delegate colorPicker:self touchesEnded:touches withEvent:event];
     }
@@ -467,34 +467,34 @@ static dispatch_queue_t backgroundQueue;
 
 + (ANImageBitmapRep *)bitmapForDiameter:(CGFloat)diameter scale:(CGFloat)scale padding:(CGFloat)paddingDistance shouldCache:(BOOL)cache {
     RSGenerateOperation *repOp = nil;
-	
+
     // Handle the scale here so the operation can just work with pixels directly
     paddingDistance *= scale;
     diameter *= scale;
-	
+
     if (diameter <= 0) return nil;
-	
+
     // Unique key for this size combo
     NSString *dictionaryCacheKey = [NSString stringWithFormat:@"%.1f-%.1f", diameter, paddingDistance];
     // Check cache
     repOp = [generatedBitmaps objectForKey:dictionaryCacheKey];
-	
+
     if (repOp) {
         if (!repOp.isFinished) {
             [repOp waitUntilFinished];
         }
         return repOp.bitmap;
     }
-	
+
     repOp = [[RSGenerateOperation alloc] initWithDiameter:diameter andPadding:paddingDistance];
-	
+
     if (cache) {
         [generatedBitmaps setObject:repOp forKey:dictionaryCacheKey cost:diameter];
     }
-	
+
     [generateQueue addOperation:repOp];
     [repOp waitUntilFinished];
-	
+
     return repOp.bitmap;
 }
 

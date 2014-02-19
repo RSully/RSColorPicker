@@ -15,12 +15,12 @@ BMPixel RSPixelFromHSV(CGFloat H, CGFloat S, CGFloat V)
     if (H == 1) {
         H = 0;
     }
-    
+
     CGFloat var_h = H * 6.0;
     // Verified `H` is never <0 so (int) is OK:
     int var_i = (int)var_h;
     CGFloat var_1 = V * (1.0 - S);
-    
+
     if (var_i == 0) {
         CGFloat var_3 = V * (1.0 - S * (1.0 - (var_h - var_i)));
         return BMPixelMake(V, var_3, var_1, 1.0);
@@ -58,7 +58,7 @@ void RSGetComponentsForColor(float *components, UIColor *color)
     CGContextFillRect(context, CGRectMake(0, 0, 1, 1));
     CGContextRelease(context);
     CGColorSpaceRelease(rgbColorSpace);
-    
+
     for (int component = 0; component < 4; component++) {
         components[component] = resultingPixel[component] / 255.0f;
     }
@@ -77,19 +77,19 @@ UIImage * RSOpacityBackgroundImage(CGFloat length, UIColor *color) {
     UIBezierPath *rectangle2Path = [UIBezierPath bezierPathWithRect: CGRectMake(length*0.5, length*0.5, length*0.5, length*0.5)];
     UIBezierPath *rectangle3Path = [UIBezierPath bezierPathWithRect: CGRectMake(0, length*0.5, length*0.5, length*0.5)];
     UIBezierPath *rectangle4Path = [UIBezierPath bezierPathWithRect: CGRectMake(length*0.5, 0, length*0.5, length*0.5)];
-    
+
     UIGraphicsBeginImageContext(CGSizeMake(length, length));
-    
+
     [color setFill];
     [rectanglePath fill];
     [rectangle2Path fill];
-    
+
     [[UIColor whiteColor] setFill];
     [rectangle3Path fill];
     [rectangle4Path fill];
-    
+
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
-    
+
     return image;
 }

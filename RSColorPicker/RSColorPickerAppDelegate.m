@@ -18,11 +18,11 @@
 
     // Then add it to a nav controller so we can experiment with pushing
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:rootController];
-    
+
     // Add navigation to our window
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     self.window.rootViewController = navController;
-    
+
     // Show the window
     [self.window makeKeyAndVisible];
     return YES;

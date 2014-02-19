@@ -21,18 +21,18 @@
  *  1 ------ 2
  */
 UIImage * RSHourGlassThumbImage(CGSize size, CGFloat cWidth){
-    
+
     //Set Size
     CGFloat width = size.width;
     CGFloat height = size.height;
-    
+
     //Setup Context
     CGContextRef ctx = [CGContextCreator newARGBBitmapContextWithSize:size];
-    
+
     //Set Colors
     CGContextSetFillColorWithColor(ctx, [UIColor blackColor].CGColor);
     CGContextSetStrokeColorWithColor(ctx, [UIColor whiteColor].CGColor);
-        
+
     //Draw Slider, See Diagram above for point numbers
     CGFloat yDist83 = sqrtf(3)/2*width;
     CGFloat yDist74 = height - yDist83;
@@ -49,18 +49,18 @@ UIImage * RSHourGlassThumbImage(CGSize size, CGFloat cWidth){
     //Fill Path
     CGContextAddLines(ctx, addLines, sizeof(addLines)/sizeof(addLines[0]));
     CGContextFillPath(ctx);
-    
+
     //Stroke Path
     CGContextAddLines(ctx, addLines, sizeof(addLines)/sizeof(addLines[0]));
     CGContextClosePath(ctx);
     CGContextStrokePath(ctx);
-    
+
     CGImageRef cgImage = CGBitmapContextCreateImage(ctx);
     CGContextRelease(ctx);
-   
-   UIImage *image = [UIImage imageWithCGImage:cgImage];
-   CGImageRelease(cgImage);
-    
+
+    UIImage *image = [UIImage imageWithCGImage:cgImage];
+    CGImageRelease(cgImage);
+
     return image;
 }
 
@@ -76,47 +76,47 @@ UIImage * RSHourGlassThumbImage(CGSize size, CGFloat cWidth){
  * +-----+
  */
 UIImage * RSArrowLoopThumbImage(CGSize size, CGSize loopSize){
-   
-   //Setup Rects
-   CGRect outsideRect = CGRectMake(0, 0, size.width, size.height);
-   CGRect insideRect;
-   insideRect.size = loopSize;
-   insideRect.origin.x = (size.width - loopSize.width)/2;
-   insideRect.origin.y = (size.height - loopSize.height)/2;
-   
-   //Setup Context
+
+    //Setup Rects
+    CGRect outsideRect = CGRectMake(0, 0, size.width, size.height);
+    CGRect insideRect;
+    insideRect.size = loopSize;
+    insideRect.origin.x = (size.width - loopSize.width)/2;
+    insideRect.origin.y = (size.height - loopSize.height)/2;
+
+    //Setup Context
     CGContextRef ctx = [CGContextCreator newARGBBitmapContextWithSize:size];
-   
-   //Set Colors
+
+    //Set Colors
     CGContextSetFillColorWithColor(ctx, [UIColor blackColor].CGColor);
-   CGContextSetStrokeColorWithColor(ctx, [UIColor whiteColor].CGColor);
-   
-   CGMutablePathRef loopPath = CGPathCreateMutable();
-   CGPathAddRect(loopPath, nil, outsideRect);
-   CGPathAddRect(loopPath, nil, insideRect);
-   
-   
-   //Fill Path
-   CGContextAddPath(ctx, loopPath);
-   CGContextEOFillPath(ctx);
-   
-   //Stroke Path
-   CGContextAddRect(ctx, insideRect);
-   CGContextStrokePath(ctx);
-   
-   CGImageRef cgImage = CGBitmapContextCreateImage(ctx);
-   
-   //Memory
-   CGPathRelease(loopPath);
-   CGContextRelease(ctx);
-   
-   UIImage *image = [UIImage imageWithCGImage:cgImage];
-   CGImageRelease(cgImage);
-    
+    CGContextSetStrokeColorWithColor(ctx, [UIColor whiteColor].CGColor);
+
+    CGMutablePathRef loopPath = CGPathCreateMutable();
+    CGPathAddRect(loopPath, nil, outsideRect);
+    CGPathAddRect(loopPath, nil, insideRect);
+
+
+    //Fill Path
+    CGContextAddPath(ctx, loopPath);
+    CGContextEOFillPath(ctx);
+
+    //Stroke Path
+    CGContextAddRect(ctx, insideRect);
+    CGContextStrokePath(ctx);
+
+    CGImageRef cgImage = CGBitmapContextCreateImage(ctx);
+
+    //Memory
+    CGPathRelease(loopPath);
+    CGContextRelease(ctx);
+
+    UIImage *image = [UIImage imageWithCGImage:cgImage];
+    CGImageRelease(cgImage);
+
     return image;
 }
 
- 
+
 @implementation RSBrightnessSlider
 
 - (id)initWithFrame:(CGRect)frame {
@@ -139,21 +139,20 @@ UIImage * RSArrowLoopThumbImage(CGSize size, CGSize loopSize){
     self.minimumValue = 0.0;
     self.maximumValue = 1.0;
     self.continuous = YES;
-    
+
     self.enabled = YES;
     self.userInteractionEnabled = YES;
-    
+
     [self addTarget:self action:@selector(myValueChanged:) forControlEvents:UIControlEventValueChanged];
 }
 
 /*
-- (CGRect)trackRectForBounds:(CGRect)bounds
-{
-    NSLog(@"breaking everything");
-    //to hide the track view
-    return CGRectMake(0, ceilf(bounds.size.height / 2), bounds.size.width, 0);
-}
-*/
+ - (CGRect)trackRectForBounds:(CGRect)bounds
+ {
+     // to hide the track view
+     return CGRectMake(0, ceilf(bounds.size.height / 2), bounds.size.width, 0);
+ }
+ */
 
 - (void)myValueChanged:(id)notif {
     [_colorPicker setBrightness:self.value];
@@ -164,9 +163,9 @@ UIImage * RSArrowLoopThumbImage(CGSize size, CGSize loopSize){
     CGColorSpaceRef space = CGColorSpaceCreateDeviceGray();
     NSArray *colors = @[(id)[UIColor colorWithWhite:0 alpha:1].CGColor,
                         (id)[UIColor colorWithWhite:1 alpha:1].CGColor];
-    
+
     CGGradientRef myGradient = CGGradientCreateWithColors(space, (__bridge CFArrayRef)colors, NULL);
-    
+
     CGContextDrawLinearGradient(ctx, myGradient, CGPointZero, CGPointMake(rect.size.width, 0), 0);
     CGGradientRelease(myGradient);
     CGColorSpaceRelease(space);

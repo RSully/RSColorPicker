@@ -34,7 +34,7 @@
 
 - (void)drawRect:(CGRect)rect {
     CGContextRef ctx = UIGraphicsGetCurrentContext();
-    
+
     CGContextSetFillColorWithColor(ctx, _selectedColor.CGColor);
     CGContextFillEllipseInRect(ctx, CGRectInset(rect, 2, 2));
     CGContextSetLineWidth(ctx, 3);
