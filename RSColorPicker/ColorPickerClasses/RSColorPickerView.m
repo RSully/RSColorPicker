@@ -390,8 +390,8 @@
 		}
 		[_loupeLayer appearInColorPicker:self];
 	} else {
-        // Otherwise, set it to nil
-        _loupeLayer = nil;
+        // Otherwise, byebye
+        [_loupeLayer disappear];
 	}
 	
     CGPoint point = [[touches anyObject] locationInView:self];
