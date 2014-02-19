@@ -5,7 +5,7 @@
 //  Created by Ryan Sullivan on 3/12/13.
 //
 
-#import "RSSelectionView.h"
+#import "RSSelectionLayer.h"
 
 
 @interface RSSelectionLayer ()

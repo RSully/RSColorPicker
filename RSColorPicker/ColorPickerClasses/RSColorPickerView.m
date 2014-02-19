@@ -7,7 +7,7 @@
 
 #import "RSColorPickerView.h"
 #import "BGRSLoupeLayer.h"
-#import "RSSelectionView.h"
+#import "RSSelectionLayer.h"
 #import "RSColorFunctions.h"
 #import "ANImageBitmapRep.h"
 #import "RSGenerateOperation.h"
@@ -292,12 +292,12 @@
     self.selectionColorLayer.backgroundColor = [[self selectionColor] CGColor];
     self.opacityLayer.opacity    = 1 - self.opacity;
     self.brightnessLayer.opacity = 1 - self.brightness;
+    [CATransaction commit];
 
     // notify delegate
     if ([self.delegate respondsToSelector:@selector(colorPickerDidChangeSelection:)]) {
         [self.delegate colorPickerDidChangeSelection:self];
     }
-    [CATransaction commit];
 }
 
 - (void)updateStateForTouchPoint:(CGPoint)point {
