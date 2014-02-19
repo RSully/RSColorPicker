@@ -35,11 +35,16 @@
 - (void)drawRect:(CGRect)rect {
     CGContextRef ctx = UIGraphicsGetCurrentContext();
 
+    CGContextSetFillColorWithColor(ctx, [UIColor whiteColor].CGColor);
+    CGContextFillEllipseInRect(ctx, CGRectInset(rect, 2, 2));
+
     CGContextSetFillColorWithColor(ctx, _selectedColor.CGColor);
     CGContextFillEllipseInRect(ctx, CGRectInset(rect, 2, 2));
+
     CGContextSetLineWidth(ctx, 3);
     CGContextSetStrokeColorWithColor(ctx, _outerRingColor.CGColor);
     CGContextStrokeEllipseInRect(ctx, CGRectInset(rect, 1.5, 1.5));
+
     CGContextSetLineWidth(ctx, 2);
     CGContextSetStrokeColorWithColor(ctx, _innerRingColor.CGColor);
     CGContextStrokeEllipseInRect(ctx, CGRectInset(rect, 3, 3));
