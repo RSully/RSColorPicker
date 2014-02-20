@@ -61,6 +61,13 @@
  */
 @property (nonatomic) CALayer *opacityLayer;
 
+/**
+ * Layer that will contain the gradientLayer, brightnessLayer,
+ * opacityLayer.
+ */
+@property (nonatomic) CALayer *contentsLayer;
+
+
 @property (nonatomic) BGRSLoupeLayer *loupeLayer;
 
 /**
@@ -122,9 +129,9 @@
 
     // Show or hide the loupe. Default: show.
     self.showLoupe = YES;
-
     self.opaque = YES;
     self.backgroundColor = [UIColor clearColor];
+
     _colorPickerViewFlags.bitmapNeedsUpdate = NO;
 
     // the view used to select the colour
@@ -147,14 +154,20 @@
     self.opacityLayer = [CALayer layer];
     self.opacityLayer.backgroundColor = [[UIColor colorWithPatternImage:opacityBackground] CGColor];
 
-    [self.layer addSublayer:self.gradientLayer];
-    [self.layer addSublayer:self.brightnessLayer];
-    [self.layer addSublayer:self.selectionColorLayer];
-    [self.layer addSublayer:self.opacityLayer];
-    [self.layer addSublayer:self.selectionLayer];
+    self.contentsLayer = [CALayer layer];
+    self.contentsLayer.frame = self.bounds;
+
+    [self.contentsLayer addSublayer:self.gradientLayer];
+    [self.contentsLayer addSublayer:self.brightnessLayer];
+    [self.contentsLayer addSublayer:self.selectionColorLayer];
+    [self.contentsLayer addSublayer:self.opacityLayer];
+    [self.contentsLayer addSublayer:self.selectionLayer];
+
+    [self.layer addSublayer:self.contentsLayer];
 
     [self handleStateChangedDisableActions:NO];
 
+    self.contentsLayer.masksToBounds = YES;
     self.cropToCircle = NO;
     self.selectionColor = [UIColor whiteColor];
 }
@@ -193,7 +206,6 @@
     if (!_colorPickerViewFlags.bitmapNeedsUpdate) return;
 
     self.rep = [self.class bitmapForDiameter:self.gradientLayer.bounds.size.width scale:self.scale padding:self.paddingDistance shouldCache:YES];
-
     _colorPickerViewFlags.bitmapNeedsUpdate = NO;
     self.gradientLayer.contents = (id)[RSUIImageWithScale(self.rep.image, self.scale) CGImage];
 }
@@ -201,10 +213,10 @@
 - (void)generateBezierPaths {
     CGRect activeAreaFrame = CGRectInset(self.bounds, self.paddingDistance, self.paddingDistance);
     if (self.cropToCircle) {
-        self.layer.cornerRadius = self.paletteDiameter / 2.0;
+        self.contentsLayer.cornerRadius = self.paletteDiameter / 2.0;
         self.activeAreaShape = [UIBezierPath bezierPathWithOvalInRect:activeAreaFrame];
     } else {
-        self.layer.cornerRadius = 0.0;
+        self.contentsLayer.cornerRadius = 0.0;
         self.activeAreaShape = [UIBezierPath bezierPathWithRect:activeAreaFrame];
     }
 }
