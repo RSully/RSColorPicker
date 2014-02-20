@@ -178,6 +178,10 @@
     }
 
     self.scale = self.window.screen.scale;
+
+    [CATransaction begin];
+    [CATransaction setDisableActions:YES];
+
     self.layer.contentsScale = self.scale;
     self.selectionLayer.contentsScale = self.scale;
     self.selectionColorLayer.contentsScale = self.scale;
@@ -198,6 +202,8 @@
     [self genBitmap];
     [self generateBezierPaths];
     [self handleStateChanged];
+
+    [CATransaction commit];
 }
 
 - (void)didMoveToWindow {
@@ -221,6 +227,9 @@
 }
 
 - (void)generateBezierPaths {
+    [CATransaction begin];
+    [CATransaction setDisableActions:YES];
+
     CGRect activeAreaFrame = CGRectInset(self.bounds, self.paddingDistance, self.paddingDistance);
     if (self.cropToCircle) {
         self.contentsLayer.cornerRadius = self.paletteDiameter / 2.0;
@@ -229,6 +238,8 @@
         self.contentsLayer.cornerRadius = 0.0;
         self.activeAreaShape = [UIBezierPath bezierPathWithRect:activeAreaFrame];
     }
+
+    [CATransaction commit];
 }
 
 #pragma mark - Getters -
