@@ -188,11 +188,13 @@
     self.contentsLayer.contentsScale = self.scale;
 
     _colorPickerViewFlags.bitmapNeedsUpdate = YES;
+    self.contentsLayer.frame    = self.bounds;
     self.gradientLayer.frame    = self.bounds;
     self.brightnessLayer.frame  = self.bounds;
     self.opacityLayer.frame     = self.bounds;
 
     self.opacityLayer.backgroundColor = [[UIColor colorWithPatternImage:RSOpacityBackgroundImage(20, self.scale, [UIColor colorWithWhite:0.5 alpha:1.0])] CGColor];
+
     [self genBitmap];
     [self generateBezierPaths];
     [self handleStateChanged];
