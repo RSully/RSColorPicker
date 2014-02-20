@@ -180,6 +180,14 @@
     }
 
     self.scale = self.window.screen.scale;
+    self.layer.contentsScale = self.scale;
+    self.selectionLayer.contentsScale = self.scale;
+    self.selectionColorLayer.contentsScale = self.scale;
+    self.brightnessLayer.contentsScale = self.scale;
+    self.gradientLayer.contentsScale = self.scale;
+    self.opacityLayer.contentsScale = self.scale;
+    self.loupeLayer.contentsScale = self.scale;
+
     _colorPickerViewFlags.bitmapNeedsUpdate = YES;
     self.gradientLayer.frame    = self.bounds;
     self.brightnessLayer.frame  = self.bounds;
@@ -387,6 +395,7 @@
         // Lazily load loupeLayer, if user wants to display it.
 		if (!self.loupeLayer) {
 			self.loupeLayer = [BGRSLoupeLayer layer];
+            self.loupeLayer.contentsScale = self.scale;
 		}
 		[self.loupeLayer appearInColorPicker:self];
 	} else {
