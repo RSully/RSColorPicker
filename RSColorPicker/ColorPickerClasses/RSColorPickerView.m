@@ -150,7 +150,7 @@
     self.gradientLayer = [CALayer layer];
     self.gradientLayer.frame = self.bounds;
 
-    UIImage *opacityBackground = RSOpacityBackgroundImage(20, [UIColor colorWithWhite:0.5 alpha:1.0]);
+    UIImage *opacityBackground = RSOpacityBackgroundImage(20, 2.0, [UIColor colorWithWhite:0.5 alpha:1.0]);
     self.opacityLayer = [CALayer layer];
     self.opacityLayer.backgroundColor = [[UIColor colorWithPatternImage:opacityBackground] CGColor];
 
@@ -185,8 +185,9 @@
     self.selectionColorLayer.contentsScale = self.scale;
     self.brightnessLayer.contentsScale = self.scale;
     self.gradientLayer.contentsScale = self.scale;
-    self.opacityLayer.contentsScale = self.scale;
+    self.opacityLayer.contentsScale = 1.0;//self.scale;
     self.loupeLayer.contentsScale = self.scale;
+    self.contentsLayer.contentsScale = self.scale;
 
     _colorPickerViewFlags.bitmapNeedsUpdate = YES;
     self.gradientLayer.frame    = self.bounds;

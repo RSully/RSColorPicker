@@ -72,7 +72,8 @@ UIImage * RSUIImageWithScale(UIImage *img, CGFloat scale)
 /**
  * Returns image that looks like a checkered background.
  */
-UIImage * RSOpacityBackgroundImage(CGFloat length, UIColor *color) {
+UIImage * RSOpacityBackgroundImage(CGFloat length, CGFloat scale, UIColor *color) {
+    length *= scale;
     UIBezierPath *rectanglePath = [UIBezierPath bezierPathWithRect: CGRectMake(0, 0, length*0.5, length*0.5)];
     UIBezierPath *rectangle2Path = [UIBezierPath bezierPathWithRect: CGRectMake(length*0.5, length*0.5, length*0.5, length*0.5)];
     UIBezierPath *rectangle3Path = [UIBezierPath bezierPathWithRect: CGRectMake(0, length*0.5, length*0.5, length*0.5)];
@@ -91,5 +92,5 @@ UIImage * RSOpacityBackgroundImage(CGFloat length, UIColor *color) {
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
 
-    return image;
+    return RSUIImageWithScale(image, scale);
 }
