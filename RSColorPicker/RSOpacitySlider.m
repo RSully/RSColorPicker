@@ -34,8 +34,6 @@
     self.enabled = YES;
     self.userInteractionEnabled = YES;
 
-    UIImage *backgroundImage = RSOpacityBackgroundImage(16.f, [UIColor colorWithWhite:0.5 alpha:1.0]);
-    self.backgroundColor = [UIColor colorWithPatternImage:backgroundImage];
     [self addTarget:self action:@selector(myValueChanged:) forControlEvents:UIControlEventValueChanged];
 }
 
@@ -46,6 +44,11 @@
     return CGRectMake(0, ceilf(bounds.size.height / 2), bounds.size.width, 0);
  }
  */
+
+-  (void)didMoveToWindow {
+    UIImage *backgroundImage = RSOpacityBackgroundImage(16.f, self.window.screen.scale, [UIColor colorWithWhite:0.5 alpha:1.0]);
+    self.backgroundColor = [UIColor colorWithPatternImage:backgroundImage];
+}
 
 - (void)myValueChanged:(id)notif {
     _colorPicker.opacity = self.value;
