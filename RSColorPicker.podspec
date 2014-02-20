@@ -1,12 +1,12 @@
 Pod::Spec.new do |s|
   s.name         = "RSColorPicker"
-  s.version      = "0.8.2"
+  s.version      = "0.8.3"
   s.summary      = "iPhone color picker view with brightness control, opacity control, and delegation support."
   s.description  = <<-DESC
-                   iPhone color picker view with brightness control, opacity control, and delegation support. Handles touch events internally. Easy to customize.
+                   iPhone color picker view with brightness control, opacity control, and delegation support.
                    DESC
   s.homepage     = "https://github.com/RSully/RSColorPicker"
-  s.screenshots  = "https://raw.github.com/RSully/RSColorPicker/v0.7.0/Example01.png", "https://raw.github.com/RSully/RSColorPicker/v0.7.0/Example02.png", "https://raw.github.com/RSully/RSColorPicker/v0.7.0/Example03.png", "https://raw.github.com/RSully/RSColorPicker/v0.7.0/Example04.png", "https://raw.github.com/RSully/RSColorPicker/v0.7.0/Example05.png", "https://raw.github.com/RSully/RSColorPicker/v0.7.0/Example06.png"
+  s.screenshots  = "https://raw.github.com/RSully/RSColorPicker/v0.8.3/Example01.png", "https://raw.github.com/RSully/RSColorPicker/v0.8.3/Example02.png", "https://raw.github.com/RSully/RSColorPicker/v0.8.3/Example03.png", "https://raw.github.com/RSully/RSColorPicker/v0.8.3/Example04.png", "https://raw.github.com/RSully/RSColorPicker/v0.8.3/Example05.png"
   s.license      = { :type => 'BSD', :file => "LICENSE.md" }
   s.author       = { "Ryan" => "rsul.dev@me.com" }
   s.source       = { :git => "https://github.com/RSully/RSColorPicker.git", :tag => "v0.8.2" }
