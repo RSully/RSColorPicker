@@ -8,7 +8,6 @@
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
 #import <Accelerate/Accelerate.h>
-#import "ANImageBitmapRep.h"
 
 @class RSColorPickerView, BGRSLoupeLayer;
 

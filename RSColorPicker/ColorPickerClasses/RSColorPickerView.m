@@ -5,13 +5,15 @@
 //  Created by Ryan Sullivan on 8/12/11.
 //
 
-#import "RSColorPickerView.h"
-#import "BGRSLoupeLayer.h"
-#import "RSSelectionLayer.h"
-#import "RSColorFunctions.h"
+
 #import "ANImageBitmapRep.h"
-#import "RSGenerateOperation.h"
+
+#import "BGRSLoupeLayer.h"
+#import "RSColorFunctions.h"
 #import "RSColorPickerState.h"
+#import "RSColorPickerView.h"
+#import "RSGenerateOperation.h"
+#import "RSSelectionLayer.h"
 
 #define kSelectionViewSize 22
 
