@@ -8,6 +8,8 @@
 
 #import "RSOpacitySlider.h"
 
+#import "RSColorFunctions.h"
+
 @implementation RSOpacitySlider
 
 - (id)initWithFrame:(CGRect)frame {

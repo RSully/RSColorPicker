@@ -6,9 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "CGContextCreator.h"
-
-@class RSColorPickerView;
+#import "RSColorPickerView.h"
 
 @interface RSBrightnessSlider : UISlider
 

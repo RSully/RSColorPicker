@@ -6,7 +6,8 @@
 //
 
 #import "RSBrightnessSlider.h"
-#import "RSColorPickerView.h"
+
+#import "CGContextCreator.h"
 
 /**
  * Returns Image with hourglass looking slider that looks something like:

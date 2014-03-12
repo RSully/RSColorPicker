@@ -6,8 +6,8 @@
 //  Copyright (c) 2013 Red Cactus LLC. All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
 #import "RSColorPickerView.h"
-#import "RSColorFunctions.h"
 
 @interface RSOpacitySlider : UISlider
 
