@@ -80,6 +80,8 @@ UIImage * RSOpacityBackgroundImage(CGFloat length, CGFloat scale, UIColor *color
     UIBezierPath *rectangle4Path = [UIBezierPath bezierPathWithRect: CGRectMake(length*0.5, 0, length*0.5, length*0.5)];
 
     UIGraphicsBeginImageContext(CGSizeMake(length, length));
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    if (!ctx) return nil;
 
     [color setFill];
     [rectanglePath fill];
