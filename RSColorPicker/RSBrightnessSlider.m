@@ -161,6 +161,7 @@ UIImage * RSArrowLoopThumbImage(CGSize size, CGSize loopSize){
 
 - (void)drawRect:(CGRect)rect {
     CGContextRef ctx = UIGraphicsGetCurrentContext();
+
     CGColorSpaceRef space = CGColorSpaceCreateDeviceGray();
     NSArray *colors = @[(id)[UIColor colorWithWhite:0 alpha:1].CGColor,
                         (id)[UIColor colorWithWhite:1 alpha:1].CGColor];

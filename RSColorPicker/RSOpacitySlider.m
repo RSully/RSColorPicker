@@ -58,6 +58,7 @@
 
 - (void)drawRect:(CGRect)rect {
     CGContextRef ctx = UIGraphicsGetCurrentContext();
+
     CGColorSpaceRef space = CGColorSpaceCreateDeviceGray();
     NSArray *colors = [[NSArray alloc] initWithObjects:
                        (id)[UIColor colorWithWhite:0 alpha:0].CGColor,
