@@ -59,7 +59,7 @@
                                      8,
                                      bitmapBytesPerRow,
                                      colorSpace,
-                                     kCGImageAlphaPremultipliedFirst);
+                                     (CGBitmapInfo)kCGImageAlphaPremultipliedFirst);
     if (context == NULL) {
         free (bitmapData);
         NSLog(@"Failed to create bitmap!");
@@ -111,7 +111,7 @@
                                      8,      // bits per component
                                      bitmapBytesPerRow,
                                      colorSpace,
-                                     kCGImageAlphaPremultipliedFirst);
+                                     (CGBitmapInfo)kCGImageAlphaPremultipliedFirst);
     if (context == NULL) {
         free (bitmapData);
         NSLog(@"Failed to create bitmap!");
