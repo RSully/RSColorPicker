@@ -101,7 +101,7 @@
     XCTAssertNotEqualWithAccuracy(rgbaA[0], rgbaB[0], kColorComponentAccuracy);
     XCTAssertNotEqualWithAccuracy(rgbaA[1], rgbaB[1], kColorComponentAccuracy);
     XCTAssertNotEqualWithAccuracy(rgbaA[2], rgbaB[2], kColorComponentAccuracy);
-    XCTAssertNotEqualWithAccuracy(rgbaA[3], rgbaB[3], kColorComponentAccuracyt);
+    XCTAssertNotEqualWithAccuracy(rgbaA[3], rgbaB[3], kColorComponentAccuracy);
 }
 
 #pragma mark - RSColorPickerView Delegates
