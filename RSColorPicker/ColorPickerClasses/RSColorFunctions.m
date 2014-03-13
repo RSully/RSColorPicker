@@ -63,9 +63,12 @@ void RSGetComponentsForColor(float *components, UIColor *color)
         components[component] = resultingPixel[component] / 255.0f;
     }
 
-    components[0] /= components[3];
-    components[1] /= components[3];
-    components[2] /= components[3];
+    if (components[3] > 0)
+    {
+        components[0] /= components[3];
+        components[1] /= components[3];
+        components[2] /= components[3];
+    }
 }
 
 UIImage * RSUIImageWithScale(UIImage *img, CGFloat scale)
