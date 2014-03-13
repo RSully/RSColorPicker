@@ -32,6 +32,22 @@
     [super tearDown];
 }
 
+- (void)testSetSelectionColor_multiple
+{
+    UIColor *newSelection = RSRandomColorOpaque(NO);
+
+    self.colorPicker.selectionColor = newSelection;
+    UIColor *setA = self.colorPicker.selectionColor;
+
+    self.colorPicker.selectionColor = newSelection;
+    UIColor *setB = self.colorPicker.selectionColor;
+
+    XCTAssertEqualObjects(newSelection, setA);
+    XCTAssertEqualObjects(newSelection, setB);
+
+    XCTAssertEqualObjects(setA, setB);
+}
+
 - (void)testSetSelectionColor_random
 {
     UIColor *newSelection = RSRandomColorOpaque(NO);
