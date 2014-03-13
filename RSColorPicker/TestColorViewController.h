@@ -7,6 +7,7 @@
 
 #import <UIKit/UIKit.h>
 #import "ColorPickerClasses/RSColorPickerView.h"
+#import "ColorPickerClasses/RSColorFunctions.h"
 
 @class RSBrightnessSlider;
 @class RSOpacitySlider;

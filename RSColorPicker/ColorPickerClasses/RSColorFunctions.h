@@ -17,3 +17,5 @@ void RSGetComponentsForColor(float *components, UIColor *color);
 UIImage * RSUIImageWithScale(UIImage *img, CGFloat scale);
 
 UIImage * RSOpacityBackgroundImage(CGFloat length, CGFloat scale, UIColor *color);
+
+UIColor * RSRandomColorOpaque(BOOL isOpaque);

@@ -22,7 +22,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    self.view.backgroundColor = [self randomColorOpaque:YES];
+    self.view.backgroundColor = RSRandomColorOpaque(YES);
 
     self.navigationController.navigationBar.translucent = NO;
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Push" style:UIBarButtonItemStyleBordered
@@ -35,7 +35,7 @@
 	//    [_colorPicker setCropToCircle:YES]; // Defaults to NO (you can set BG color)
 
     // Set the selection color - useful to present when the user had picked a color previously
-    [_colorPicker setSelectionColor:[self randomColorOpaque:YES]];
+    [_colorPicker setSelectionColor:RSRandomColorOpaque(YES)];
 
 	//    [_colorPicker setSelectionColor:[UIColor colorWithRed:1 green:0 blue:0.752941 alpha:1.000000]];
 	//    [_colorPicker setSelection:CGPointMake(269, 269)];
@@ -217,51 +217,6 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
-#pragma mark - Random color for testing
-
-- (UIColor*)randomColorOpaque:(BOOL)isOpaque {
-    /*
-     From https://gist.github.com/kylefox/1689973
-
-     ***
-
-     Distributed under The MIT License:
-     http://opensource.org/licenses/mit-license.php
-
-     Permission is hereby granted, free of charge, to any person obtaining
-     a copy of this software and associated documentation files (the
-     "Software"), to deal in the Software without restriction, including
-     without limitation the rights to use, copy, modify, merge, publish,
-     distribute, sublicense, and/or sell copies of the Software, and to
-     permit persons to whom the Software is furnished to do so, subject to
-     the following conditions:
-
-     The above copyright notice and this permission notice shall be
-     included in all copies or substantial portions of the Software.
-
-     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-     MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-     LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-     OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-     WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-     Alpha modifications for RSColorPicker test project
-     */
-
-    CGFloat hue = ( arc4random() % 256 / 256.0 );  //  0.0 to 1.0
-    CGFloat saturation = ( arc4random() % 128 / 256.0 ) + 0.5;  //  0.5 to 1.0, away from white
-    CGFloat brightness = ( arc4random() % 128 / 256.0 ) + 0.5;  //  0.5 to 1.0, away from black
-    CGFloat alpha = 1;
-
-    if (!isOpaque) {
-        alpha = ( arc4random() % 128 / 256.0 ) + 0.5;
-    }
-
-    return [UIColor colorWithHue:hue saturation:saturation brightness:brightness alpha:alpha];
 }
 
 @end
