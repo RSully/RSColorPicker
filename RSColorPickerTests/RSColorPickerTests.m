@@ -7,8 +7,12 @@
 //
 
 #import <XCTest/XCTest.h>
+#import "RSColorPickerView.h"
+#import "RSColorFunctions.h"
 
-@interface RSColorPickerTests : XCTestCase
+@interface RSColorPickerTests : XCTestCase <RSColorPickerViewDelegate>
+
+@property (nonatomic) RSColorPickerView *colorPicker;
 
 @end
 
@@ -17,7 +21,9 @@
 - (void)setUp
 {
     [super setUp];
-    // Put setup code here. This method is called before the invocation of each test method in the class.
+    self.colorPicker = [[RSColorPickerView alloc] initWithFrame:CGRectMake(0.0, 0.0, 200.0, 200.0)];
+    self.colorPicker.delegate = self;
+    self.colorPicker.selectionColor = RSRandomColorOpaque(NO);
 }
 
 - (void)tearDown
@@ -26,9 +32,41 @@
     [super tearDown];
 }
 
-- (void)testExample
+- (void)testSetSelectionColor_random
 {
-    XCTFail(@"No implementation for \"%s\"", __PRETTY_FUNCTION__);
+    UIColor *newSelection = RSRandomColorOpaque(NO);
+    UIColor *oldSelection = self.colorPicker.selectionColor;
+
+    self.colorPicker.selectionColor = newSelection;
+
+    UIColor *currentSelection = self.colorPicker.selectionColor;
+
+    XCTAssertNotEqualObjects(currentSelection, oldSelection);
+    XCTAssertEqualObjects(currentSelection, newSelection);
 }
+
+- (void)testSetSelectionColor_self
+{
+    UIColor *currentColor = self.colorPicker.selectionColor;
+    self.colorPicker.selectionColor = currentColor;
+
+    XCTAssertEqualObjects(currentColor, self.colorPicker.selectionColor);
+}
+
+#pragma mark - RSColorPickerView Delegates
+
+- (void)colorPickerDidChangeSelection:(RSColorPickerView *)cp
+{
+
+}
+- (void)colorPicker:(RSColorPickerView *)colorPicker touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+
+}
+- (void)colorPicker:(RSColorPickerView *)colorPicker touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+{
+
+}
+
 
 @end
