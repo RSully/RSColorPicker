@@ -46,6 +46,8 @@
  */
 @property (readwrite) CGPoint selection;
 
+@property (readonly) CGFloat paddingDistance;
+
 /**
  * Show or hide the loupe.
  * Default: YES (show).

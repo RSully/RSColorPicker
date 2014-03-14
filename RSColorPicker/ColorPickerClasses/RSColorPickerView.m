@@ -98,7 +98,6 @@
 - (void)updateStateForTouchPoint:(CGPoint)point;
 
 // metrics
-- (CGFloat)paddingDistance;
 - (CGFloat)paletteDiameter;
 
 @end
