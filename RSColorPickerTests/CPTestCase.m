@@ -13,22 +13,6 @@
 
 @implementation CPTestCase
 
-- (void)testAssertColorEqualsColor
-{
-    UIColor *redA = [UIColor redColor];
-    UIColor *redB = [UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:1.0];
-
-    [self assertColor:redA equalsColor:redB];
-}
-
-- (void)testAssertColorNotEqualsColor
-{
-    UIColor *red = [UIColor redColor];
-    UIColor *green = [UIColor greenColor];
-
-    [self assertColor:red notEqualsColor:green];
-}
-
 #pragma mark - Component helpers
 
 - (void)assertColor:(UIColor *)colorA equalsColor:(UIColor *)colorB
@@ -43,6 +27,16 @@
     XCTAssertEqualWithAccuracy(rgbaA[1], rgbaB[1], kColorComponentAccuracy);
     XCTAssertEqualWithAccuracy(rgbaA[2], rgbaB[2], kColorComponentAccuracy);
     XCTAssertEqualWithAccuracy(rgbaA[3], rgbaB[3], kColorComponentAccuracy);
+
+    // Check it manually too
+    // Might as well keep this code around if we're maintaining the one below
+    XCTAssert(
+        (fabs(rgbaA[0] - rgbaB[0]) < kColorComponentAccuracy) &&
+        (fabs(rgbaA[1] - rgbaB[1]) < kColorComponentAccuracy) &&
+        (fabs(rgbaA[2] - rgbaB[2]) < kColorComponentAccuracy) &&
+        (fabs(rgbaA[3] - rgbaB[3]) < kColorComponentAccuracy),
+        @"Color %@ does not equal color %@, but they should be equal", colorA, colorB
+    );
 }
 - (void)assertColor:(UIColor *)colorA notEqualsColor:(UIColor *)colorB
 {
@@ -52,10 +46,13 @@
     RSGetComponentsForColor(rgbaA, colorA);
     RSGetComponentsForColor(rgbaB, colorB);
 
-    XCTAssertNotEqualWithAccuracy(rgbaA[0], rgbaB[0], kColorComponentAccuracy);
-    XCTAssertNotEqualWithAccuracy(rgbaA[1], rgbaB[1], kColorComponentAccuracy);
-    XCTAssertNotEqualWithAccuracy(rgbaA[2], rgbaB[2], kColorComponentAccuracy);
-    XCTAssertNotEqualWithAccuracy(rgbaA[3], rgbaB[3], kColorComponentAccuracy);
+    XCTAssert(
+        (fabs(rgbaA[0] - rgbaB[0]) > kColorComponentAccuracy) ||
+        (fabs(rgbaA[1] - rgbaB[1]) > kColorComponentAccuracy) ||
+        (fabs(rgbaA[2] - rgbaB[2]) > kColorComponentAccuracy) ||
+        (fabs(rgbaA[3] - rgbaB[3]) > kColorComponentAccuracy),
+        @"Color %@ is too similar to %@, but they should not be equal", colorA, colorB
+    );
 }
 
 @end

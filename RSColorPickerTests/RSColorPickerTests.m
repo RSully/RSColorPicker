@@ -15,6 +15,7 @@
 @interface RSColorPickerTests : CPTestCase <RSColorPickerViewDelegate>
 
 @property (nonatomic) RSColorPickerView *colorPicker;
+@property (nonatomic) int delegateDidChangeSelectionCalledCount;
 
 @end
 
@@ -24,9 +25,14 @@
 - (void)setUp
 {
     [super setUp];
+
+    // Reset counter
+    self.delegateDidChangeSelectionCalledCount = 0;
+
     self.colorPicker = [[RSColorPickerView alloc] initWithFrame:CGRectMake(0.0, 0.0, 200.0, 200.0)];
-    self.colorPicker.delegate = self;
     self.colorPicker.selectionColor = RSRandomColorOpaque(NO);
+    // Make sure we set delegate last so counters don't get messed up by init
+    self.colorPicker.delegate = self;
 }
 
 - (void)tearDown
@@ -49,6 +55,8 @@
     [self assertColor:newSelection equalsColor:setB];
 
     XCTAssertEqualObjects(setA, setB);
+
+    XCTAssertEqual(self.delegateDidChangeSelectionCalledCount, 2);
 }
 
 - (void)testSetSelectionColor_random
@@ -62,6 +70,8 @@
 
     [self assertColor:currentSelection notEqualsColor:oldSelection];
     [self assertColor:currentSelection equalsColor:newSelection];
+
+    XCTAssertEqual(self.delegateDidChangeSelectionCalledCount, 1);
 }
 
 - (void)testSetSelectionColor_self
@@ -70,21 +80,24 @@
     self.colorPicker.selectionColor = currentColor;
 
     XCTAssertEqualObjects(currentColor, self.colorPicker.selectionColor);
+
+    XCTAssertEqual(self.delegateDidChangeSelectionCalledCount, 1);
 }
 
 #pragma mark - RSColorPickerView Delegates
 
 - (void)colorPickerDidChangeSelection:(RSColorPickerView *)cp
 {
-
+    self.delegateDidChangeSelectionCalledCount++;
+    NSLog(@"Got RSColorPickerViewDelegate selection change callback");
 }
 - (void)colorPicker:(RSColorPickerView *)colorPicker touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
-
+    XCTFail(@"Got -touchesBegan from running tests");
 }
 - (void)colorPicker:(RSColorPickerView *)colorPicker touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
-
+    XCTFail(@"Got -touchesBegan from running tests");
 }
 
 

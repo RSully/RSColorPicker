@@ -16,6 +16,7 @@
 		1FA35E9913F5A17E00A6B347 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FA35E9813F5A17E00A6B347 /* QuartzCore.framework */; };
 		2B12A0DF1792FF46007F2A0A /* TestColorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B12A0DE1792FF46007F2A0A /* TestColorViewController.m */; };
 		2B78462718D290340002F859 /* CPTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B78462618D290340002F859 /* CPTestCase.m */; };
+		2B78462918D298570002F859 /* CPTestCaseTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B78462818D298570002F859 /* CPTestCaseTests.m */; };
 		2B85423116EFC8970047FFBE /* ANImageBitmapRep.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B85420D16EFC8970047FFBE /* ANImageBitmapRep.m */; };
 		2B85423216EFC8970047FFBE /* BitmapContextRep.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B85420F16EFC8970047FFBE /* BitmapContextRep.m */; };
 		2B85423316EFC8970047FFBE /* NSImage+ANImageBitmapRep.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B85421216EFC8970047FFBE /* NSImage+ANImageBitmapRep.m */; };
@@ -71,6 +72,7 @@
 		2B12A0DE1792FF46007F2A0A /* TestColorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestColorViewController.m; sourceTree = "<group>"; };
 		2B78462518D290340002F859 /* CPTestCase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CPTestCase.h; sourceTree = "<group>"; };
 		2B78462618D290340002F859 /* CPTestCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CPTestCase.m; sourceTree = "<group>"; };
+		2B78462818D298570002F859 /* CPTestCaseTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CPTestCaseTests.m; sourceTree = "<group>"; };
 		2B85420C16EFC8970047FFBE /* ANImageBitmapRep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ANImageBitmapRep.h; sourceTree = "<group>"; };
 		2B85420D16EFC8970047FFBE /* ANImageBitmapRep.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ANImageBitmapRep.m; sourceTree = "<group>"; };
 		2B85420E16EFC8970047FFBE /* BitmapContextRep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BitmapContextRep.h; sourceTree = "<group>"; };
@@ -285,6 +287,7 @@
 		2BFBDBDD18D2574400DFC1E5 /* RSColorPickerTests */ = {
 			isa = PBXGroup;
 			children = (
+				2B78462818D298570002F859 /* CPTestCaseTests.m */,
 				2BFBDBE318D2574400DFC1E5 /* RSColorPickerTests.m */,
 				2BFBDBDE18D2574400DFC1E5 /* Supporting Files */,
 				2B78462518D290340002F859 /* CPTestCase.h */,
@@ -440,6 +443,7 @@
 			files = (
 				2B78462718D290340002F859 /* CPTestCase.m in Sources */,
 				2BFBDBE418D2574400DFC1E5 /* RSColorPickerTests.m in Sources */,
+				2B78462918D298570002F859 /* CPTestCaseTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
