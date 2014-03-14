@@ -14,7 +14,7 @@
 
 @interface RSColorPickerTests : CPTestCase <RSColorPickerViewDelegate>
 
-@property (nonatomic) RSColorPickerView *colorPicker;
+@property (nonatomic) RSColorPickerView * colorPicker;
 @property (nonatomic) int delegateDidChangeSelectionCalledCount;
 
 @end
@@ -41,6 +41,7 @@
     [super tearDown];
 }
 
+
 - (void)testSetSelectionColor_multiple
 {
     UIColor *newSelection = RSRandomColorOpaque(NO);
@@ -55,8 +56,6 @@
     [self assertColor:newSelection equalsColor:setB];
 
     XCTAssertEqualObjects(setA, setB);
-
-    XCTAssertEqual(self.delegateDidChangeSelectionCalledCount, 2);
 }
 
 - (void)testSetSelectionColor_random
@@ -70,8 +69,6 @@
 
     [self assertColor:currentSelection notEqualsColor:oldSelection];
     [self assertColor:currentSelection equalsColor:newSelection];
-
-    XCTAssertEqual(self.delegateDidChangeSelectionCalledCount, 1);
 }
 
 - (void)testSetSelectionColor_self
@@ -80,9 +77,40 @@
     self.colorPicker.selectionColor = currentColor;
 
     XCTAssertEqualObjects(currentColor, self.colorPicker.selectionColor);
+}
 
+
+- (void)testSetCropToCircle
+{
+    // TODO: better testing here
+    self.colorPicker.cropToCircle = YES;
+    XCTAssert(self.colorPicker.cropToCircle == YES, @"Crop to circle failed");
+}
+
+
+- (void)testDelegateDidChangeSelection
+{
+    self.colorPicker.selectionColor = RSRandomColorOpaque(NO);
     XCTAssertEqual(self.delegateDidChangeSelectionCalledCount, 1);
 }
+
+
+- (void)testSetSelection
+{
+    // TODO
+}
+
+- (void)testSetShowLoupe
+{
+    // TODO: how would you even test this?
+}
+
+- (void)testColorAtPoint
+{
+    // TODO
+}
+
+// TODO: test prepare methods
 
 #pragma mark - RSColorPickerView Delegates
 
