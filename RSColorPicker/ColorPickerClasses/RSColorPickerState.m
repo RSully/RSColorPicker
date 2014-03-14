@@ -39,7 +39,7 @@ static CGPoint _calculatePoint(CGFloat hue, CGFloat saturation);
 
 - (id)initWithColor:(UIColor *)_selectionColor {
     if ((self = [super init])) {
-        float rgba[4];
+        CGFloat rgba[4];
         RSGetComponentsForColor(rgba, _selectionColor);
         UIColor * selectionColor = [UIColor colorWithRed:rgba[0] green:rgba[1] blue:rgba[2] alpha:rgba[3]];
         CGFloat hue, saturation;

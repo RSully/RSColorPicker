@@ -48,7 +48,7 @@ void RSHSVFromPixel(BMPixel pixel, CGFloat *h, CGFloat *s, CGFloat *v)
     [color getHue:h saturation:s brightness:v alpha:NULL];
 }
 
-void RSGetComponentsForColor(float *components, UIColor *color)
+void RSGetComponentsForColor(CGFloat *components, UIColor *color)
 {
     if ([color getRed:&components[0] green:&components[1] blue:&components[2] alpha:&components[3]]) {
         return;

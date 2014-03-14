@@ -79,8 +79,8 @@
 
 - (void)assertColor:(UIColor *)colorA equalsColor:(UIColor *)colorB
 {
-    float rgbaA[4];
-    float rgbaB[4];
+    CGFloat rgbaA[4];
+    CGFloat rgbaB[4];
 
     RSGetComponentsForColor(rgbaA, colorA);
     RSGetComponentsForColor(rgbaB, colorB);
@@ -92,8 +92,8 @@
 }
 - (void)assertColor:(UIColor *)colorA notEqualsColor:(UIColor *)colorB
 {
-    float rgbaA[4];
-    float rgbaB[4];
+    CGFloat rgbaA[4];
+    CGFloat rgbaB[4];
 
     RSGetComponentsForColor(rgbaA, colorA);
     RSGetComponentsForColor(rgbaB, colorB);
