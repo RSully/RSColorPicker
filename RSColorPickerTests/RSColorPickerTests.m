@@ -96,12 +96,59 @@
 }
 
 
-- (void)testSetSelection
+- (void)testSetSelection_location
 {
-    CGPoint oldSelection = self.colorPicker.selection;
-    RSColorPickerState *oldState = [[RSColorPickerState alloc] initWithColor:self.colorPicker.selectionColor];
+    // Requirements
+    CGFloat size = self.colorPicker.bounds.size.height;
+    CGFloat padding = self.colorPicker.paddingDistance;
 
-    // TODO: test this
+    // Fetch current state/selection
+    CGPoint oldSelection = self.colorPicker.selection;
+
+    // Get new state/selection
+    UIColor *newColor = RSRandomColorOpaque(NO);
+    RSColorPickerState *newState = [[RSColorPickerState alloc] initWithColor:newColor];
+    CGPoint newSelection = [newState selectionLocationWithSize:size padding:padding];
+
+    // Actually set it
+    self.colorPicker.selection = newSelection;
+
+    // Test selection equals
+    CGPoint newSelectionTest = self.colorPicker.selection;
+
+    // Test new point
+    XCTAssertEqual(newSelectionTest.x, newSelection.x);
+    XCTAssertEqual(newSelectionTest.y, newSelection.y);
+    // Test point not old
+    XCTAssertNotEqual(newSelectionTest.x, oldSelection.x);
+    XCTAssertNotEqual(newSelectionTest.y, oldSelection.y);
+}
+- (void)testSetSelection_color
+{
+    // Requirements
+    CGFloat size = self.colorPicker.bounds.size.height;
+    CGFloat padding = self.colorPicker.paddingDistance;
+
+    // Fetch current state/selection
+    CGPoint oldSelection = self.colorPicker.selection;
+    RSColorPickerState *oldState = [RSColorPickerState stateForPoint:oldSelection size:size padding:padding];
+    UIColor *oldColor = oldState.color;
+
+    // Get new state/selection
+    CGPoint newSelection = CGPointMake(100.0, 100.0);
+    RSColorPickerState *newState = [RSColorPickerState stateForPoint:newSelection size:size padding:padding];
+    UIColor *newColor = newState.color;
+
+    // Actually set it
+    self.colorPicker.selection = newSelection;
+
+    // Test selection equals
+    UIColor *newSelectionColorTest = self.colorPicker.selectionColor;
+
+    // Test new color equals
+    [self assertColor:newSelectionColorTest equalsColor:newColor];
+    // Test new color not old
+    [self assertColor:newSelectionColorTest notEqualsColor:oldColor];
 }
 
 - (void)testSetShowLoupe
