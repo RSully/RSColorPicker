@@ -2,3 +2,6 @@ language: objective-c
 xcode_project: RSColorPicker.xcodeproj
 xcode_scheme: RSColorPicker
 xcode_sdk: iphonesimulator
+notifications:
+  email: false
+
