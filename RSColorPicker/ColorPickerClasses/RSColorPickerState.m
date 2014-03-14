@@ -74,7 +74,7 @@ static CGPoint _calculatePoint(CGFloat hue, CGFloat saturation);
     return CGPointMake(unscaled.x + (size / 2.0), (size / 2.0) - unscaled.y);
 }
 
-#pragma mark - Modification -
+#pragma mark - Modification
 
 - (RSColorPickerState *)stateBySettingBrightness:(CGFloat)newBright {
     return [[RSColorPickerState alloc] initWithScaledRelativePoint:scaledRelativePoint brightness:newBright alpha:alpha];
@@ -94,9 +94,22 @@ static CGPoint _calculatePoint(CGFloat hue, CGFloat saturation);
     return [[RSColorPickerState alloc] initWithScaledRelativePoint:newPoint brightness:brightness alpha:alpha];
 }
 
+#pragma mark - Debugging
+
+- (NSString *)description {
+    NSMutableString *description = [NSMutableString stringWithFormat:@"<%@: %p { ", NSStringFromClass([self class]), self];
+
+    [description appendFormat:@"scaledPoint:%@ ", NSStringFromCGPoint(scaledRelativePoint)];
+    [description appendFormat:@"brightness:%f ", brightness];
+    [description appendFormat:@"alpha:%f", alpha];
+
+    [description appendString:@"} >"];
+    return description;
+}
+
 @end
 
-#pragma mark - Helper Functions -
+#pragma mark - Helper Functions
 
 static CGFloat _calculateHue(CGPoint point) {
     double angle = atan2(point.y, point.x);
