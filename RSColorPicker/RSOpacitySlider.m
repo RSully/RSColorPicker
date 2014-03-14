@@ -39,15 +39,9 @@
     [self addTarget:self action:@selector(myValueChanged:) forControlEvents:UIControlEventValueChanged];
 }
 
-/*
- - (CGRect)trackRectForBounds:(CGRect)bounds
- {
-    // to hide the track view
-    return CGRectMake(0, ceilf(bounds.size.height / 2), bounds.size.width, 0);
- }
- */
-
 -  (void)didMoveToWindow {
+    if (!self.window) return;
+
     UIImage *backgroundImage = RSOpacityBackgroundImage(16.f, self.window.screen.scale, [UIColor colorWithWhite:0.5 alpha:1.0]);
     self.backgroundColor = [UIColor colorWithPatternImage:backgroundImage];
 }
