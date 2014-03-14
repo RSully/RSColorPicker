@@ -162,6 +162,13 @@
 
     // Actually set it
     self.colorPicker.selection = newSelection;
+    // ... along with the brightness and alpha
+    CGFloat newColorH, newColorS, newColorV;
+    CGFloat newColorComponents[4];
+    RSGetComponentsForColor(newColorComponents, newColor);
+    RSHSVFromPixel(BMPixelMake(newColorComponents[0], newColorComponents[1], newColorComponents[2], newColorComponents[3]), &newColorH, &newColorS, &newColorV);
+    self.colorPicker.brightness = newColorV;
+    self.colorPicker.opacity = newColorComponents[3];
 
     // Test selection equals
     UIColor *newSelectionColorTest = self.colorPicker.selectionColor;
@@ -189,6 +196,13 @@
 
     // Actually set it
     self.colorPicker.selection = newSelection;
+    // ... along with the brightness and alpha
+    CGFloat newColorH, newColorS, newColorV;
+    CGFloat newColorComponents[4];
+    RSGetComponentsForColor(newColorComponents, newColor);
+    RSHSVFromPixel(BMPixelMake(newColorComponents[0], newColorComponents[1], newColorComponents[2], newColorComponents[3]), &newColorH, &newColorS, &newColorV);
+    self.colorPicker.brightness = newColorV;
+    self.colorPicker.opacity = newColorComponents[3];
 
     // Test selection equals
     UIColor *newSelectionColorTest = self.colorPicker.selectionColor;
