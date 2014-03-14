@@ -10,7 +10,7 @@
 #import "RSColorPickerView.h"
 #import "RSColorFunctions.h"
 
-#define kColorComponentAccuracy 0.05f
+#define kColorComponentAccuracy (1.0/255.0)
 
 @interface RSColorPickerTests : XCTestCase <RSColorPickerViewDelegate>
 

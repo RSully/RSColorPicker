@@ -50,9 +50,18 @@ void RSHSVFromPixel(BMPixel pixel, CGFloat *h, CGFloat *s, CGFloat *v)
 
 void RSGetComponentsForColor(float *components, UIColor *color)
 {
+    if ([color getRed:&components[0] green:&components[1] blue:&components[2] alpha:&components[3]]) {
+        return;
+    } else if ([color getWhite:&components[0] alpha:&components[3]]) {
+        components[1] = components[0];
+        components[2] = components[0];
+        return;
+    }
+    
+    // resort to this good old hack.
+    
     CGColorSpaceRef rgbColorSpace = CGColorSpaceCreateDeviceRGB();
     unsigned char resultingPixel[4];
-    // this is pretty clever; I'll allow it to stay.
     CGContextRef context = CGBitmapContextCreate(&resultingPixel, 1, 1, 8, 4, rgbColorSpace, (CGBitmapInfo)kCGImageAlphaPremultipliedLast);
     CGContextSetFillColorWithColor(context, [color CGColor]);
     CGContextFillRect(context, CGRectMake(0, 0, 1, 1));
