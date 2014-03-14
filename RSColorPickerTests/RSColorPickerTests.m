@@ -10,6 +10,7 @@
 #import "CPTestCase.h"
 #import "RSColorPickerView.h"
 #import "RSColorFunctions.h"
+#import "RSColorPickerState.h"
 
 
 @interface RSColorPickerTests : CPTestCase <RSColorPickerViewDelegate>
@@ -97,7 +98,10 @@
 
 - (void)testSetSelection
 {
-    // TODO
+    CGPoint oldSelection = self.colorPicker.selection;
+    RSColorPickerState *oldState = [[RSColorPickerState alloc] initWithColor:self.colorPicker.selectionColor];
+
+    // TODO: test this
 }
 
 - (void)testSetShowLoupe
