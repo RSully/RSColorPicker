@@ -50,6 +50,8 @@ void RSHSVFromPixel(BMPixel pixel, CGFloat *h, CGFloat *s, CGFloat *v)
 
 void RSGetComponentsForColor(CGFloat *components, UIColor *color)
 {
+    // First try to get the components the right way
+
     if ([color getRed:&components[0] green:&components[1] blue:&components[2] alpha:&components[3]]) {
         return;
     } else if ([color getWhite:&components[0] alpha:&components[3]]) {
@@ -57,19 +59,20 @@ void RSGetComponentsForColor(CGFloat *components, UIColor *color)
         components[2] = components[0];
         return;
     }
-    
-    // resort to this good old hack.
+
+    // *Then* resort to this good old hack.
     
     CGColorSpaceRef rgbColorSpace = CGColorSpaceCreateDeviceRGB();
-    unsigned char resultingPixel[4];
+    unsigned char resultingPixel[4] = {0};
     CGContextRef context = CGBitmapContextCreate(&resultingPixel, 1, 1, 8, 4, rgbColorSpace, (CGBitmapInfo)kCGImageAlphaPremultipliedLast);
     CGContextSetFillColorWithColor(context, [color CGColor]);
     CGContextFillRect(context, CGRectMake(0, 0, 1, 1));
     CGContextRelease(context);
     CGColorSpaceRelease(rgbColorSpace);
 
+
     for (int component = 0; component < 4; component++) {
-        components[component] = resultingPixel[component] / 255.0f;
+        components[component] = resultingPixel[component] / 255.0;
     }
 
     if (components[3] > 0)
