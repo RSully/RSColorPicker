@@ -12,7 +12,7 @@
 @class RSColorPickerView, BGRSLoupeLayer;
 
 @protocol RSColorPickerViewDelegate <NSObject>
-- (void)colorPickerDidChangeSelection:(RSColorPickerView *)cp;
+- (void)colorPickerDidChangeSelection:(RSColorPickerView *)colorPicker;
 @optional
 - (void)colorPicker:(RSColorPickerView *)colorPicker touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event;
 - (void)colorPicker:(RSColorPickerView *)colorPicker touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event;
