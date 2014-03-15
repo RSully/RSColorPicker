@@ -7,7 +7,6 @@
 //
 
 #import <XCTest/XCTest.h>
-#import "CPTestCase.h"
 
 @interface CPTestCaseTests : CPTestCase
 

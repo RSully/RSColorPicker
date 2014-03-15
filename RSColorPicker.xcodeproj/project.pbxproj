@@ -33,6 +33,7 @@
 		2B85423F16EFC8970047FFBE /* RSColorFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B85422C16EFC8970047FFBE /* RSColorFunctions.m */; };
 		2B85424016EFC8970047FFBE /* RSColorPickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B85422E16EFC8970047FFBE /* RSColorPickerView.m */; };
 		2B85424116EFC8970047FFBE /* RSSelectionLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B85423016EFC8970047FFBE /* RSSelectionLayer.m */; };
+		2BF47AD318D4D44600C12FA5 /* RSColorPickerViewDelegateTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BF47AD218D4D44600C12FA5 /* RSColorPickerViewDelegateTests.m */; };
 		2BFBDBDA18D2574400DFC1E5 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BFBDBD918D2574400DFC1E5 /* XCTest.framework */; };
 		2BFBDBDB18D2574400DFC1E5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FA35E6113F57B2700A6B347 /* Foundation.framework */; };
 		2BFBDBDC18D2574400DFC1E5 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FA35E5F13F57B2700A6B347 /* UIKit.framework */; };
@@ -105,6 +106,7 @@
 		2B85422E16EFC8970047FFBE /* RSColorPickerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSColorPickerView.m; sourceTree = "<group>"; };
 		2B85422F16EFC8970047FFBE /* RSSelectionLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSSelectionLayer.h; sourceTree = "<group>"; };
 		2B85423016EFC8970047FFBE /* RSSelectionLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSSelectionLayer.m; sourceTree = "<group>"; };
+		2BF47AD218D4D44600C12FA5 /* RSColorPickerViewDelegateTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSColorPickerViewDelegateTests.m; sourceTree = "<group>"; };
 		2BFBDBD818D2574400DFC1E5 /* RSColorPickerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RSColorPickerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2BFBDBD918D2574400DFC1E5 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		2BFBDBDF18D2574400DFC1E5 /* RSColorPickerTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "RSColorPickerTests-Info.plist"; sourceTree = "<group>"; };
@@ -287,6 +289,7 @@
 		2BFBDBDD18D2574400DFC1E5 /* RSColorPickerTests */ = {
 			isa = PBXGroup;
 			children = (
+				2BF47AD218D4D44600C12FA5 /* RSColorPickerViewDelegateTests.m */,
 				2B78462818D298570002F859 /* CPTestCaseTests.m */,
 				2BFBDBE318D2574400DFC1E5 /* RSColorPickerViewTests.m */,
 				2BFBDBDE18D2574400DFC1E5 /* Supporting Files */,
@@ -441,6 +444,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2BF47AD318D4D44600C12FA5 /* RSColorPickerViewDelegateTests.m in Sources */,
 				2B78462718D290340002F859 /* CPTestCase.m in Sources */,
 				2BFBDBE418D2574400DFC1E5 /* RSColorPickerViewTests.m in Sources */,
 				2B78462918D298570002F859 /* CPTestCaseTests.m in Sources */,
