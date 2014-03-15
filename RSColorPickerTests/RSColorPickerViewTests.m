@@ -13,7 +13,7 @@
 #import "RSColorPickerState.h"
 
 
-@interface RSColorPickerTests : CPTestCase <RSColorPickerViewDelegate>
+@interface RSColorPickerViewTests : CPTestCase <RSColorPickerViewDelegate>
 
 @property (nonatomic) RSColorPickerView * colorPicker;
 @property (nonatomic) int delegateDidChangeSelectionCalledCount;
@@ -21,7 +21,7 @@
 @end
 
 
-@implementation RSColorPickerTests
+@implementation RSColorPickerViewTests
 
 - (void)setUp
 {
@@ -89,9 +89,14 @@
 }
 
 
-- (void)testDelegateDidChangeSelection
+- (void)testDelegateDidChangeSelection_selectionColor
 {
     self.colorPicker.selectionColor = RSRandomColorOpaque(NO);
+    XCTAssertEqual(self.delegateDidChangeSelectionCalledCount, 1);
+}
+- (void)testDelegateDidChangeSelection_selection
+{
+    self.colorPicker.selection = CGPointMake(100.0, 100.0);
     XCTAssertEqual(self.delegateDidChangeSelectionCalledCount, 1);
 }
 
@@ -238,7 +243,7 @@
 }
 - (void)colorPicker:(RSColorPickerView *)colorPicker touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    XCTFail(@"Got -touchesBegan from running tests");
+    XCTFail(@"Got -touchesEnded from running tests");
 }
 
 
