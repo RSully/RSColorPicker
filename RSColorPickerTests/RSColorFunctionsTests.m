@@ -54,7 +54,7 @@
     UIColor *color = RSRandomColorOpaque(YES);
 
     RSGetComponentsForColor(components, color);
-    XCTAssertEqual(components[3], 1.0);
+    XCTAssertEqualWithAccuracy(components[3], 1.0, kColorComponentAccuracy);
 }
 
 @end

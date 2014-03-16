@@ -8,6 +8,8 @@
 
 #import <XCTest/XCTest.h>
 
+#define kColorComponentAccuracy (1.0/255.0)
+
 @interface CPTestCase : XCTestCase
 
 - (void)assertColor:(UIColor *)colorA equalsColor:(UIColor *)colorB;

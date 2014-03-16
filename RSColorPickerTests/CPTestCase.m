@@ -9,7 +9,6 @@
 #import "CPTestCase.h"
 #import "RSColorFunctions.h"
 
-#define kColorComponentAccuracy (1.0/255.0)
 
 @implementation CPTestCase
 
