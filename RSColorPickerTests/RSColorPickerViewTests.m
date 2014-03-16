@@ -78,9 +78,10 @@
 
 - (void)testSetCropToCircle
 {
-    // TODO: better testing here
     self.colorPicker.cropToCircle = YES;
-    XCTAssert(self.colorPicker.cropToCircle == YES, @"Crop to circle failed");
+    XCTAssertTrue(self.colorPicker.cropToCircle);
+    self.colorPicker.cropToCircle = NO;
+    XCTAssertFalse(self.colorPicker.cropToCircle);
 }
 
 
@@ -203,7 +204,10 @@
 
 - (void)testSetShowLoupe
 {
-    // TODO: how would you even test this?
+    self.colorPicker.showLoupe = YES;
+    XCTAssertTrue(self.colorPicker.showLoupe);
+    self.colorPicker.showLoupe = NO;
+    XCTAssertFalse(self.colorPicker.showLoupe);
 }
 
 - (void)testColorAtPoint
