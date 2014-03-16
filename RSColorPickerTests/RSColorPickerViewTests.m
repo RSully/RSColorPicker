@@ -208,7 +208,17 @@
 
 - (void)testColorAtPoint
 {
-    // TODO
+    CGPoint centerPoint = CGPointMake(100, 100);
+    CGPoint rightPoint = CGPointMake(200, 100);
+
+    self.colorPicker.opacity = 1.0;
+
+    self.colorPicker.brightness = 0.0;
+    [self assertColor:[UIColor blackColor] equalsColor:[self.colorPicker colorAtPoint:centerPoint]];
+
+    self.colorPicker.brightness = 1.0;
+    [self assertColor:[UIColor whiteColor] equalsColor:[self.colorPicker colorAtPoint:centerPoint]];
+    [self assertColor:[UIColor redColor] equalsColor:[self.colorPicker colorAtPoint:rightPoint]];
 }
 
 // TODO: test prepare methods
