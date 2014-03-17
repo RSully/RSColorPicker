@@ -70,9 +70,14 @@
 - (void)testSetSelectionColor_self
 {
     UIColor *currentColor = self.colorPicker.selectionColor;
+
+    // Re-set it
     self.colorPicker.selectionColor = currentColor;
 
-    XCTAssertEqualObjects(currentColor, self.colorPicker.selectionColor);
+    UIColor *newCurrentColor = self.colorPicker.selectionColor;
+
+    [self assertColor:currentColor equalsColor:newCurrentColor];
+    XCTAssertEqualObjects(currentColor, newCurrentColor);
 }
 
 
@@ -80,6 +85,7 @@
 {
     self.colorPicker.cropToCircle = YES;
     XCTAssertTrue(self.colorPicker.cropToCircle);
+
     self.colorPicker.cropToCircle = NO;
     XCTAssertFalse(self.colorPicker.cropToCircle);
 }
