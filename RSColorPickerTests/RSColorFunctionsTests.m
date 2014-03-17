@@ -46,7 +46,7 @@
     testColor = [UIColor colorWithRed:components[0] green:components[1] blue:components[2] alpha:components[3]];
     [self assertColor:color equalsColor:testColor];
 }
-- (void)testComponentsForColor_mono {
+- (void)testComponentsForColor_gray {
     UIColor *color = [UIColor colorWithWhite:0.1 alpha:0.2];
     UIColor *testColor;
 
