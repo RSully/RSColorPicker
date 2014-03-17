@@ -36,7 +36,30 @@
 
 }
 
-- (void)testComponentsForColor {
+- (void)testComponentsForColor_rgb {
+    UIColor *color = [UIColor colorWithRed:0.1 green:0.2 blue:0.3 alpha:0.4];
+    UIColor *testColor;
+
+    CGFloat components[4];
+    RSGetComponentsForColor(components, color);
+
+    testColor = [UIColor colorWithRed:components[0] green:components[1] blue:components[2] alpha:components[3]];
+    [self assertColor:color equalsColor:testColor];
+}
+- (void)testComponentsForColor_mono {
+    UIColor *color = [UIColor colorWithWhite:0.1 alpha:0.2];
+    UIColor *testColor;
+
+    CGFloat components[4];
+    RSGetComponentsForColor(components, color);
+
+    testColor = [UIColor colorWithRed:0.1 green:0.1 blue:0.1 alpha:0.2];
+    [self assertColor:color equalsColor:testColor];
+
+    testColor = [UIColor colorWithRed:components[0] green:components[1] blue:components[2] alpha:components[3]];
+    [self assertColor:color equalsColor:testColor];
+}
+- (void)testComponentsForColor_idk {
 
 }
 
