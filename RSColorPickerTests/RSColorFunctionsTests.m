@@ -59,8 +59,68 @@
     testColor = [UIColor colorWithRed:components[0] green:components[1] blue:components[2] alpha:components[3]];
     [self assertColor:color equalsColor:testColor];
 }
-- (void)testComponentsForColor_idk {
+- (void)testComponentsForColor_hsv {
+    UIColor *color = [UIColor colorWithHue:0 saturation:1.0 brightness:1.0 alpha:0.4];
+    UIColor *testColor;
 
+    CGFloat components[4];
+    RSGetComponentsForColor(components, color);
+
+    testColor = [UIColor colorWithRed:1.0 green:0 blue:0 alpha:0.4];
+    [self assertColor:color equalsColor:testColor];
+
+    testColor = [UIColor colorWithRed:components[0] green:components[1] blue:components[2] alpha:components[3]];
+    [self assertColor:color equalsColor:testColor];
+}
+- (void)testComponentsForColor_cmyk {
+    // All of this just to get a CMYK color
+    UIColor * (^colorFromCMYK)(CGFloat C, CGFloat M, CGFloat Y, CGFloat K, CGFloat A) = ^UIColor*(CGFloat C, CGFloat M, CGFloat Y, CGFloat K, CGFloat A){
+        CGColorSpaceRef cmykColorSpace = CGColorSpaceCreateDeviceCMYK();
+        CGFloat colors[5] = {C, M, Y, K, A}; // CMYK+Alpha
+        CGColorRef cgColor = CGColorCreate(cmykColorSpace, colors);
+        UIColor *color = [UIColor colorWithCGColor:cgColor];
+        CGColorRelease(cgColor);
+        CGColorSpaceRelease(cmykColorSpace);
+        return color;
+    };
+
+
+    UIColor *color;
+    UIColor *testColor;
+    CGFloat components[4];
+
+
+    // Test all 1 (black + black)
+    color = colorFromCMYK(1, 1, 1, 1, 0.5);
+    RSGetComponentsForColor(components, color);
+
+    testColor = [UIColor colorWithWhite:0 alpha:0.5];
+    [self assertColor:color equalsColor:testColor];
+
+    testColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5];
+    [self assertColor:color equalsColor:testColor];
+
+
+    // Test all 0 with 1 (black)
+    color = colorFromCMYK(0, 0, 0, 1, 0.5);
+    RSGetComponentsForColor(components, color);
+
+    testColor = [UIColor colorWithWhite:0 alpha:0.5];
+    [self assertColor:color equalsColor:testColor];
+
+    testColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5];
+    [self assertColor:color equalsColor:testColor];
+
+
+    // Test all 0 (white)
+    color = colorFromCMYK(0, 0, 0, 0, 0.5);
+    RSGetComponentsForColor(components, color);
+
+    testColor = [UIColor colorWithWhite:1 alpha:0.5];
+    [self assertColor:color equalsColor:testColor];
+
+    testColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.5];
+    [self assertColor:color equalsColor:testColor];
 }
 
 - (void)testImageWithScale {
