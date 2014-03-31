@@ -81,6 +81,12 @@
     [self assertColor:expectedColor equalsColor:state.color];
 }
 
+- (void)testColor_stateForPointSizePadding {
+    RSColorPickerState *state = [RSColorPickerState stateForPoint:CGPointMake(100, 100) size:200 padding:0];
+    UIColor *expectedColor = [UIColor whiteColor];
+    [self assertColor:expectedColor equalsColor:state.color];
+}
+
 
 
 - (void)testSelectionLocationWithSizePadding {
