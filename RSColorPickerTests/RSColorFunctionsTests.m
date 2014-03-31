@@ -29,7 +29,22 @@
 
 
 - (void)testPixelFromHSV {
+    UIColor *actual, *expected;
 
+    // Inefficient, but should be OK:
+
+    for (CGFloat h = 0; h < M_PI*2; h += M_PI_4 * (1.0/16.0))
+    {
+        for (CGFloat s = 0; s < 1; s += 0.05)
+        {
+            for (CGFloat v = 0; v < 0; v += 0.05)
+            {
+                actual = UIColorFromBMPixel(RSPixelFromHSV(h, s, v));
+                expected = [UIColor colorWithHue:h saturation:s brightness:v alpha:1.0];
+                [self assertColor:actual equalsColor:expected];
+            }
+        }
+    }
 }
 
 - (void)testHSVFromPixel {
