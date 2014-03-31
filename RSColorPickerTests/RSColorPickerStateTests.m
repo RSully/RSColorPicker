@@ -46,6 +46,7 @@
     }
 }
 
+
 - (void)testSaturation_initWithColor {
     for (int i = 0; i < 5; i++)
     {
@@ -62,6 +63,7 @@
     }
 }
 
+
 - (void)testColor_initWithColor {
     for (int i = 0; i < 5; i++)
     {
@@ -71,6 +73,14 @@
         [self assertColor:state.color equalsColor:expectedColor];
     }
 }
+
+- (void)testColor_initWithScaledRelativePoint {
+    RSColorPickerState *state = [[RSColorPickerState alloc] initWithScaledRelativePoint:CGPointMake(0, 0)
+                                                                             brightness:1.0 alpha:1.0];
+    UIColor *expectedColor = [UIColor whiteColor];
+    [self assertColor:expectedColor equalsColor:state.color];
+}
+
 
 
 - (void)testSelectionLocationWithSizePadding {
