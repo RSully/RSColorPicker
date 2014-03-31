@@ -48,7 +48,16 @@
 }
 
 - (void)testHSVFromPixel {
+    // Not really needed yet, since we're using Apple's implementation
 
+    BMPixel pixel = BMPixelMake(0, 0, 0, 1.0);
+    CGFloat h, s, v;
+
+    RSHSVFromPixel(pixel, &h, &s, &v);
+
+    XCTAssertEqual(0, h);
+    XCTAssertEqual(0, s);
+    XCTAssertEqual(0, v);
 }
 
 - (void)testComponentsForColor_rgb {
