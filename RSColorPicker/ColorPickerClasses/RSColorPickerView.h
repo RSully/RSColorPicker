@@ -12,7 +12,11 @@
 @class RSColorPickerView, BGRSLoupeLayer;
 
 @protocol RSColorPickerViewDelegate <NSObject>
-- (void)colorPickerDidChangeSelection:(RSColorPickerView *)cp;
+/**
+ * Called everytime the color picker's selection/color is changed.
+ * Don't do expensive operations here as it will slow down your app.
+ */
+- (void)colorPickerDidChangeSelection:(RSColorPickerView *)colorPicker;
 @optional
 - (void)colorPicker:(RSColorPickerView *)colorPicker touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event;
 - (void)colorPicker:(RSColorPickerView *)colorPicker touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event;
@@ -20,39 +24,58 @@
 
 @interface RSColorPickerView : UIView
 
+/**
+ * Specifies if the color picker should be drawn as a circle, or as a square.
+ */
 @property (nonatomic) BOOL cropToCircle;
 
 /**
- * Changes the brightness of the current selection
+ * The brightness of the current selection
  */
 @property (nonatomic) CGFloat brightness;
 
 /**
- * Changes the opacity of the current selection.
+ * The opacity of the current selection.
  */
 @property (nonatomic) CGFloat opacity;
 
 /**
- * Changes the selection color. This may modify `brightness` and
- * `opacity` as necessary.
+ * The selection color.
+ * This setter may modify `brightness` and `opacity` as necessary.
  */
 @property (nonatomic) UIColor * selectionColor;
 
+/**
+ * The delegate
+ */
 @property (nonatomic, weak) id <RSColorPickerViewDelegate> delegate;
 
 /**
- * Get or set the current point (in the color picker's coordinates)
- * of the selected color.
+ * The current point (in the color picker's bounds) of the selected color.
  */
 @property (readwrite) CGPoint selection;
 
 /**
- * Show or hide the loupe.
+ * The distance around the edges of the color picker that is drawn for padding.
+ * Colors are cut-off before this distance so that the user can pick all colors.
+ */
+@property (readonly) CGFloat paddingDistance;
+
+/**
+ * Specifies if the loupe should be drawn or not.
  * Default: YES (show).
  */
 @property (nonatomic) BOOL showLoupe;
 
-- (UIColor *)colorAtPoint:(CGPoint)point; // Returns UIColor at a point in the RSColorPickerView
+/**
+ * The color at a given point in the color picker's bounds.
+ */
+- (UIColor *)colorAtPoint:(CGPoint)point;
+
+/**
+ * Methods that create/cache data needed to create a color picker.
+ * These run async (except where noted) and can help the overall UX.
+ */
 
 + (void)prepareForDiameter:(CGFloat)diameter;
 + (void)prepareForDiameter:(CGFloat)diameter padding:(CGFloat)padding;

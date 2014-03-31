@@ -98,7 +98,6 @@
 - (void)updateStateForTouchPoint:(CGPoint)point;
 
 // metrics
-- (CGFloat)paddingDistance;
 - (CGFloat)paletteDiameter;
 
 @end
@@ -370,10 +369,10 @@
 
         // alpha is the angle in radian of the touch on the unit circle
         CGFloat alpha = acos( X / r );
-        if (touchPoint.y > CGRectGetMidX(self.bounds)) alpha = 2 * M_PI - alpha;
+        if (touchPoint.y > CGRectGetMidX(self.bounds)) alpha = (2 * M_PI) - alpha;
 
         // 'actual radius' is the distance between the center and the border of the gradient
-        CGFloat actualRadius = self.paletteDiameter / 2.0 - self.paddingDistance;
+        CGFloat actualRadius = (self.paletteDiameter / 2.0) - self.paddingDistance;
 
         returnedPoint.x = fabs(actualRadius) * cos(alpha);
         returnedPoint.y = fabs(actualRadius) * sin(alpha);
