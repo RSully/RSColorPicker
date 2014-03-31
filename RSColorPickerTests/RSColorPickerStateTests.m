@@ -87,6 +87,12 @@
     [self assertColor:expectedColor equalsColor:state.color];
 }
 
+- (void)testColor_initWithHueSaturationBrightnessAlpha {
+    RSColorPickerState *state = [[RSColorPickerState alloc] initWithHue:0 saturation:0 brightness:1.0 alpha:1.0];
+    UIColor *expectedColor = [UIColor whiteColor];
+    [self assertColor:expectedColor equalsColor:state.color];
+}
+
 
 
 - (void)testSelectionLocationWithSizePadding {
