@@ -79,25 +79,17 @@
     CGPoint expectedPoint, actualPoint;
 
 
+    NSArray *centerTests = @[[UIColor blackColor], [UIColor whiteColor], [UIColor colorWithWhite:0.5 alpha:1.0]];
+    for (expectedColor in centerTests)
+    {
+        state = [[RSColorPickerState alloc] initWithColor:expectedColor];
 
-    expectedColor = [UIColor blackColor];
-    state = [[RSColorPickerState alloc] initWithColor:expectedColor];
+        expectedPoint = CGPointMake(100, 100);
+        actualPoint = [state selectionLocationWithSize:200.0 padding:20.0];
 
-    expectedPoint = CGPointMake(100, 100);
-    actualPoint = [state selectionLocationWithSize:200.0 padding:20.0];
-
-    XCTAssertEqual(expectedPoint.x, actualPoint.x);
-    XCTAssertEqual(expectedPoint.y, actualPoint.y);
-
-
-    expectedColor = [UIColor whiteColor];
-    state = [[RSColorPickerState alloc] initWithColor:expectedColor];
-
-    expectedPoint = CGPointMake(100, 100);
-    actualPoint = [state selectionLocationWithSize:200.0 padding:20.0];
-
-    XCTAssertEqual(expectedPoint.x, actualPoint.x);
-    XCTAssertEqual(expectedPoint.y, actualPoint.y);
+        XCTAssertEqual(expectedPoint.x, actualPoint.x);
+        XCTAssertEqual(expectedPoint.y, actualPoint.y);
+    }
 }
 
 @end
