@@ -55,9 +55,9 @@
 
     RSHSVFromPixel(pixel, &h, &s, &v);
 
-    XCTAssertEqual(0, h);
-    XCTAssertEqual(0, s);
-    XCTAssertEqual(0, v);
+    XCTAssertEqualWithAccuracy(0, h, 0.01);
+    XCTAssertEqualWithAccuracy(0, s, 0.01);
+    XCTAssertEqualWithAccuracy(0, v, 0.01);
 }
 
 - (void)testComponentsForColor_rgb {
