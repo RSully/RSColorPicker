@@ -33,7 +33,7 @@
 
     // Inefficient, but should be OK:
 
-    for (CGFloat h = 0; h < M_PI*2; h += M_PI_4 * (1.0/16.0))
+    for (CGFloat h = 0; h < 1; h += 0.05)
     {
         for (CGFloat s = 0; s < 1; s += 0.05)
         {
