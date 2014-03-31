@@ -95,10 +95,10 @@ UIImage * RSOpacityBackgroundImage(CGFloat length, CGFloat scale, UIColor *color
     NSCAssert(scale > 0, @"Tried to create opacity background image with scale 0");
     NSCAssert(length > 0, @"Tried to create opacity background image with length 0");
 
-    UIBezierPath *rectanglePath = [UIBezierPath bezierPathWithRect: CGRectMake(0, 0, length*0.5, length*0.5)];
-    UIBezierPath *rectangle2Path = [UIBezierPath bezierPathWithRect: CGRectMake(length*0.5, length*0.5, length*0.5, length*0.5)];
-    UIBezierPath *rectangle3Path = [UIBezierPath bezierPathWithRect: CGRectMake(0, length*0.5, length*0.5, length*0.5)];
-    UIBezierPath *rectangle4Path = [UIBezierPath bezierPathWithRect: CGRectMake(length*0.5, 0, length*0.5, length*0.5)];
+    UIBezierPath *rectanglePath = [UIBezierPath bezierPathWithRect:CGRectMake(0, 0, length*0.5, length*0.5)];
+    UIBezierPath *rectangle2Path = [UIBezierPath bezierPathWithRect:CGRectMake(length*0.5, length*0.5, length*0.5, length*0.5)];
+    UIBezierPath *rectangle3Path = [UIBezierPath bezierPathWithRect:CGRectMake(0, length*0.5, length*0.5, length*0.5)];
+    UIBezierPath *rectangle4Path = [UIBezierPath bezierPathWithRect:CGRectMake(length*0.5, 0, length*0.5, length*0.5)];
 
     UIGraphicsBeginImageContextWithOptions(CGSizeMake(length, length), NO, scale);
 
