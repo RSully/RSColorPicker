@@ -55,9 +55,9 @@
 
     RSHSVFromPixel(pixel, &h, &s, &v);
 
-    XCTAssertEqualWithAccuracy(0, h, 0.01);
-    XCTAssertEqualWithAccuracy(0, s, 0.01);
-    XCTAssertEqualWithAccuracy(0, v, 0.01);
+    UIColor *color1 = [UIColor colorWithRed:0 green:0 blue:0 alpha:1.0];
+    UIColor *color2 = [UIColor colorWithHue:h saturation:s brightness:v alpha:1.0];
+    [self assertColor:color1 equalsColor:color2];
 }
 
 - (void)testComponentsForColor_rgb {
