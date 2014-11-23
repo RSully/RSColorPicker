@@ -7,6 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "TargetConditionals.h"
+
+#if TARGET_OS_IPHONE
+#import <CoreGraphics/CoreGraphics.h>
+#elif TARGET_OS_MAC
+#import <Quartz/Quartz.h>
+#endif
 
 /**
  * This class has several static methods for creating bitmap contexts.

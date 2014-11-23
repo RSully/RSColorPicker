@@ -27,9 +27,19 @@ BMPoint BMPointFromPoint (CGPoint point) {
 
 - (id)initWithImage:(ANImageObj *)image {
     if ((self = [super init])) {
-        context = [CGContextCreator newARGBBitmapContextWithImage:CGImageFromANImage(image)];
+        CGImageRef img = CGImageFromANImage(image);
+        context = [CGContextCreator newARGBBitmapContextWithImage:img];
         bitmapData = CGBitmapContextGetData(context);
-        lastImage = CGBitmapContextCreateImage(context);
+        lastImage = CGImageRetain(img);
+    }
+    return self;
+}
+
+- (id)initWithCGImage:(CGImageRef)img {
+    if ((self = [super init])) {
+        context = [CGContextCreator newARGBBitmapContextWithImage:img];
+        bitmapData = CGBitmapContextGetData(context);
+        lastImage = CGImageRetain(img);
     }
     return self;
 }
@@ -112,6 +122,10 @@ BMPoint BMPointFromPoint (CGPoint point) {
 #else
     return (CGImageRef)[[CGImageContainer imageContainerWithImage:lastImage] image];
 #endif
+}
+
+- (unsigned char *)bitmapData {
+    return bitmapData;
 }
 
 - (void)dealloc {

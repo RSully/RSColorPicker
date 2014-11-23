@@ -9,6 +9,7 @@
 #ifndef ImageBitmapRep_OSCommonImage_h
 #define ImageBitmapRep_OSCommonImage_h
 
+#import "TargetConditionals.h"
 #import "CGImageContainer.h"
 
 #if TARGET_OS_IPHONE
