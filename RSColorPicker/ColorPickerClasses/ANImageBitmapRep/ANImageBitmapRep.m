@@ -38,7 +38,7 @@ NSColor * NSColorFromBMPixel (BMPixel pixel) {
 - (void)forwardInvocation:(NSInvocation *)anInvocation {
     if (!baseClasses) [self generateBaseClasses];
     for (int i = 0; i < [baseClasses count]; i++) {
-        BitmapContextManipulator * manip = baseClasses[i];
+        BitmapContextManipulator * manip = [baseClasses objectAtIndex:i];
         if ([manip respondsToSelector:[anInvocation selector]]) {
             [anInvocation invokeWithTarget:manip];
             return;
@@ -148,7 +148,7 @@ NSColor * NSColorFromBMPixel (BMPixel pixel) {
     BitmapScaleManipulator * scalable = [[BitmapScaleManipulator alloc] initWithContext:self];
     BitmapRotationManipulator * rotatable = [[BitmapRotationManipulator alloc] initWithContext:self];
     BitmapDrawManipulator * drawable = [[BitmapDrawManipulator alloc] initWithContext:self];
-    baseClasses = @[croppable, scalable, rotatable, drawable];
+    baseClasses = [[NSArray alloc] initWithObjects:croppable, scalable, rotatable, drawable, nil];
 #if __has_feature(objc_arc) != 1
     [rotatable release];
     [scalable release];

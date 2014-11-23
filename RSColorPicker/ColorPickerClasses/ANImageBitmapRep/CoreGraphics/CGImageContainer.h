@@ -6,10 +6,8 @@
 //  Copyright 2011 __MyCompanyName__. All rights reserved.
 //
 
-
-#if __has_feature(objc_arc) != 1
-
 #import <Foundation/Foundation.h>
+#import "TargetConditionals.h"
 
 #if TARGET_OS_IPHONE
 #import <CoreGraphics/CoreGraphics.h>
@@ -17,6 +15,7 @@
 #import <Quartz/Quartz.h>
 #endif
 
+#if __has_feature(objc_arc) != 1
 
 @interface CGImageContainer : NSObject {
     CGImageRef image;
