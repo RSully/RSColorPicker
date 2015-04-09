@@ -22,12 +22,13 @@
 - (void)colorPicker:(RSColorPickerView *)colorPicker touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event;
 @end
 
+IB_DESIGNABLE
 @interface RSColorPickerView : UIView
 
 /**
  * Specifies if the color picker should be drawn as a circle, or as a square.
  */
-@property (nonatomic) BOOL cropToCircle;
+@property (nonatomic) IBInspectable BOOL cropToCircle;
 
 /**
  * The brightness of the current selection
